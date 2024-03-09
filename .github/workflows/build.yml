@@ -31,6 +31,9 @@ jobs:
           gradle-version: 8.6
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-plugins:
     runs-on: ubuntu-latest
@@ -53,12 +56,15 @@ jobs:
           gradle-version: 8.6
       - name: Build with Gradle
         run: ./gradlew build
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-services:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [users]
+        service: [ users ]
     defaults:
       run:
         working-directory: ${{ matrix.service }}
