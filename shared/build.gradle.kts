@@ -1,37 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
 	id("org.springframework.boot") version "3.2.3"
 	id("io.spring.dependency-management") version "1.1.4"
-	kotlin("jvm") version "1.9.22"
 	kotlin("plugin.spring") version "1.9.22"
-	id("java-library")
-	id("maven-publish")
-}
-
-group = "pl.edu.pw.ia"
-version = "0.0.1-SNAPSHOT"
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
-	withSourcesJar()
+	id("pl.edu.pw.ia.library-convention")
 }
 
 configurations {
 	compileOnly {
 		extendsFrom(configurations.annotationProcessor.get())
-	}
-}
-
-repositories {
-	mavenCentral()
-	maven {
-		url = uri("https://maven.pkg.github.com/ERSMS-24L/ERSMS-24L")
-		credentials {
-			username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("GITHUB_ACTOR").toString()
-			password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("GITHUB_TOKEN").toString()
-		}
 	}
 }
 
@@ -66,31 +42,6 @@ dependencyManagement {
 	}
 }
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs += "-Xjsr305=strict"
-		jvmTarget = "21"
-	}
-}
-
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-publishing {
-	publications {
-		create<MavenPublication>("library") {
-			from(components["java"])
-		}
-	}
-	repositories {
-		maven {
-			name = "GitHubPackages"
-			url = uri("https://maven.pkg.github.com/ERSMS-24L/ERSMS-24L")
-			credentials {
-				username = System.getenv("GITHUB_ACTOR") ?: project.findProperty("GITHUB_ACTOR").toString()
-				password = System.getenv("GITHUB_TOKEN") ?: project.findProperty("GITHUB_TOKEN").toString()
-			}
-		}
-	}
 }
