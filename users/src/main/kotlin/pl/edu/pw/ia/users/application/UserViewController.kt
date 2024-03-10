@@ -47,7 +47,7 @@ interface UserViewController {
 
 @RestController
 @RequestMapping(
-	value = ["/users"],
+	value = ["/api/v1/users"],
 	produces = [MediaType.APPLICATION_JSON_VALUE]
 )
 class UserViewControllerImpl(
