@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  axonserver:
+    image: axoniq/axonserver:2023.2.0-jdk-17-dev
+    hostname: axonserver
+    environment:
+      - AXONIQ_AXONSERVER_DEVMODE_ENABLED=true
+      - AXONIQ_AXONSERVER_STANDALONE=true
+    volumes:
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+
+  users-service:
+    # TODO: setup github docker registry
+    # image: ghcr.io/ERSMS-24L/ERSMS-24L/users:latest
+    build: users
+    ports:
+      - '8101:8080'
+    depends_on:
+      - axonserver
+    environment:
+      - AXON_AXONSERVER_SERVERS=axonserver
+
+
+volumes:
+  axonserver-data:
+  axonserver-events:
+  axonserver-config:
