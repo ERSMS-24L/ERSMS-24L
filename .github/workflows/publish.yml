@@ -14,13 +14,18 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      version: ${{ steps.tag.outputs.version }}
     steps:
-      - name: Set TAG version
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: echo "VERSION=${GITHUB_REF_NAME:1}" >> $GITHUB_ENV
-      - name: Set SHA version
-        if: "!startsWith(github.ref, 'refs/tags/v')"
-        run: echo "VERSION=sha-${GITHUB_SHA::7}" >> $GITHUB_ENV
+      - name: Set version depending on tag or commit hash
+        id: tag
+        run: |
+          if [ v = "${GITHUB_REF_NAME::1}" ]
+          then
+            echo "version=${GITHUB_REF_NAME:1}"
+          else
+            echo "version=${GITHUB_SHA::7}"
+          fi >> $GITHUB_OUTPUT
 
   build-shared:
     runs-on: ubuntu-latest
@@ -50,6 +55,7 @@ jobs:
       - name: Publish with Gradle
         run: ./gradlew -Pversion="${{ env.VERSION }}" publish
         env:
+          VERSION: ${{ needs.set-version.outputs.version }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -81,6 +87,7 @@ jobs:
       - name: Publish with Gradle
         run: ./gradlew -Pversion="${{ env.VERSION }}" publish
         env:
+          VERSION: ${{ needs.set-version.outputs.version }}
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
