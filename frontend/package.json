@@ -11,7 +11,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --open --config webpack.config.dev.js",
-    "build": "webpack --config webpack.config.prod.js"
+    "build": "webpack --config webpack.config.prod.js",
+    "lint": "echo \"TODO: Configure frontend linter\" && exit 0"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.5",
