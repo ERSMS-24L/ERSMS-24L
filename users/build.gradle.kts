@@ -23,6 +23,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
 	implementation("org.axonframework:axon-spring-boot-starter")
+	implementation("org.axonframework.extensions.mongo:axon-mongo")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion")
 
@@ -30,6 +31,7 @@ dependencies {
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 

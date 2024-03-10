@@ -23,11 +23,27 @@ services:
       - '8101:8080'
     depends_on:
       - axonserver
+      - users-db
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
+      - SPRING_DATA_MONGODB_URI=mongodb://root:password@users-db:27017/?authSource=admin&authMechanism=SCRAM-SHA-1
+      - SPRING_DATA_MONGODB_DATABASE=users
+      - SPRING_PROFILES_ACTIVE=disableSecurity
 
+  users-db:
+    image: mongo:7.0.6
+    ports:
+      - '27101:27017'
+    volumes:
+      - users-db-data:/data/db
+      - ./users/mongo_init.js:/docker-entrypoint-initdb.d/mongo_init.js:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=users
 
 volumes:
   axonserver-data:
   axonserver-events:
   axonserver-config:
+  users-db-data:
