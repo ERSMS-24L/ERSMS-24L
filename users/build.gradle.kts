@@ -22,7 +22,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 
-//	implementation("org.axonframework:axon-spring-boot-starter")
+	implementation("org.axonframework:axon-spring-boot-starter")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion")
 
@@ -35,19 +35,19 @@ dependencies {
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-//	testImplementation("org.axonframework.extensions.reactor:axon-reactor-spring-boot-starter")
-//	testImplementation("org.axonframework:axon-test")
+	testImplementation("org.axonframework.extensions.reactor:axon-reactor-spring-boot-starter")
+	testImplementation("org.axonframework:axon-test")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mongodb")
 }
 
-//dependencyManagement {
-//	imports {
-//		mavenBom("org.axonframework:axon-bom:${axonVersion}")
-//	}
-//}
+dependencyManagement {
+	imports {
+		mavenBom("org.axonframework:axon-bom:${axonVersion}")
+	}
+}
 
 tasks.withType<Test> {
 	useJUnitPlatform()
