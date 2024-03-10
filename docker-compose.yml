@@ -23,12 +23,15 @@ services:
       - '8101:8080'
     depends_on:
       - axonserver
+      - mongo-db
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
 
   mongo-db:
     image: 'mongo:7.0'
+    volumes:
+      - mongo-db-data:/data/db
     environment:
       - 'MONGO_INITDB_DATABASE=database'
       - 'MONGO_INITDB_ROOT_PASSWORD=root'
@@ -40,3 +43,4 @@ volumes:
   axonserver-data:
   axonserver-events:
   axonserver-config:
+  mongo-db-data:
