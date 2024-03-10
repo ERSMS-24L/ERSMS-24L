@@ -15,14 +15,19 @@ val axonVersion = "4.9.4"
 val springDocVersion = "2.3.0"
 
 dependencies {
-	implementation("pl.edu.pw.ia:ersms-shared:0.0.8")
+	implementation("pl.edu.pw.ia:ersms-shared:0.1.1")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 
 	implementation("org.axonframework:axon-spring-boot-starter")
+	implementation("org.axonframework.extensions.reactor:axon-reactor-spring-boot-starter")
+	implementation("org.axonframework.extensions.kotlin:axon-kotlin")
+	implementation("org.axonframework.extensions.mongo:axon-mongo")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion")
 

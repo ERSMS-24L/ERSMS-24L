@@ -25,7 +25,16 @@ services:
       - axonserver
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
+      - SPRING_DATA_MONGODB_HOST=mongo-db
 
+  mongo-db:
+    image: 'mongo:7.0'
+    environment:
+      - 'MONGO_INITDB_DATABASE=database'
+      - 'MONGO_INITDB_ROOT_PASSWORD=root'
+      - 'MONGO_INITDB_ROOT_USERNAME=root'
+    ports:
+      - '27017:27017'
 
 volumes:
   axonserver-data:
