@@ -17,4 +17,8 @@ data class CreateUserRequest(
 	@field:NotBlank(message = "Email cannot be blank")
 	@field:Length(max = 50, message = "Maximum allowed email length is 320 characters")
 	val email: String,
-)
+) {
+	override fun toString(): String {
+		return "CreateUserRequest(name='$name', email=**********)"
+	}
+}

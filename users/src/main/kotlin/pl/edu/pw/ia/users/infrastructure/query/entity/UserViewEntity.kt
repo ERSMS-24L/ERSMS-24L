@@ -9,4 +9,8 @@ data class UserViewEntity(
 	val id: String,
 	val name: String,
 	val email: String,
-)
+) {
+	override fun toString(): String {
+		return "UserViewEntity(id='$id', name='$name', email=**********)"
+	}
+}
