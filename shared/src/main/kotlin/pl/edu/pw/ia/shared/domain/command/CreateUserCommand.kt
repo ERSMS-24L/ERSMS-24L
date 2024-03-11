@@ -7,4 +7,8 @@ data class CreateUserCommand(
 		@TargetAggregateIdentifier val userId: UUID,
 		val name: String,
 		val email: String,
-)
+) {
+	override fun toString(): String {
+		return "CreateUserCommand(userId=$userId, name='$name', email=**********)"
+	}
+}

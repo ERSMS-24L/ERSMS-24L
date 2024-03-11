@@ -8,4 +8,8 @@ data class UserCreatedEvent(
 		val userId: UUID,
 		val name: String,
 		val email: String,
-)
+) {
+	override fun toString(): String {
+		return "UserCreatedEvent(userId=$userId, name='$name', email=**********)"
+	}
+}
