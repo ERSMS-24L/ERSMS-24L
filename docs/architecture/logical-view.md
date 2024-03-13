@@ -22,11 +22,6 @@ title: User Query Service
 ---
 erDiagram
     USER_EVENTS
-    
-    
-    CUSTOMER ||--o{ ORDER : places
-    ORDER ||--|{ LINE-ITEM : contains
-    CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
 ```
 
 
