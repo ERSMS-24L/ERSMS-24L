@@ -12,7 +12,7 @@ configurations {
 }
 
 val axonVersion = "4.9.4"
-val springDocVersion = "2.3.0"
+val springDocVersion = "2.4.0"
 
 dependencies {
 	implementation("pl.edu.pw.ia:ersms-shared:0.1.1")
