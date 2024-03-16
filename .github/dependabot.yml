@@ -18,6 +18,16 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "gradle"
-    directory: "/users"
+    directory: "/accounts"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "gradle"
+    directory: "/posts"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "gradle"
+    directory: "/threads"
     schedule:
       interval: "weekly"
