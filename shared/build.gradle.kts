@@ -14,7 +14,7 @@ configurations {
 }
 
 val axonVersion = "4.9.4"
-val springDocVersion = "2.3.0"
+val springDocVersion = "2.4.0"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
