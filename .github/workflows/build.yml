@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [ users ]
+        service: [ accounts, posts, threads ]
     defaults:
       run:
         working-directory: ${{ matrix.service }}

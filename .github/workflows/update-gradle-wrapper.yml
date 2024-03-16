@@ -26,4 +26,6 @@ jobs:
           paths: |
             plugins/**
             shared/**
-            users/**
+            accounts/**
+            posts/**
+            threads/**
