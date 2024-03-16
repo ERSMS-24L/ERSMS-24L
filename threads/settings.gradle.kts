@@ -12,7 +12,7 @@ pluginManagement {
 	}
 }
 
-rootProject.name = "ersms-users"
+rootProject.name = "ersms-threads"
 
 apply(plugin = "pl.edu.pw.ia.settings")
 
@@ -22,3 +22,8 @@ buildscript {
 		"classpath"("pl.edu.pw.ia.settings:pl.edu.pw.ia.settings.gradle.plugin:0.0.1")
 	}
 }
+
+include(
+	"command",
+	"query",
+)

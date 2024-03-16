@@ -36,7 +36,7 @@ interface UserController {
 
 	@Operation(description = "Create user")
 	@ApiResponse(responseCode = "201", description = "Ok.")
-	fun createUser(request: CreateUserRequest): Mono<UUID>
+	fun createUser(@Valid request: CreateUserRequest): Mono<UUID>
 }
 
 @Validated
@@ -54,7 +54,7 @@ class UserControllerImpl(
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.USER.WRITE}')")
 	override fun createUser(
-		@Valid @RequestBody request: CreateUserRequest
+		@RequestBody request: CreateUserRequest
 	): Mono<UUID> {
 		val command = conversionService.convert(request, CreateUserCommand::class.java)
 		return reactorCommandGateway.send(command)

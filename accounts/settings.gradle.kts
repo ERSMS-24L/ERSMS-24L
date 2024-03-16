@@ -12,7 +12,7 @@ pluginManagement {
 	}
 }
 
-rootProject.name = "ersms-reactions"
+rootProject.name = "ersms-accounts"
 
 apply(plugin = "pl.edu.pw.ia.settings")
 
