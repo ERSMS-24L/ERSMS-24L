@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: gateway
+  main:
+    web-application-type: REACTIVE
+
+eureka:
+  client:
+    enabled: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /rest-api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger
+    config-url: /rest-api-docs/swagger-config
+    urls:
+      - url: /rest-api-docs
+        name: Gateway Service
+      - url: /discovery/rest-api-docs
+        name: Discovery Service
+      - url: /accounts/rest-api-docs
+        name: Account Service
+      - url: /threads/rest-api-docs
+        name: Threads Service
+      - url: /posts/rest-api-docs
+        name: Posts Service
+
+management:
+  info:
+    env:
+      enabled: true
+  
+server:
+  error:
+    include-exception: true
+    include-message: always
+    include-binding-errors: always
