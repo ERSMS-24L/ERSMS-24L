@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
+import pl.edu.pw.ia.shared.domain.exception.MissingAccountIdException
 import reactor.core.publisher.Mono
 
 @Configuration
@@ -20,8 +21,8 @@ class UserContextWebFilter : WebFilter {
 			.mapNotNull { it.authentication.principal }
 			.cast(Jwt::class.java)
 			.map {
-				val userId = UUID.fromString(it.subject)
-				exchange.setUserId(userId)
+				val accountId = UUID.fromString(it.subject)
+				exchange.setAccountId(accountId)
 				return@map it
 			}
 			.then(chain.filter(exchange))
@@ -33,27 +34,27 @@ class TestUserContextWebFilter : WebFilter {
 
 	override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
 		val headerUserId = exchange.request.headers["X-User-Id"]?.firstOrNull()
-		val userId = UUID.fromString(headerUserId ?: TEST_USER_ID)
-		exchange.setUserId(userId)
+		val accountId = UUID.fromString(headerUserId ?: TEST_ACCOUNT_ID)
+		exchange.setAccountId(accountId)
 		return chain.filter(exchange)
 			.contextWrite(
 				ReactiveSecurityContextHolder.withAuthentication(
-					TestingAuthenticationToken(userId, null)
+					TestingAuthenticationToken(accountId, null)
 				)
 			)
 	}
 }
 
-const val TEST_USER_ID = "facade00-0000-4000-a000-000000000000"
+const val TEST_ACCOUNT_ID = "facade00-0000-4000-a000-000000000000"
 
-const val USER_ID = "userId"
+const val ACCOUNT_ID = "accountId"
 
-fun ServerWebExchange.getUserId(): UUID {
-	return getAttribute<String>(USER_ID)
+fun ServerWebExchange.getAccountId(): UUID {
+	return getAttribute<String>(ACCOUNT_ID)
 		?.let { UUID.fromString(it) }
-		?: error("User id not found")
+		?: throw MissingAccountIdException()
 }
 
-fun ServerWebExchange.setUserId(userId: UUID) {
-	attributes[USER_ID] = userId.toString()
+fun ServerWebExchange.setAccountId(accountId: UUID) {
+	attributes[ACCOUNT_ID] = accountId.toString()
 }
