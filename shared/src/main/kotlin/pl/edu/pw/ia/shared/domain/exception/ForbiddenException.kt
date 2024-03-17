@@ -5,7 +5,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
-open class ForbiddenException(message: String) : RuntimeException(message)
+open class ForbiddenException(message: String? = null, cause: Throwable? = null) :
+	RuntimeException(
+		message?.let { "[ForbiddenException] $message" } ?: cause?.message,
+		cause
+	)
 
 class AccountMismatchException(currentAccountId: UUID, ownerAccountId: UUID) :
 	ForbiddenException(

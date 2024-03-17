@@ -5,7 +5,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-open class NotFoundException(message: String) : RuntimeException(message)
+open class NotFoundException(message: String? = null, cause: Throwable? = null) :
+	RuntimeException(
+		message?.let { "[NotFoundException] $message" } ?: cause?.message,
+		cause
+	)
 
 class AccountNotFoundException(accountId: UUID) : NotFoundException("Could not find account with Id: $accountId")
 
