@@ -15,12 +15,12 @@ services:
       - '8124:8124'
       - '8224:8224'
 
-  users-service:
+  accounts-service:
     # TODO: setup github docker registry
     # image: ghcr.io/ERSMS-24L/ERSMS-24L/users:latest
-    build: users
+    build: accounts
     ports:
-      - '8101:8080'
+      - '8101:8081'
     depends_on:
       - axonserver
       - mongo-db
