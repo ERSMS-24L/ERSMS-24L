@@ -31,3 +31,8 @@ updates:
     directory: "/threads"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "gradle"
+    directory: "/discovery"
+    schedule:
+      interval: "weekly"

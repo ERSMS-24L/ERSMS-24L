@@ -29,3 +29,4 @@ jobs:
             accounts/**
             posts/**
             threads/**
+            discovery/**

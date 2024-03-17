@@ -95,7 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [ accounts, posts, threads ]
+        service: [ accounts, posts, threads, discovery ]
     defaults:
       run:
         working-directory: ${{ matrix.service }}
