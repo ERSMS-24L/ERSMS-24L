@@ -36,3 +36,8 @@ updates:
     directory: "/discovery"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "gradle"
+    directory: "/gateway"
+    schedule:
+      interval: "weekly"
