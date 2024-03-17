@@ -20,43 +20,43 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
-import pl.edu.pw.ia.shared.domain.command.CreateUserCommand
+import pl.edu.pw.ia.shared.domain.command.CreateAccountCommand
 import pl.edu.pw.ia.shared.security.Scopes
-import pl.edu.pw.ia.users.application.model.CreateUserRequest
+import pl.edu.pw.ia.users.application.model.CreateAccountRequest
 import reactor.core.publisher.Mono
 
-@Tag(name = "Users")
+@Tag(name = "Accounts")
 @ApiResponse(
 	responseCode = "500",
 	description = "Internal Server Error.",
 	content = [Content(schema = Schema(implementation = ApiErrorResponse::class))]
 )
 @SecurityRequirement(name = "Bearer")
-interface UserController {
+interface AccountController {
 
-	@Operation(description = "Create user")
+	@Operation(description = "Create account")
 	@ApiResponse(responseCode = "201", description = "Ok.")
-	fun createUser(@Valid request: CreateUserRequest): Mono<UUID>
+	fun createAccount(@Valid request: CreateAccountRequest): Mono<UUID>
 }
 
 @Validated
 @RestController
 @RequestMapping(
-	value = ["/api/v1/users"],
+	value = ["/api/v1/accounts"],
 	produces = [MediaType.APPLICATION_JSON_VALUE]
 )
-class UserControllerImpl(
+class AccountControllerImpl(
 	private val reactorCommandGateway: ReactorCommandGateway,
 	private val conversionService: ConversionService,
-) : UserController {
+) : AccountController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.USER.WRITE}')")
-	override fun createUser(
-		@RequestBody request: CreateUserRequest
+	override fun createAccount(
+		@RequestBody request: CreateAccountRequest
 	): Mono<UUID> {
-		val command = conversionService.convert(request, CreateUserCommand::class.java)
+		val command = conversionService.convert(request, CreateAccountCommand::class.java)
 		return reactorCommandGateway.send(command)
 	}
 }

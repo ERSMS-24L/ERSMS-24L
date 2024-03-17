@@ -22,7 +22,7 @@ class TokenStoreConfiguration {
 			.mongoTemplate(
 				DefaultMongoTemplate
 					.builder()
-					.mongoDatabase(client, "axon-users-query")
+					.mongoDatabase(client, "axon-accounts-query")
 					.build()
 			)
 			.serializer(serializer)

@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
-import pl.edu.pw.ia.shared.domain.query.FindUserByIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
 import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.shared.security.getUserId
-import pl.edu.pw.ia.users.domain.query.view.UserView
+import pl.edu.pw.ia.users.domain.query.view.AccountView
 import reactor.core.publisher.Mono
 
-@Tag(name = "Users")
+@Tag(name = "Accounts")
 @ApiResponse(responseCode = "200", description = "Ok.")
 @ApiResponse(
 	responseCode = "404",
-	description = "Author not found.",
+	description = "Account not found.",
 	content = [Content(schema = Schema(implementation = ApiErrorResponse::class))]
 )
 @ApiResponse(
@@ -36,39 +36,40 @@ import reactor.core.publisher.Mono
 	content = [Content(schema = Schema(implementation = ApiErrorResponse::class))]
 )
 @SecurityRequirement(name = "Bearer")
-interface UserViewController {
+interface AccountViewController {
 
-	@Operation(description = "Find user by identifier")
-	fun findUser(@PathVariable userId: UUID): Mono<UserView>
+	@Operation(description = "Find account by identifier")
+	fun findAccount(@PathVariable accountId: UUID): Mono<AccountView>
 
-	@Operation(description = "Find current user info")
-	fun findCurrentUser(exchange: ServerWebExchange): Mono<UserView>
+	@Operation(description = "Find current account info")
+	fun findCurrentUser(exchange: ServerWebExchange): Mono<AccountView>
 }
 
 @RestController
 @RequestMapping(
-	value = ["/api/v1/users"],
+	value = ["/api/v1/accounts"],
 	produces = [MediaType.APPLICATION_JSON_VALUE]
 )
-class UserViewControllerImpl(
+class AccountViewControllerImpl(
 	private val reactorQueryGateway: ReactorQueryGateway
-) : UserViewController {
+) : AccountViewController {
 
-	@GetMapping("/{userId}")
+	@GetMapping("/{accountId}")
 	@PreAuthorize("hasAnyAuthority('${Scopes.USER.READ}')")
-	override fun findUser(@PathVariable userId: UUID): Mono<UserView> {
+	override fun findAccount(@PathVariable accountId: UUID): Mono<AccountView> {
 		return reactorQueryGateway.query(
-			FindUserByIdQuery(userId),
-			ResponseTypes.instanceOf(UserView::class.java)
+			FindAccountByIdQuery(accountId),
+			ResponseTypes.instanceOf(AccountView::class.java)
 		)
 	}
 
 	@GetMapping("/me")
 	@PreAuthorize("hasAnyAuthority('${Scopes.USER.READ}')")
-	override fun findCurrentUser(exchange: ServerWebExchange): Mono<UserView> {
+	override fun findCurrentUser(exchange: ServerWebExchange): Mono<AccountView> {
 		return reactorQueryGateway.query(
-			FindUserByIdQuery(exchange.getUserId()),
-			ResponseTypes.instanceOf(UserView::class.java)
+			FindAccountByIdQuery(exchange.getUserId()),
+			ResponseTypes.instanceOf(AccountView::class.java)
 		)
 	}
 }
+

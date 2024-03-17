@@ -10,11 +10,11 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableWebFlux
 @SpringBootApplication(scanBasePackages = ["pl.edu.pw.ia"])
 @OpenAPIDefinition(
-	info = Info(title = "Users Service")
+	info = Info(title = "Accounts Service")
 )
 @EnableDiscoveryClient
-class UsersApplication
+class AccountsApplication
 
 fun main(args: Array<String>) {
-	runApplication<UsersApplication>(*args)
+	runApplication<AccountsApplication>(*args)
 }

@@ -10,7 +10,7 @@ import org.testcontainers.utility.DockerImageName
 import pl.edu.pw.ia.shared.SharedApplication
 
 @TestConfiguration(proxyBeanMethods = false)
-class TestUsersApplication {
+class TestAccountsApplication {
 
 	@Bean
 	@ServiceConnection
@@ -21,5 +21,5 @@ class TestUsersApplication {
 }
 
 fun main(args: Array<String>) {
-	fromApplication<SharedApplication>().with(TestUsersApplication::class).run(*args)
+	fromApplication<SharedApplication>().with(TestAccountsApplication::class).run(*args)
 }
