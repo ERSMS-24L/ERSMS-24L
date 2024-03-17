@@ -15,8 +15,8 @@ class AccountViewRepositoryImpl(
 	private val conversionService: ConversionService,
 ) : AccountViewRepository {
 
-	override fun save(user: AccountView) {
-		Mono.just(user)
+	override fun save(account: AccountView) {
+		Mono.just(account)
 			.mapNotNull { conversionService.convert(it, AccountViewEntity::class.java) }
 			.flatMap { repository.save(it!!) }
 			.block()
