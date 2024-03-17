@@ -17,8 +17,6 @@ val axonVersion = "4.9.4"
 val springDocVersion = "2.4.0"
 
 dependencies {
-	implementation(project(":command"))
-	implementation(project(":query"))
 	implementation("pl.edu.pw.ia:ersms-shared:0.1.3-SNAPSHOT")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
