@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: mongodb
+  name: mongodb
+  namespace: ersms-forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - image: mongo:7.0.2
+          name: mongodb
+          ports:
+            - containerPort: 27101
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodb-data
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: root
+            - name: MONGO_INITDB_DATABASE
+              value: admin
+          resources:
+            requests:
+              memory: "250Mi"
+              cpu: "125m"
+      restartPolicy: Always
+      volumes:
+        - name: mongodb-data
+          persistentVolumeClaim:
+            claimName: mongodb-data

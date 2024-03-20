@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gateway-service
+  name: gateway-service
+  namespace: ersms-forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - image: ghcr.io/ersms-24l/ersms-24l/gateway:latest
+          name: gateway-service
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 90
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+            initialDelaySeconds: 15
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: 125m
+              memory: 250Mi
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+status: {}
