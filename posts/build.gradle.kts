@@ -26,8 +26,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
-	implementation("org.springframework.cloud:spring-cloud-starter-config")
+//	implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+//	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	if (project.hasProperty("kubernetes")) {
 		implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config")
 	} else {
