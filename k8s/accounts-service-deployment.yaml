@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: accounts-service
+  name: accounts-service
+  namespace: ersms-forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts-service
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: accounts-service
+    spec:
+      containers:
+        - image: ghcr.io/ersms-24l/ersms-24l/accounts:latest
+          name: accounts-service
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 90
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+            initialDelaySeconds: 15
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: 125m
+              memory: 250Mi
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes, disableSecurity
+            - name: AXON_AXONSERVER_SERVERS
+              value: axonserver
+            - name: AXONIQ_CONSOLE_CREDENTIALS
+              value: "68447ea9-1:4ac1289d784047ac88cc1e1ab39bdefc"
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb://root:root@mongodb:27017/accounts?authSource=admin"
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+status: {}
