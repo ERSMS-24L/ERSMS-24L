@@ -26,7 +26,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+	implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
+	implementation("org.springframework.cloud:spring-cloud-starter-config")
+	if (project.hasProperty("kubernetes")) {
+		implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config")
+	} else {
+		implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+	}
 
 	implementation("org.axonframework:axon-spring-boot-starter")
 	implementation("org.axonframework.extensions.reactor:axon-reactor-spring-boot-starter")
