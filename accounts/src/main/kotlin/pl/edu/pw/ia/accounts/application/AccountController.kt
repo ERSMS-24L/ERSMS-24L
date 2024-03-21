@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import java.util.UUID
 import org.axonframework.extensions.reactor.commandhandling.gateway.ReactorCommandGateway
-import org.springframework.core.convert.ConversionService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
@@ -19,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
-import pl.edu.pw.ia.shared.domain.command.CreateAccountCommand
-import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.accounts.application.model.CreateAccountRequest
+import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
+import pl.edu.pw.ia.shared.security.Scopes
 import reactor.core.publisher.Mono
 
 @Tag(name = "Accounts")
@@ -47,7 +45,6 @@ interface AccountController {
 )
 class AccountControllerImpl(
 	private val reactorCommandGateway: ReactorCommandGateway,
-	private val conversionService: ConversionService,
 ) : AccountController {
 
 	@PostMapping
@@ -56,7 +53,7 @@ class AccountControllerImpl(
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
 	): Mono<UUID> {
-		val command = conversionService.convert(request, CreateAccountCommand::class.java)
+		val command = request.toCommand()
 		return reactorCommandGateway.send(command)
 	}
 }
