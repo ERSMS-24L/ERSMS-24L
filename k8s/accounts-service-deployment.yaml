@@ -23,13 +23,13 @@ spec:
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
-              port: 8080
+              port: 8081
               path: /actuator/health/liveness
             initialDelaySeconds: 90
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              port: 8080
+              port: 8081
               path: /actuator/health/readiness
             initialDelaySeconds: 15
           lifecycle:
@@ -50,6 +50,6 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               value: "mongodb://root:root@mongodb:27017/accounts?authSource=admin"
           ports:
-            - containerPort: 8080
+            - containerPort: 8081
       restartPolicy: Always
 status: {}

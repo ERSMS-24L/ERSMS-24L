@@ -23,7 +23,7 @@ dependencies {
 //	implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
 //	implementation("org.springframework.cloud:spring-cloud-starter-config")
 	if (project.hasProperty("kubernetes")) {
-		implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-config")
+		implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-all")
 	} else {
 		implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	}
