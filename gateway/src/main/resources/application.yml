@@ -4,6 +4,41 @@ spring:
   main:
     web-application-type: REACTIVE
 
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      x-forwarded:
+        enabled: true
+        for-enabled: true
+        proto-enabled: true
+        host-append: false
+        port-append: false
+        proto-append: false
+      routes:
+        - id: accounts-service
+          uri: http://accounts-service.ersms-forum.svc.cluster.local:8081
+          predicates:
+            - Path=/accounts2/**
+          filters:
+            - StripPrefix=1
+        - id: posts-service
+          uri: http://posts-service.ersms-forum.svc.cluster.local:8082
+          predicates:
+            - Path=/posts2/**
+          filters:
+            - StripPrefix=1
+        - id: threads-service
+          uri: http://threads-service.ersms-forum.svc.cluster.local:8083
+          predicates:
+            - Path=/threads2/**
+          filters:
+            - StripPrefix=1
+
 eureka:
   client:
     enabled: true
@@ -19,14 +54,18 @@ springdoc:
     urls:
       - url: /rest-api-docs
         name: Gateway Service
-      - url: /discovery/rest-api-docs
-        name: Discovery Service
       - url: /accounts/rest-api-docs
         name: Account Service
       - url: /threads/rest-api-docs
         name: Threads Service
       - url: /posts/rest-api-docs
         name: Posts Service
+      - url: /accounts2/rest-api-docs
+        name: Account Service 2
+      - url: /threads2/rest-api-docs
+        name: Threads Service 2
+      - url: /posts2/rest-api-docs
+        name: Posts Service 2
 
 management:
   info:
