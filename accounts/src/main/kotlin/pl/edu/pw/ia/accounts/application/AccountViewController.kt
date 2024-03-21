@@ -19,7 +19,7 @@ import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
 import pl.edu.pw.ia.shared.security.Scopes
-import pl.edu.pw.ia.shared.security.getUserId
+import pl.edu.pw.ia.shared.security.getAccountId
 import pl.edu.pw.ia.accounts.domain.query.view.AccountView
 import reactor.core.publisher.Mono
 
@@ -67,7 +67,7 @@ class AccountViewControllerImpl(
 	@PreAuthorize("hasAnyAuthority('${Scopes.USER.READ}')")
 	override fun findCurrentUser(exchange: ServerWebExchange): Mono<AccountView> {
 		return reactorQueryGateway.query(
-			FindAccountByIdQuery(exchange.getUserId()),
+			FindAccountByIdQuery(exchange.getAccountId()),
 			ResponseTypes.instanceOf(AccountView::class.java)
 		)
 	}
