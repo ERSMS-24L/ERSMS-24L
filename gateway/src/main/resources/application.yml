@@ -23,21 +23,15 @@ spring:
         - id: accounts-service
           uri: http://accounts-service.ersms-forum.svc.cluster.local:8081
           predicates:
-            - Path=/accounts2/**
-          filters:
-            - StripPrefix=1
+            - Path=/accounts/**
         - id: posts-service
           uri: http://posts-service.ersms-forum.svc.cluster.local:8082
           predicates:
-            - Path=/posts2/**
-          filters:
-            - StripPrefix=1
+            - Path=/posts/**
         - id: threads-service
           uri: http://threads-service.ersms-forum.svc.cluster.local:8083
           predicates:
-            - Path=/threads2/**
-          filters:
-            - StripPrefix=1
+            - Path=/threads/**
 
 eureka:
   client:
@@ -60,12 +54,6 @@ springdoc:
         name: Threads Service
       - url: /posts/rest-api-docs
         name: Posts Service
-      - url: /accounts2/rest-api-docs
-        name: Account Service 2
-      - url: /threads2/rest-api-docs
-        name: Threads Service 2
-      - url: /posts2/rest-api-docs
-        name: Posts Service 2
 
 management:
   info:

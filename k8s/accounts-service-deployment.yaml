@@ -24,13 +24,13 @@ spec:
           livenessProbe:
             httpGet:
               port: 8081
-              path: /actuator/health/liveness
+              path: /accounts/actuator/health/liveness
             initialDelaySeconds: 90
             periodSeconds: 5
           readinessProbe:
             httpGet:
               port: 8081
-              path: /actuator/health/readiness
+              path: /accounts/actuator/health/readiness
             initialDelaySeconds: 15
           lifecycle:
             preStop:
