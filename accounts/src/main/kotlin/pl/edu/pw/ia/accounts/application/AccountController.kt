@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.accounts.application.model.CreateAccountRequest
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
+import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
 import reactor.core.publisher.Mono
 
@@ -34,7 +35,7 @@ interface AccountController {
 
 	@Operation(description = "Create account")
 	@ApiResponse(responseCode = "201", description = "Ok.")
-	fun createAccount(@Valid request: CreateAccountRequest): Mono<UUID>
+	fun createAccount(@Valid request: CreateAccountRequest): Mono<IdResponse>
 }
 
 @Validated
@@ -52,8 +53,9 @@ class AccountControllerImpl(
 	@PreAuthorize("hasAnyAuthority('${Scopes.USER.WRITE}')")
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
-	): Mono<UUID> {
+	): Mono<IdResponse> {
 		val command = request.toCommand()
-		return reactorCommandGateway.send(command)
+		return reactorCommandGateway.send<UUID>(command)
+			.map { IdResponse(id = it) }
 	}
 }

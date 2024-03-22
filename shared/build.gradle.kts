@@ -26,6 +26,8 @@ dependencies {
 	implementation("org.springframework.data:spring-data-commons")
 
 	implementation("org.axonframework:axon-spring-boot-starter")
+	implementation("org.axonframework.extensions.reactor:axon-reactor-spring-boot-starter")
+	implementation("org.axonframework.extensions.kotlin:axon-kotlin")
 
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion")
 
