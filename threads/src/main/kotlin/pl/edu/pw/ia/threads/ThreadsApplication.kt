@@ -1,4 +1,4 @@
-package pl.edu.pw.ia.reactions
+package pl.edu.pw.ia.threads
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
 import io.swagger.v3.oas.annotations.info.Info
@@ -10,11 +10,11 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableWebFlux
 @SpringBootApplication(scanBasePackages = ["pl.edu.pw.ia"])
 @OpenAPIDefinition(
-	info = Info(title = "Reactions Service")
+	info = Info(title = "Threads Service")
 )
 @EnableDiscoveryClient
-class ReactionsApplication
+class ThreadsApplication
 
 fun main(args: Array<String>) {
-	runApplication<ReactionsApplication>(*args)
+	runApplication<ThreadsApplication>(*args)
 }

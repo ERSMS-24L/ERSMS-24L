@@ -1,10 +1,10 @@
-package pl.edu.pw.ia.reactions
+package pl.edu.pw.ia.threads
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class ReactionsApplicationTests {
+class ThreadsApplicationTests {
 
 	@Test
 	fun contextLoads() {

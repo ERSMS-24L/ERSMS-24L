@@ -11,14 +11,10 @@ configurations {
 	}
 }
 
-extra["springCloudVersion"] = "2023.0.0"
-
 val axonVersion = "4.9.4"
 val springDocVersion = "2.4.0"
 
 dependencies {
-	implementation(project(":query"))
-	implementation(project(":command"))
 	implementation("pl.edu.pw.ia:ersms-shared:0.2.2")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -27,14 +23,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
-
-//	implementation("org.springframework.cloud:spring-cloud-starter-bootstrap")
-//	implementation("org.springframework.cloud:spring-cloud-starter-config")
-	if (project.hasProperty("kubernetes")) {
-		implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-client-all")
-	} else {
-		implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-	}
 
 	implementation("org.axonframework:axon-spring-boot-starter")
 	implementation("org.axonframework.extensions.reactor:axon-reactor-spring-boot-starter")
@@ -64,7 +52,6 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom("org.axonframework:axon-bom:${axonVersion}")
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
 	}
 }
 
