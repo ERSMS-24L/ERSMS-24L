@@ -3,7 +3,7 @@ package pl.edu.pw.ia.accounts.infrastructure.query.entity
 import java.util.UUID
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import pl.edu.pw.ia.accounts.domain.query.view.AccountView
+import pl.edu.pw.ia.shared.domain.view.AccountView
 
 @Document(collection = "accountViews")
 data class AccountViewEntity(

@@ -3,11 +3,11 @@ package pl.edu.pw.ia.accounts.domain.query.projector
 import org.axonframework.eventhandling.EventHandler
 import org.axonframework.queryhandling.QueryHandler
 import org.springframework.stereotype.Service
+import pl.edu.pw.ia.accounts.domain.query.repository.AccountViewRepository
 import pl.edu.pw.ia.shared.domain.event.AccountCreatedEvent
 import pl.edu.pw.ia.shared.domain.exception.AccountNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
-import pl.edu.pw.ia.accounts.domain.query.repository.AccountViewRepository
-import pl.edu.pw.ia.accounts.domain.query.view.AccountView
+import pl.edu.pw.ia.shared.domain.view.AccountView
 
 @Service
 class AccountProjector(
