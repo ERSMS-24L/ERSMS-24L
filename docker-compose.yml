@@ -16,23 +16,45 @@ services:
       - '8224:8224'
 
   discovery-service:
-    build: discovery
+    image: ghcr.io/ersms-24l/ersms-24l/discovery:latest
     ports:
       - '8761:8761'
 
   gateway-service:
-    build: gateway
+    image: ghcr.io/ersms-24l/ersms-24l/gateway:latest
     ports:
       - '8080:8080'
     environment:
       - SPRING_PROFILES_ACTIVE=docker
 
   accounts-service:
-    # TODO: setup github docker registry
-    # image: ghcr.io/ERSMS-24L/ERSMS-24L/accounts:latest
-    build: accounts
+    image: ghcr.io/ersms-24l/ersms-24l/accounts:latest
     ports:
       - '8081:8081'
+    depends_on:
+      - axonserver
+      - mongo-db
+    environment:
+      - AXON_AXONSERVER_SERVERS=axonserver
+      - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_PROFILES_ACTIVE=docker
+
+  posts-service:
+    image: ghcr.io/ersms-24l/ersms-24l/posts:latest
+    ports:
+      - '8082:8082'
+    depends_on:
+      - axonserver
+      - mongo-db
+    environment:
+      - AXON_AXONSERVER_SERVERS=axonserver
+      - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_PROFILES_ACTIVE=docker
+
+  threads-service:
+    image: ghcr.io/ersms-24l/ersms-24l/threads:latest
+    ports:
+      - '8083:8083'
     depends_on:
       - axonserver
       - mongo-db
