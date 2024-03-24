@@ -15,18 +15,58 @@ services:
       - '8124:8124'
       - '8224:8224'
 
-  accounts-service:
-    # TODO: setup github docker registry
-    # image: ghcr.io/ERSMS-24L/ERSMS-24L/users:latest
-    build: accounts
+  discovery-service:
+    image: ghcr.io/ersms-24l/ersms-24l/discovery:latest
+    pull_policy: always
     ports:
-      - '8101:8081'
+      - '8761:8761'
+
+  gateway-service:
+    image: ghcr.io/ersms-24l/ersms-24l/gateway:latest
+    pull_policy: always
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+
+  accounts-service:
+    image: ghcr.io/ersms-24l/ersms-24l/accounts:latest
+    pull_policy: always
+    ports:
+      - '8081:8081'
     depends_on:
       - axonserver
       - mongo-db
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+
+  posts-service:
+    image: ghcr.io/ersms-24l/ersms-24l/posts:latest
+    pull_policy: always
+    ports:
+      - '8082:8082'
+    depends_on:
+      - axonserver
+      - mongo-db
+    environment:
+      - AXON_AXONSERVER_SERVERS=axonserver
+      - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+
+  threads-service:
+    image: ghcr.io/ersms-24l/ersms-24l/threads:latest
+    pull_policy: always
+    ports:
+      - '8083:8083'
+    depends_on:
+      - axonserver
+      - mongo-db
+    environment:
+      - AXON_AXONSERVER_SERVERS=axonserver
+      - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   mongo-db:
     image: 'mongo:7.0'

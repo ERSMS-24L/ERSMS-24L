@@ -1,0 +1,30 @@
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+
+spring:
+  cloud:
+    gateway:
+      x-forwarded:
+        enabled: true
+        for-enabled: true
+        proto-enabled: true
+        host-append: false
+        port-append: false
+        proto-append: false
+      routes:
+        - id: accounts-service
+          uri: lb://ACCOUNTS
+          predicates:
+            - Path=/accounts/**
+        - id: posts-service
+          uri: lb://POSTS
+          predicates:
+            - Path=/posts/**
+        - id: threads-service
+          uri: lb://THREADS
+          predicates:
+            - Path=/threads/**

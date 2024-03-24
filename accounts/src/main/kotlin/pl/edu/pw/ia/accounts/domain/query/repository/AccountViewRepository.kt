@@ -1,7 +1,7 @@
 package pl.edu.pw.ia.accounts.domain.query.repository
 
 import java.util.UUID
-import pl.edu.pw.ia.accounts.domain.query.view.AccountView
+import pl.edu.pw.ia.shared.domain.view.AccountView
 
 interface AccountViewRepository {
 

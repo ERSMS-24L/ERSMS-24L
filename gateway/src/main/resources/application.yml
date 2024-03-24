@@ -4,35 +4,6 @@ spring:
   main:
     web-application-type: REACTIVE
 
-  cloud:
-    kubernetes:
-      discovery:
-        enabled: true
-    loadbalancer:
-      ribbon:
-        enabled: false
-    gateway:
-      x-forwarded:
-        enabled: true
-        for-enabled: true
-        proto-enabled: true
-        host-append: false
-        port-append: false
-        proto-append: false
-      routes:
-        - id: accounts-service
-          uri: http://accounts-service.ersms-forum.svc.cluster.local:8081
-          predicates:
-            - Path=/accounts/**
-        - id: posts-service
-          uri: http://posts-service.ersms-forum.svc.cluster.local:8082
-          predicates:
-            - Path=/posts/**
-        - id: threads-service
-          uri: http://threads-service.ersms-forum.svc.cluster.local:8083
-          predicates:
-            - Path=/threads/**
-
 eureka:
   client:
     enabled: true

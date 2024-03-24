@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
+import pl.edu.pw.ia.shared.domain.view.AccountView
 import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.shared.security.getAccountId
-import pl.edu.pw.ia.accounts.domain.query.view.AccountView
 import reactor.core.publisher.Mono
 
 @Tag(name = "Accounts")
