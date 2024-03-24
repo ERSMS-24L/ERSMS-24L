@@ -17,11 +17,13 @@ services:
 
   discovery-service:
     image: ghcr.io/ersms-24l/ersms-24l/discovery:latest
+    pull_policy: always
     ports:
       - '8761:8761'
 
   gateway-service:
     image: ghcr.io/ersms-24l/ersms-24l/gateway:latest
+    pull_policy: always
     ports:
       - '8080:8080'
     environment:
@@ -29,6 +31,7 @@ services:
 
   accounts-service:
     image: ghcr.io/ersms-24l/ersms-24l/accounts:latest
+    pull_policy: always
     ports:
       - '8081:8081'
     depends_on:
@@ -41,6 +44,7 @@ services:
 
   posts-service:
     image: ghcr.io/ersms-24l/ersms-24l/posts:latest
+    pull_policy: always
     ports:
       - '8082:8082'
     depends_on:
@@ -53,6 +57,7 @@ services:
 
   threads-service:
     image: ghcr.io/ersms-24l/ersms-24l/threads:latest
+    pull_policy: always
     ports:
       - '8083:8083'
     depends_on:
