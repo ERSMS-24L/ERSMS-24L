@@ -49,7 +49,7 @@ class ThreadControllerImpl(
 
     @PostMapping
     @ResponseStatus
-    @PreAuthorize("hasAnyAuthority('${Scopes.USER.WRITE}')")
+    @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.WRITE}')")
     override fun createThread(
         @RequestBody request: ThreadCreateRequest
     ): Mono<IdResponse> {
