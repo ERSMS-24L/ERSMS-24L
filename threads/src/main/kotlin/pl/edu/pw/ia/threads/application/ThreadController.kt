@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -68,14 +70,14 @@ class ThreadControllerImpl(
         return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
     }
 
-    @PostMapping
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
     override fun updateThread(request: ThreadUpdateRequest): Mono<IdResponse> {
         val command = request.toCommand()
         return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
     }
 
-    @PostMapping
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     override fun deleteThread(request: ThreadDeleteRequest): Mono<IdResponse> {
         val command = request.toCommand()
