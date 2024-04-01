@@ -21,6 +21,7 @@ import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.threads.application.model.ThreadCreateRequest
+import pl.edu.pw.ia.threads.application.model.ThreadDeleteRequest
 import pl.edu.pw.ia.threads.application.model.ThreadUpdateRequest
 import reactor.core.publisher.Mono
 import java.util.UUID
@@ -41,6 +42,10 @@ interface ThreadController {
     @Operation(description = "Update thread")
     @ApiResponse(responseCode = "200", description = "Updated.")
     fun updateThread(@Valid request: ThreadUpdateRequest): Mono<IdResponse>
+
+    @Operation(description = "Delete thread")
+    @ApiResponse(responseCode = "204", description = "Deleted.")
+    fun deleteThread(@Valid request: ThreadDeleteRequest): Mono<IdResponse>
 }
 
 @Validated
@@ -69,4 +74,12 @@ class ThreadControllerImpl(
         val command = request.toCommand()
         return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    override fun deleteThread(request: ThreadDeleteRequest): Mono<IdResponse> {
+        val command = request.toCommand()
+        return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+    }
+
 }
