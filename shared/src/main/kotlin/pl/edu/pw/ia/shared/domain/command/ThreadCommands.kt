@@ -15,6 +15,11 @@ data class UpdateThreadCommand(
 	val accountId: UUID,
 )
 
+data class DeleteThreadCommand(
+	@TargetAggregateIdentifier val threadId: UUID,
+	val accountId: UUID,
+)
+
 data class AddModeratorCommand(
 	val threadId: UUID,
 	val accountId: UUID,
