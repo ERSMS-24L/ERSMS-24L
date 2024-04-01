@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.axonframework.extensions.reactor.commandhandling.gateway.ReactorCommandGateway
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
@@ -20,6 +21,7 @@ import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.threads.application.model.ThreadCreateRequest
+import pl.edu.pw.ia.threads.application.model.ThreadUpdateRequest
 import reactor.core.publisher.Mono
 import java.util.UUID
 
@@ -35,6 +37,10 @@ interface ThreadController {
     @Operation(description = "Create thread")
     @ApiResponse(responseCode = "201", description = "Created.")
     fun createThread(@Valid request: ThreadCreateRequest): Mono<IdResponse>
+
+    @Operation(description = "Update thread")
+    @ApiResponse(responseCode = "200", description = "Updated.")
+    fun updateThread(@Valid request: ThreadUpdateRequest): Mono<IdResponse>
 }
 
 @Validated
@@ -48,11 +54,18 @@ class ThreadControllerImpl(
 ) : ThreadController {
 
     @PostMapping
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.WRITE}')")
     override fun createThread(
         @RequestBody request: ThreadCreateRequest
     ): Mono<IdResponse> {
+        val command = request.toCommand()
+        return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    override fun updateThread(request: ThreadUpdateRequest): Mono<IdResponse> {
         val command = request.toCommand()
         return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
     }
