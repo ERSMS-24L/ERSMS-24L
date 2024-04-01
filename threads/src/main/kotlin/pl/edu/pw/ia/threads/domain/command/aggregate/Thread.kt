@@ -8,6 +8,8 @@ import org.axonframework.spring.stereotype.Aggregate
 import pl.edu.pw.ia.shared.domain.command.CreateThreadCommand
 import pl.edu.pw.ia.shared.domain.command.UpdateThreadCommand
 import pl.edu.pw.ia.shared.domain.event.ThreadCreatedEvent
+import pl.edu.pw.ia.shared.domain.event.ThreadUpdatedEvent
+import pl.edu.pw.ia.shared.domain.exception.AccountMismatchException
 import java.time.Instant
 import java.util.UUID
 
@@ -34,13 +36,32 @@ internal class Thread {
     }
 
     @CommandHandler
-    fun handle(command: UpdateThreadCommand) {}
+    fun handle(command: UpdateThreadCommand) {
+        if (accountId != command.accountId) {
+            throw AccountMismatchException(
+                currentAccountId = command.accountId,
+                ownerAccountId = accountId,
+            )
+        }
+        AggregateLifecycle.apply(
+            ThreadUpdatedEvent(
+                accountId = command.accountId,
+                title = command.title,
+                threadId = command.threadId,
+            )
+        )
+    }
 
     @EventSourcingHandler
     fun on(event: ThreadCreatedEvent) {
         threadId = event.threadId
         title = event.title
         accountId = event.accountId
+    }
+
+    @EventSourcingHandler
+    fun on(event: ThreadUpdatedEvent) {
+        title = event.title
     }
 
 }
