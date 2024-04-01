@@ -20,6 +20,12 @@ data class ThreadUpdatedEvent(
 )
 
 @Revision("1.0")
+data class ThreadDeleteEvent(
+	val threadId: UUID,
+	val accountId: UUID,
+)
+
+@Revision("1.0")
 data class ModeratorAddedEvent(
 	val threadId: UUID,
 	val accountId: UUID,
