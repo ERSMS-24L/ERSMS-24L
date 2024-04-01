@@ -1,15 +1,16 @@
 package pl.edu.pw.ia.shared.domain.command
 
+import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.UUID
 
 data class CreateThreadCommand(
-	val threadId: UUID,
+	@TargetAggregateIdentifier val threadId: UUID,
 	val title: String,
 	val accountId: UUID,
 )
 
 data class UpdateThreadCommand(
-	val threadId: UUID,
+	@TargetAggregateIdentifier val threadId: UUID,
 	val title: String,
 	val accountId: UUID,
 )
