@@ -145,6 +145,19 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64
+      - name: Build docker image with Gradle
+        run: ./gradlew clean build
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: ./${{ matrix.service }}
+          push: true
+          tags: docker-latest
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64
 
   build-frontend:
     runs-on: ubuntu-latest
