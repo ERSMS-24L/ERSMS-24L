@@ -12,12 +12,13 @@ import pl.edu.pw.ia.shared.domain.query.*
 import pl.edu.pw.ia.shared.domain.view.AccountView
 import pl.edu.pw.ia.shared.domain.view.ThreadView
 import pl.edu.pw.ia.threads.domain.query.repository.ThreadViewRepository
+import java.time.Instant
 
 class ThreadProjector(
     private val repository: ThreadViewRepository,
     private val queryGateway: QueryGateway
 ) {
-
+    // TODO: Handle for posts, username change, etc
     @EventHandler
     fun on(event: ThreadCreatedEvent) {
         val view = ThreadView(
@@ -25,7 +26,8 @@ class ThreadProjector(
             title = event.title,
             accountId = event.accountId,
             post = "",
-            username = queryGateway.query(FindAccountByIdQuery(accountId = event.accountId), AccountView::class.java).get().name
+            username = queryGateway.query(FindAccountByIdQuery(accountId = event.accountId), AccountView::class.java).get().name,
+            lastModified = event.createdAt
         )
         repository.save(view)
     }
@@ -33,7 +35,7 @@ class ThreadProjector(
     @EventHandler
     fun on(event: ThreadUpdatedEvent) {
         val view = repository.findById(event.threadId) ?: throw ThreadNotFoundException(event.threadId)
-        repository.save(view.copy(title = event.title))
+        repository.save(view.copy(title = event.title, lastModified = event.modifiedAt))
     }
 
     @EventHandler
