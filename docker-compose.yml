@@ -16,13 +16,13 @@ services:
       - '8224:8224'
 
   discovery-service:
-    image: ghcr.io/ersms-24l/ersms-24l/discovery:latest
+    image: ghcr.io/ersms-24l/ersms-24l/discovery:docker-latest
     pull_policy: always
     ports:
       - '8761:8761'
 
   gateway-service:
-    image: ghcr.io/ersms-24l/ersms-24l/gateway:latest
+    image: ghcr.io/ersms-24l/ersms-24l/gateway:docker-latest
     pull_policy: always
     ports:
       - '8080:8080'
@@ -30,7 +30,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   accounts-service:
-    image: ghcr.io/ersms-24l/ersms-24l/accounts:latest
+    image: ghcr.io/ersms-24l/ersms-24l/accounts:docker-latest
     pull_policy: always
     ports:
       - '8081:8081'
@@ -43,7 +43,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   posts-service:
-    image: ghcr.io/ersms-24l/ersms-24l/posts:latest
+    image: ghcr.io/ersms-24l/ersms-24l/posts:docker-latest
     pull_policy: always
     ports:
       - '8082:8082'
@@ -56,7 +56,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   threads-service:
-    image: ghcr.io/ersms-24l/ersms-24l/threads:latest
+    image: ghcr.io/ersms-24l/ersms-24l/threads:docker-latest
     pull_policy: always
     ports:
       - '8083:8083'
