@@ -20,11 +20,17 @@ spring:
           uri: lb://ACCOUNTS
           predicates:
             - Path=/accounts/**
+          filters:
+            - StripPrefix=1
         - id: posts-service
           uri: lb://POSTS
           predicates:
             - Path=/posts/**
+          filters:
+            - StripPrefix=1
         - id: threads-service
           uri: lb://THREADS
           predicates:
             - Path=/threads/**
+          filters:
+            - StripPrefix=1
