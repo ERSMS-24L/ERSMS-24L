@@ -9,7 +9,6 @@ import pl.edu.pw.ia.threads.domain.query.repository.ThreadViewRepository
 import pl.edu.pw.ia.threads.infrastructure.query.entity.ThreadViewEntity.Companion.toEntity
 import pl.edu.pw.ia.threads.infrastructure.query.repository.database.SpringThreadViewEntityRepository
 import reactor.core.publisher.Mono
-import reactor.kotlin.extra.math.max
 import java.time.Instant
 import java.util.*
 
