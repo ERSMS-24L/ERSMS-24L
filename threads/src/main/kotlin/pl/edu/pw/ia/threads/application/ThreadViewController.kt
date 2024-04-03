@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping
 
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
@@ -44,11 +45,11 @@ interface ThreadViewController {
     @Operation(description = "Find thread by id")
     fun findThreadById(@PathVariable threadId: UUID): Mono<ThreadView>
     @Operation(description = "Find thread by title")
-    fun findThreadByTitle(@PathVariable title: String, @PageableDefault(value = 2, page = 0) pageable: Pageable): Mono<ThreadView>
+    fun findThreadByTitle(@RequestParam title: String, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView>
     @Operation(description = "Find thread by author")
-    fun findThreadByAuthor(@PathVariable accountId: UUID, @PageableDefault(value = 2, page = 0) pageable: Pageable): Mono<ThreadView>
+    fun findThreadByAuthor(@RequestParam accountId: UUID, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView>
     @Operation(description = "Get recent threads")
-    fun findRecentThreads(@PathVariable date: Instant, @PageableDefault(value = 2, page = 0) pageable: Pageable): Mono<ThreadView>
+    fun findRecentThreads(@RequestParam date: Instant, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView>
 
 }
 
@@ -69,27 +70,27 @@ class ThreadViewControllerImpl(
         )
     }
 
-    @GetMapping("/{title}")
+    @GetMapping("")
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
-    override fun findThreadByTitle(@PathVariable title: String, @PageableDefault(value = 2, page = 0) pageable: Pageable): Mono<ThreadView> {
+    override fun findThreadByTitle(@RequestParam title: String, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView> {
         return reactorQueryGateway.query(
             FindThreadsByTitleQuery(title, pageable),
             ResponseTypes.instanceOf(ThreadView::class.java)
         )
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping("")
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
-    override fun findThreadByAuthor(@PathVariable accountId: UUID, @PageableDefault(value = 2, page = 0) pageable: Pageable): Mono<ThreadView> {
+    override fun findThreadByAuthor(@RequestParam accountId: UUID, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView> {
         return reactorQueryGateway.query(
             FindThreadsByAuthor(accountId, pageable),
             ResponseTypes.instanceOf(ThreadView::class.java)
         )
     }
 
-    @GetMapping("/{date}")
+    @GetMapping("")
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
-    override fun findRecentThreads(@PathVariable date: Instant, @PageableDefault(value = 2, page = 0) pageable: Pageable): Mono<ThreadView> {
+    override fun findRecentThreads(@RequestParam date: Instant, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView> {
         return reactorQueryGateway.query(
             findRecentThreads(date, pageable),
             ResponseTypes.instanceOf(ThreadView::class.java)
