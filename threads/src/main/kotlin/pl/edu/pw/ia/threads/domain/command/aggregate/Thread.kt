@@ -50,6 +50,7 @@ internal class Thread {
                 accountId = command.accountId,
                 title = command.title,
                 threadId = command.threadId,
+                modifiedAt = Instant.now(),
             )
         )
     }
@@ -66,7 +67,8 @@ internal class Thread {
         AggregateLifecycle.apply(
             ThreadDeleteEvent(
                 accountId = command.accountId,
-                threadId = command.threadId
+                threadId = command.threadId,
+                deletedAt = Instant.now(),
             )
         )
     }
