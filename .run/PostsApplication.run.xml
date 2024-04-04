@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PostsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="ersms-posts.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="pl.edu.pw.ia.posts.PostsApplication" />
+    <option name="VM_PARAMETERS" value="--add-opens java.base/java.util=ALL-UNNAMED" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
