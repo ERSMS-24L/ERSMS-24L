@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
@@ -17,7 +19,7 @@ val axonVersion = "4.9.4"
 val springDocVersion = "2.4.0"
 
 dependencies {
-	implementation("pl.edu.pw.ia:ersms-shared:pageable-fix")
+	implementation("pl.edu.pw.ia:ersms-shared:fix-axon-pageable")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
@@ -68,4 +70,16 @@ dependencyManagement {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.withType<Jar> {
+	manifest {
+		attributes("Add-Opens" to "java.base/java.util")
+	}
+}
+
+tasks.withType<BootRun> {
+	jvmArgs(
+		"--add-opens", "java.base/java.util=ALL-UNNAMED"
+	)
 }
