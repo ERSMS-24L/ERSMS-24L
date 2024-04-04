@@ -17,12 +17,14 @@ data class ThreadUpdatedEvent(
 	val threadId: UUID,
 	val title: String,
 	val accountId: UUID,
+	val modifiedAt: Instant,
 )
 
 @Revision("1.0")
 data class ThreadDeleteEvent(
 	val threadId: UUID,
 	val accountId: UUID,
+	val deletedAt: Instant,
 )
 
 @Revision("1.0")

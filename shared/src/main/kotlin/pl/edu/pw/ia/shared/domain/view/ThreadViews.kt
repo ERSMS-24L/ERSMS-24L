@@ -1,5 +1,6 @@
 package pl.edu.pw.ia.shared.domain.view
 
+import java.time.Instant
 import java.util.UUID
 
 data class ThreadView(
@@ -8,6 +9,7 @@ data class ThreadView(
 	val username: String,
 	val title: String,
 	val post: String,
+	val lastModified: Instant
 )
 
 data class ModeratorView(
