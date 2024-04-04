@@ -70,7 +70,7 @@ class ThreadViewControllerImpl(
         )
     }
 
-    @GetMapping("")
+    @GetMapping(params = ["title"])
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
     override fun findThreadByTitle(@RequestParam title: String, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView> {
         return reactorQueryGateway.query(
@@ -79,7 +79,7 @@ class ThreadViewControllerImpl(
         )
     }
 
-    @GetMapping("")
+    @GetMapping(params = ["accountId"])
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
     override fun findThreadByAuthor(@RequestParam accountId: UUID, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView> {
         return reactorQueryGateway.query(
@@ -88,7 +88,7 @@ class ThreadViewControllerImpl(
         )
     }
 
-    @GetMapping("")
+    @GetMapping(params = ["date"])
     @PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
     override fun findRecentThreads(@RequestParam date: Instant, @PageableDefault(page = 0) pageable: Pageable): Mono<ThreadView> {
         return reactorQueryGateway.query(
