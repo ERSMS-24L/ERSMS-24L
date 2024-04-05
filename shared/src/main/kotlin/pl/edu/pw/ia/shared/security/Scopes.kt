@@ -20,4 +20,11 @@ object Scopes {
 		const val READ = "${SCOPE}_read:${THREADS}"
 		const val WRITE = "${SCOPE}_write:${THREADS}"
 	}
+
+	object PostScopes {
+		private const val POSTS = "posts"
+
+		const val READ = "${SCOPE}_read:${POSTS}"
+		const val WRITE = "${SCOPE}_write:${POSTS}"
+	}
 }
