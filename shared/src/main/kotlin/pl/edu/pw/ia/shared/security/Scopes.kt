@@ -4,6 +4,7 @@ object Scopes {
 
 	val USER = UserScopes
 	val THREAD = ThreadScopes
+	val POST = PostScopes
 
 	private const val SCOPE = "SCOPE"
 
