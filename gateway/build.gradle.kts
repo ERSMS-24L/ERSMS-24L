@@ -7,7 +7,7 @@ plugins {
 
 extra["springCloudVersion"] = "2023.0.0"
 
-val springDocVersion = "2.4.0"
+val springDocVersion = "2.5.0"
 
 dependencies {
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
