@@ -73,7 +73,7 @@ class PostControllerImpl(
 	}
 
 	@DeleteMapping
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	override fun deletePost(request: PostDeleteRequest): Mono<IdResponse> {
 		val command = request.toCommand()
 		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
