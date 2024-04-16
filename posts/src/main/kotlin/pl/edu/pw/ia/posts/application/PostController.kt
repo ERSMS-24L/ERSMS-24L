@@ -44,7 +44,7 @@ interface PostController {
 	fun updatePost(@Valid request: PostUpdateRequest): Mono<IdResponse>
 
 	@Operation(description = "Delete post")
-	@ApiResponse(responseCode = "204", description = "Deleted.")
+	@ApiResponse(responseCode = "200", description = "Deleted.")
 	fun deletePost(@Valid request: PostDeleteRequest): Mono<IdResponse>
 }
 
