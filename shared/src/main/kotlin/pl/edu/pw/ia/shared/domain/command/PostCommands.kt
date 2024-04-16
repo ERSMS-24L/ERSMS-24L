@@ -4,13 +4,13 @@ import java.util.UUID
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import pl.edu.pw.ia.shared.domain.model.VoteType
 
-data class CreatePostEvent(
+data class CreatePostCommand(
 	@TargetAggregateIdentifier val postId: UUID,
 	val accountId: UUID,
 	val content: String,
 )
 
-data class UpdatePostEvent(
+data class UpdatePostCommand(
 	@TargetAggregateIdentifier val postId: UUID,
 	val accountId: UUID,
 	val content: String,
