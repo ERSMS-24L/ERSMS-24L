@@ -11,6 +11,8 @@ kubectl get svc -n ersms-forum
 kubectl get pods -n ersms-forum
 
 # Logging
+helm repo add elastic https://helm.elastic.co
+helm repo update
 kubectl create -f https://download.elastic.co/downloads/eck/2.12.1/crds.yaml
 kubectl apply -f https://download.elastic.co/downloads/eck/2.12.1/operator.yaml
 #helm install eck-stack elastic/eck-stack \
