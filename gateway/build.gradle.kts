@@ -30,6 +30,8 @@ dependencies {
 
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$springDocVersion")
 
+	implementation("io.micrometer:micrometer-registry-prometheus:1.12.5")
+
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
