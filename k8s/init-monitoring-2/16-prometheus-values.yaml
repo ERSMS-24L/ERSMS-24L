@@ -2113,6 +2113,9 @@ prometheus-node-exporter:
       enabled: false
       ipFamilies: ["IPv6", "IPv4"]
       ipFamilyPolicy: "PreferDualStack"
+  hostRootFsMount:
+    enabled: false
+    mountPropagation: "HostToContainer"
   prometheus:
     monitor:
       enabled: true
@@ -2505,10 +2508,12 @@ prometheusOperator:
   ## Namespaces to scope the interaction of the Prometheus Operator and the apiserver (allow list).
   ## This is mutually exclusive with denyNamespaces. Setting this to an empty object will disable the configuration
   ##
-  namespaces: {}
-    # releaseNamespace: true
-    # additional:
-  # - kube-system
+  namespaces:
+     releaseNamespace: true
+     additional:
+       - default
+       - kube-system
+       - ersms-forum
 
   ## Namespaces not to scope the interaction of the Prometheus Operator (deny list).
   ##
@@ -3535,6 +3540,7 @@ prometheus:
     ## which will also match the servicemonitors created
     ##
     serviceMonitorSelectorNilUsesHelmValues: true
+    ## TODO: verify if not false
 
     ## ServiceMonitors to be selected for target discovery.
     ## If {}, select all ServiceMonitors
@@ -3558,6 +3564,7 @@ prometheus:
     ## which will also match the podmonitors created
     ##
     podMonitorSelectorNilUsesHelmValues: true
+    ## TODO: verify if not false
 
     ## PodMonitors to be selected for target discovery.
     ## If {}, select all PodMonitors
@@ -4059,15 +4066,45 @@ prometheus:
   #    verbs: [ "get", "list", "watch" ]
 
   additionalServiceMonitors:
-    - name: kube-prometheus-stack-spring-boot
+    - name: prometheus-stack-spring-boot-gateway
       selector:
         matchLabels:
-          prometheus-monitoring: 'true'
-      namespaceSelector:
-        matchNames:
-          - ersms-forum
+          app: gateway-service
       endpoints:
-        - port: management
+        - port: "http"
+          interval: 5s
+          path: /actuator/prometheus
+
+    - name: prometheus-stack-spring-boot-accounts
+      selector:
+        matchLabels:
+          app: accounts-service
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: "http"
+          interval: 5s
+          path: /actuator/prometheus
+
+    - name: prometheus-stack-spring-boot-posts
+      selector:
+        matchLabels:
+          app: posts-service
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: "http"
+          interval: 5s
+          path: /actuator/prometheus
+
+    - name: prometheus-stack-spring-boot-threads
+      selector:
+        matchLabels:
+          app: threads-service
+      namespaceSelector:
+        any: true
+      endpoints:
+        - port: "http"
           interval: 5s
           path: /actuator/prometheus
     ## Name of the ServiceMonitor to create
