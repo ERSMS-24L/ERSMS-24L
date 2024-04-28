@@ -20,7 +20,7 @@ springdoc:
       - url: /rest-api-docs
         name: Gateway Service
       - url: /accounts/rest-api-docs
-        name: Account Service
+        name: Accounts Service
       - url: /threads/rest-api-docs
         name: Threads Service
       - url: /posts/rest-api-docs
