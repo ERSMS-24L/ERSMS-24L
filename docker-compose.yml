@@ -67,6 +67,17 @@ services:
       - SPRING_DATA_MONGODB_HOST=mongo-db
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
+  keycloak-service:
+    image: quay.io/keycloak/keycloak:24.0.3
+    ports:
+      - '8888:8080'
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./keycloak/imports:/opt/keycloak/data/import
+    command: -v start-dev --import-realm
+
   mongo-db:
     image: 'mongo:7.0'
     volumes:
