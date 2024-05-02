@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: keycloak
+  name: keycloak
+  namespace: ersms-forum
+spec:
+  ports:
+    - name: "http"
+      port: 8888
+      targetPort: 8080
+  selector:
+    app: keycloak
+  type: LoadBalancer # TODO: unsure?
+status:
+  loadBalancer: { }
