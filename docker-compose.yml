@@ -40,7 +40,7 @@ services:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
-      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - SPRING_PROFILES_ACTIVE=docker
 
   posts-service:
     image: ghcr.io/ersms-24l/ersms-24l/posts:docker-latest
@@ -54,7 +54,7 @@ services:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
-      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - SPRING_PROFILES_ACTIVE=docker
 
   threads-service:
     image: ghcr.io/ersms-24l/ersms-24l/threads:docker-latest
@@ -68,7 +68,7 @@ services:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
-      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - SPRING_PROFILES_ACTIVE=docker
 
   keycloak-service:
     image: quay.io/keycloak/keycloak:24.0.3
