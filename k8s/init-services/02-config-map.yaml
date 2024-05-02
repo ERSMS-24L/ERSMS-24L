@@ -71,7 +71,3 @@ data:
             port-append: false
             proto-append: false
       
-    spring:
-      profiles:
-        active:
-          - disableSecurity
