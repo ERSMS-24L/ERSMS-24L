@@ -39,6 +39,7 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   posts-service:
@@ -52,6 +53,7 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   threads-service:
@@ -65,6 +67,7 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
 
   keycloak-service:
