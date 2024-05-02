@@ -1,6 +1,5 @@
 package pl.edu.pw.ia.shared.security
 
-import java.security.interfaces.RSAPublicKey
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
