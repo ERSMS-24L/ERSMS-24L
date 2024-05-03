@@ -9,6 +9,7 @@ import pl.edu.pw.ia.shared.domain.model.VoteType
 data class PostCreatedEvent(
 	val postId: UUID,
 	val accountId: UUID,
+	val threadId: UUID,
 	val content: String,
 	val createdAt: Instant,
 )
