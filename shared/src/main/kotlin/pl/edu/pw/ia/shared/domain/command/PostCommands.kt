@@ -15,13 +15,11 @@ data class UpdatePostCommand(
 	@TargetAggregateIdentifier val postId: UUID,
 	val accountId: UUID,
 	val content: String,
-	val threadId: UUID,
 )
 
 data class DeletePostCommand(
 	@TargetAggregateIdentifier val postId: UUID,
 	val accountId: UUID,
-	val threadId: UUID,
 )
 
 data class CreateVoteCommand(

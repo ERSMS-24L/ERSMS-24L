@@ -18,7 +18,6 @@ data class PostCreatedEvent(
 data class PostUpdatedEvent(
 	val postId: UUID,
 	val accountId: UUID,
-	val threadId: UUID,
 	val content: String,
 )
 
@@ -26,7 +25,6 @@ data class PostUpdatedEvent(
 data class PostDeletedEvent(
 	val postId: UUID,
 	val accountId: UUID,
-	val threadId: UUID,
 )
 
 @Revision("1.0")

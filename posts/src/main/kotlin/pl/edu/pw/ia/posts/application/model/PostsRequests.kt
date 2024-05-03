@@ -35,28 +35,22 @@ data class PostUpdateRequest(
 
 	@field:org.hibernate.validator.constraints.UUID(message = "Post id is invalid")
 	val postId: String,
-	@field:org.hibernate.validator.constraints.UUID(message = "Thread id is invalid")
-	val threadId: String,
 ) {
 	fun toCommand() =
 		UpdatePostCommand(
 			postId = UUID.fromString(postId),
 			content = content,
 			accountId = SecurityContext.getAccountId(),
-			threadId = UUID.fromString(threadId),
 		)
 }
 
 data class PostDeleteRequest(
 	@field:org.hibernate.validator.constraints.UUID(message = "Post id is invalid")
 	val postId: String,
-	@field:org.hibernate.validator.constraints.UUID(message = "Thread id is invalid")
-	val threadId: String,
 ) {
 	fun toCommand() =
 		DeletePostCommand(
 			postId = UUID.fromString(postId),
 			accountId = SecurityContext.getAccountId(),
-			threadId = UUID.fromString(threadId)
 		)
 }

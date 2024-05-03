@@ -52,7 +52,6 @@ internal class Post {
 				accountId = command.accountId,
 				content = command.content,
 				postId = command.postId,
-				threadId = command.threadId,
 			)
 		)
 	}
@@ -70,7 +69,6 @@ internal class Post {
 			PostDeletedEvent(
 				accountId = command.accountId,
 				postId = command.postId,
-				threadId = command.threadId,
 			)
 		)
 	}
