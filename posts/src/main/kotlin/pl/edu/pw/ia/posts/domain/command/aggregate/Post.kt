@@ -22,6 +22,7 @@ internal class Post {
 	private lateinit var postId: UUID
 	private lateinit var content: String
 	private lateinit var accountId: UUID
+	private lateinit var threadId: UUID
 
 	private constructor()
 
@@ -31,6 +32,7 @@ internal class Post {
 			PostCreatedEvent(
 				postId = command.postId,
 				accountId = command.accountId,
+				threadId = command.threadId,
 				content = command.content,
 				createdAt = Instant.now(),
 			)
@@ -50,6 +52,7 @@ internal class Post {
 				accountId = command.accountId,
 				content = command.content,
 				postId = command.postId,
+				threadId = command.threadId,
 			)
 		)
 	}
@@ -66,7 +69,8 @@ internal class Post {
 		AggregateLifecycle.apply(
 			PostDeletedEvent(
 				accountId = command.accountId,
-				postId = command.postId
+				postId = command.postId,
+				threadId = command.threadId,
 			)
 		)
 	}
@@ -76,6 +80,7 @@ internal class Post {
 		postId = event.postId
 		content = event.content
 		accountId = event.accountId
+		threadId = event.threadId
 	}
 
 	@EventSourcingHandler
