@@ -8,6 +8,7 @@ data class CreatePostCommand(
 	@TargetAggregateIdentifier val postId: UUID,
 	val accountId: UUID,
 	val content: String,
+	val threadId: UUID,
 )
 
 data class UpdatePostCommand(
