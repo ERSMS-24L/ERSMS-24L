@@ -39,7 +39,8 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
-      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
+      - SPRING_PROFILES_ACTIVE=docker
 
   posts-service:
     image: ghcr.io/ersms-24l/ersms-24l/posts:docker-latest
@@ -52,7 +53,8 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
-      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
+      - SPRING_PROFILES_ACTIVE=docker
 
   threads-service:
     image: ghcr.io/ersms-24l/ersms-24l/threads:docker-latest
@@ -65,7 +67,19 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
-      - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
+      - SPRING_PROFILES_ACTIVE=docker
+
+  keycloak-service:
+    image: quay.io/keycloak/keycloak:24.0.3
+    ports:
+      - '8888:8080'
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./keycloak/imports:/opt/keycloak/data/import
+    command: -v start-dev --import-realm
 
   mongo-db:
     image: 'mongo:7.0'

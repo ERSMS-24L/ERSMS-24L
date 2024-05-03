@@ -1,6 +1,5 @@
 package pl.edu.pw.ia.shared.security
 
-import java.security.interfaces.RSAPublicKey
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -23,8 +22,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 @EnableReactiveMethodSecurity
 @Profile("!disableSecurity")
 class SecurityConfig(
-		@Value("\${jwt.public.key}")
-		private val publicKey: RSAPublicKey,
+		@Value("\${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+		private val jwkSetUri: String,
 		@Value("\${springdoc.api-docs.path}")
 		private val restApiDocPath: String,
 		@Value("\${springdoc.swagger-ui.path}")
@@ -56,7 +55,9 @@ class SecurityConfig(
 
 	@Bean
 	fun jwtDecoder(): ReactiveJwtDecoder {
-		return NimbusReactiveJwtDecoder.withPublicKey(publicKey).build()
+		return NimbusReactiveJwtDecoder
+			.withJwkSetUri(jwkSetUri)
+			.build()
 	}
 
 	@Bean
