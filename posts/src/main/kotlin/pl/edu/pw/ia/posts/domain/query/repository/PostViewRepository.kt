@@ -16,5 +16,5 @@ interface PostViewRepository {
 
 	fun findByContentAndThreadId(content: String, threadId: UUID, pageable: Pageable): Page<PostView>
 
-	fun delete(threadId: UUID)
+	fun delete(postId: UUID)
 }
