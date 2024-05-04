@@ -19,7 +19,7 @@ val axonVersion = "4.9.4"
 val springDocVersion = "2.5.0"
 
 dependencies {
-	implementation("pl.edu.pw.ia:ersms-shared:6ef7b70")
+	implementation("pl.edu.pw.ia:ersms-shared:merge-please-work")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
