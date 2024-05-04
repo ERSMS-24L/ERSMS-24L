@@ -1,6 +1,7 @@
 package pl.edu.pw.ia.posts.infrastructure.query.repository
 
 import java.util.UUID
+import kotlin.streams.asSequence
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -34,8 +35,8 @@ class PostViewRepositoryImpl(
 			.map { it.toDomain() }
 			.collectList()
 			.block() ?: emptyList()
-		val countViews = repository.countByThreadId(threadId.toString()).block()
-		return PageImpl(postViews, pageable, countViews ?: 0)
+		val countViews = repository.countByThreadId(threadId.toString()).block() ?: 0
+		return PageImpl(postViews, pageable, countViews)
 	}
 
 	override fun findByContent(content: String, pageable: Pageable): Page<PostView> {
@@ -43,16 +44,28 @@ class PostViewRepositoryImpl(
 			.map { it.toDomain() }
 			.collectList()
 			.block() ?: emptyList()
-		val countViews = repository.countByContentIsContainingIgnoreCase(content).block()
-		return PageImpl(postViews, pageable, countViews ?: 0)
+		val countViews = repository.countByContentIsContainingIgnoreCase(content).block() ?: 0
+		return PageImpl(postViews, pageable, countViews)
 	}
 
 	override fun findByContentAndThreadId(content: String, threadId: UUID, pageable: Pageable): Page<PostView> {
-		val postViews = repository.findByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString(), pageable)
+		val postViews = repository.findByContentIsContainingIgnoreCaseAndThreadId(
+			content,
+			threadId.toString(),
+			pageable
+		)
 			.map { it.toDomain() }
 			.collectList()
 			.block() ?: emptyList()
-		val countViews = repository.countByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString()).block()
-		return PageImpl(postViews, pageable, countViews ?: 0)
+		val countViews =
+			repository.countByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString()).block() ?: 0
+		return PageImpl(postViews, pageable, countViews)
+	}
+
+	override fun findAllByAccountId(accountId: UUID): Sequence<PostView> {
+		return repository.findAllByAccountId(accountId.toString())
+			.map { it.toDomain() }
+			.toStream()
+			.asSequence()
 	}
 }
