@@ -33,26 +33,26 @@ class PostViewRepositoryImpl(
 		val postViews = repository.findByThreadId(threadId.toString(), pageable)
 			.map { it.toDomain() }
 			.collectList()
-			.block()
+			.block() ?: emptyList()
 		val countViews = repository.countByThreadId(threadId.toString()).block()
-		return PageImpl(postViews ?: emptyList(), pageable, countViews ?: 0)
+		return PageImpl(postViews, pageable, countViews ?: 0)
 	}
 
 	override fun findByContent(content: String, pageable: Pageable): Page<PostView> {
 		val postViews = repository.findByContentIsContainingIgnoreCase(content, pageable)
 			.map { it.toDomain() }
 			.collectList()
-			.block()
+			.block() ?: emptyList()
 		val countViews = repository.countByContentIsContainingIgnoreCase(content).block()
-		return PageImpl(postViews ?: emptyList(), pageable, countViews ?: 0)
+		return PageImpl(postViews, pageable, countViews ?: 0)
 	}
 
 	override fun findByContentAndThreadId(content: String, threadId: UUID, pageable: Pageable): Page<PostView> {
 		val postViews = repository.findByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString(), pageable)
 			.map { it.toDomain() }
 			.collectList()
-			.block()
+			.block() ?: emptyList()
 		val countViews = repository.countByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString()).block()
-		return PageImpl(postViews ?: emptyList(), pageable, countViews ?: 0)
+		return PageImpl(postViews, pageable, countViews ?: 0)
 	}
 }
