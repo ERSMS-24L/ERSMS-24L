@@ -7,12 +7,23 @@ data class FindPostByIdQuery(
 	val postId: UUID,
 )
 
-data class FindVoteByAccountAndPostIdsQuery(
-	val postId: UUID,
-	val accountId: UUID,
-)
-
 data class FindPostsByThreadIdQuery(
 	val threadId: UUID,
 	val pageable: Pageable,
+)
+
+data class FindPostsByContentQuery(
+	val content: String,
+	val pageable: Pageable,
+)
+
+data class FindPostsByContentAndThreadIdQuery(
+	val content: String,
+	val threadId: UUID,
+	val pageable: Pageable,
+)
+
+data class FindVoteByAccountAndPostIdsQuery(
+	val postId: UUID,
+	val accountId: UUID,
 )
