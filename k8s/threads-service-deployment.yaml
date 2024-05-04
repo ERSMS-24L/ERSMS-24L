@@ -51,6 +51,8 @@ spec:
               value: "mongodb://root:root@mongodb:27017/threads?authSource=admin"
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
               value: keycloak:8888/realms/ersms
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI
+              value: keycloak:8888/realms/ersms/protocol/openid-connect/certs
           ports:
             - containerPort: 8083
       restartPolicy: Always
