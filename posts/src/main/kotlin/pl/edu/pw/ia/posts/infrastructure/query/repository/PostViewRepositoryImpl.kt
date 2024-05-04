@@ -43,7 +43,7 @@ class PostViewRepositoryImpl(
 			.map { it.toDomain() }
 			.collectList()
 			.block()
-		val countViews = repository.countByContentIsContainingIgnoreCase(content, pageable).block()
+		val countViews = repository.countByContentIsContainingIgnoreCase(content).block()
 		return PageImpl(postViews ?: emptyList(), pageable, countViews ?: 0)
 	}
 
@@ -52,7 +52,7 @@ class PostViewRepositoryImpl(
 			.map { it.toDomain() }
 			.collectList()
 			.block()
-		val countViews = repository.countByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString(), pageable).block()
+		val countViews = repository.countByContentIsContainingIgnoreCaseAndThreadId(content, threadId.toString()).block()
 		return PageImpl(postViews ?: emptyList(), pageable, countViews ?: 0)
 	}
 }
