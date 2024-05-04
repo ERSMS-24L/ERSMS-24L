@@ -17,4 +17,6 @@ interface PostViewRepository {
 	fun findByContentAndThreadId(content: String, threadId: UUID, pageable: Pageable): Page<PostView>
 
 	fun delete(postId: UUID)
+
+	fun findAllByAccountId(accountId: UUID): Sequence<PostView>
 }

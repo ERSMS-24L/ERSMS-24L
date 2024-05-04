@@ -20,4 +20,6 @@ interface SpringPostViewEntityRepository : ReactiveMongoRepository<PostViewEntit
 	fun findByContentIsContainingIgnoreCaseAndThreadId(content: String, threadId: String, pageable: Pageable): Flux<PostViewEntity>
 
 	fun countByContentIsContainingIgnoreCaseAndThreadId(content: String, threadId: String): Mono<Long>
+
+	fun findAllByAccountId(accountId: String): Flux<PostViewEntity>
 }
