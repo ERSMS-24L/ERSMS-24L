@@ -5,11 +5,16 @@ import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.queryhandling.QueryHandler
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
+import pl.edu.pw.ia.posts.domain.command.aggregate.Post
 import pl.edu.pw.ia.posts.domain.query.repository.PostViewRepository
+import pl.edu.pw.ia.shared.domain.event.AccountUpdatedEvent
 import pl.edu.pw.ia.shared.domain.event.PostCreatedEvent
 import pl.edu.pw.ia.shared.domain.event.PostDeletedEvent
 import pl.edu.pw.ia.shared.domain.event.PostUpdatedEvent
+import pl.edu.pw.ia.shared.domain.event.VoteCreatedEvent
+import pl.edu.pw.ia.shared.domain.event.VoteUpdatedEvent
 import pl.edu.pw.ia.shared.domain.exception.PostNotFoundException
+import pl.edu.pw.ia.shared.domain.model.VoteType
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindPostByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindPostsByContentAndThreadIdQuery
@@ -50,6 +55,48 @@ class PostProjector(
 	@EventHandler
 	fun on(event: PostDeletedEvent) {
 		repository.delete(event.postId)
+	}
+
+	@EventHandler
+	fun on(event: AccountUpdatedEvent) {
+		//TODO: Handle username change
+	}
+
+	@EventHandler
+	fun on(event: VoteCreatedEvent) {
+		val view = repository.findById(event.postId) ?: throw PostNotFoundException(event.postId)
+		val newVotes = when (event.vote) {
+			VoteType.UP_VOTE -> view.votes + 1
+			VoteType.DOWN_VOTE -> view.votes - 1
+			else -> view.votes
+		}
+		repository.save(view.copy(votes = newVotes))
+	}
+
+	@EventHandler
+	fun on(event: VoteUpdatedEvent) {
+		val view = repository.findById(event.postId) ?: throw PostNotFoundException(event.postId)
+		val newVotes = when (event.previousVote) {
+			VoteType.DOWN_VOTE ->
+				when (event.vote) {
+					VoteType.UP_VOTE -> view.votes + 2
+					VoteType.NO_VOTE -> view.votes + 1
+					else -> view.votes
+				}
+			VoteType.UP_VOTE ->
+				when (event.vote) {
+					VoteType.DOWN_VOTE -> view.votes - 2
+					VoteType.NO_VOTE -> view.votes - 1
+					else -> view.votes
+				}
+			VoteType.NO_VOTE ->
+				when (event.vote) {
+					VoteType.UP_VOTE -> view.votes + 1
+					VoteType.DOWN_VOTE -> view.votes - 1
+					else -> view.votes
+				}
+		}
+		repository.save(view.copy(votes = newVotes))
 	}
 
 	@QueryHandler
