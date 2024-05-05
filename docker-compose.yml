@@ -27,6 +27,7 @@ services:
       - '8080:8080'
     environment:
       - SPRING_PROFILES_ACTIVE=docker, disableSecurity
+      - DOCKER_GATEWAY_HOST
 
   accounts-service:
     image: ghcr.io/ersms-24l/ersms-24l/accounts:docker-latest
