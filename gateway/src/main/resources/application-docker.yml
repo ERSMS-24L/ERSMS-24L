@@ -44,4 +44,4 @@ spring:
           uri: http://frontend:8084
           predicates:
             - Path=/**
-            - NotPath=/swagger,/swagger/**,/webjars/**
+            - NotPath=/swagger,/swagger/**,/webjars/**,/actuator/**
