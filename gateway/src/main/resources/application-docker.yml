@@ -40,3 +40,8 @@ spring:
             - Path=/frontend-dev/**
           filters:
             - StripPrefix=1
+        - id: frontend
+          uri: http://frontend:8084
+          predicates:
+            - Path=/**
+            - NotPath=/swagger,/swagger/**,/webjars/**
