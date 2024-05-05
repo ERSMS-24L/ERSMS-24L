@@ -74,6 +74,12 @@ services:
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=keycloak-service:8080/realms/ersms/protocol/openid-connect/certs
       - SPRING_PROFILES_ACTIVE=docker
 
+  frontend:
+    image: ghcr.io/ersms-24l/ersms-24l/frontend:latest
+    pull_policy: always
+    ports:
+      - '8084:8084'
+
   keycloak-service:
     image: quay.io/keycloak/keycloak:24.0.3
     ports:
