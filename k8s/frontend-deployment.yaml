@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: frontend
+  name: frontend
+  namespace: ersms-forum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - image: ghcr.io/ersms-24l/ersms-24l/frontend:latest
+          name: frontend
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              port: 8084
+              path: /health
+            initialDelaySeconds: 90
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8084
+              path: /health
+            initialDelaySeconds: 15
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+          resources:
+            requests:
+              cpu: 125m
+              memory: 250Mi
+          env:
+            - name: TODO
+              value: kubernetes
+          ports:
+            - containerPort: 8084
+      restartPolicy: Always
+status: {}
