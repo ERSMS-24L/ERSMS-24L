@@ -35,7 +35,7 @@ spring:
           filters:
             - StripPrefix=1
         - id: frontend-dev
-          uri: http://${DOCKER_GATEWAY_HOST:host.docker.internal}:8084
+          uri: http://${DOCKER_GATEWAY_HOST:host.docker.internal}:8085
           predicates:
             - Path=/frontend-dev/**
           filters:
