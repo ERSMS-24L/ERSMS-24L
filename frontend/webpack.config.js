@@ -2,6 +2,8 @@
 
 const path = require('path')
 const autoprefixer = require('autoprefixer')
+
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -17,7 +19,8 @@ module.exports = {
     hot: true
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: './src/index.html' })
+    new FaviconsWebpackPlugin("./src/img/icon.svg"),
+    new HtmlWebpackPlugin({ template: './src/index.html' }),
   ],
   module: {
     rules: [
