@@ -34,11 +34,7 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
 @import "bootstrap/scss/functions";
 
 // Customize some defaults
-$body-color: #333;
-$body-bg: #fff;
-$border-radius: .4rem;
 $primary: #e08524;
-$success: #7952b3;
 
 // Required
 @import "bootstrap/scss/variables";
@@ -56,7 +52,7 @@ $success: #7952b3;
 // @import "bootstrap/scss/tables";
 // @import "bootstrap/scss/forms";
 @import "bootstrap/scss/buttons";
-@import "bootstrap/scss/transitions";
+// @import "bootstrap/scss/transitions";
 @import "bootstrap/scss/dropdown";
 // @import "bootstrap/scss/button-group";
 // @import "bootstrap/scss/nav";
@@ -69,14 +65,14 @@ $success: #7952b3;
 // @import "bootstrap/scss/alert";
 // @import "bootstrap/scss/progress";
 // @import "bootstrap/scss/list-group";
-@import "bootstrap/scss/close";
+// @import "bootstrap/scss/close";
 // @import "bootstrap/scss/toasts";
-@import "bootstrap/scss/modal"; // Requires transitions
+// @import "bootstrap/scss/modal"; // Requires transitions
 // @import "bootstrap/scss/tooltip";
-@import "bootstrap/scss/popover";
+// @import "bootstrap/scss/popover";
 // @import "bootstrap/scss/carousel";
 // @import "bootstrap/scss/spinners";
-@import "bootstrap/scss/offcanvas"; // Requires transitions
+// @import "bootstrap/scss/offcanvas"; // Requires transitions
 // @import "bootstrap/scss/placeholders";
 
 // Helpers
@@ -89,9 +85,3 @@ $success: #7952b3;
 //
 // Custom styles
 //
-
-@import "icon-list";
-
-body {
-  padding: 1.5rem;
-}
