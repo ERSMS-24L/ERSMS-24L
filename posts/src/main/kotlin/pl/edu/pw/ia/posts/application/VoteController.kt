@@ -13,6 +13,8 @@ import org.springframework.http.MediaType
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.axonframework.extensions.reactor.queryhandling.gateway.ReactorQueryGateway
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -21,6 +23,9 @@ import pl.edu.pw.ia.posts.application.model.CreateVoteRequest
 import pl.edu.pw.ia.posts.application.model.UpdateVoteRequest
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
+import pl.edu.pw.ia.shared.domain.query.FindVoteByAccountAndPostIdsQuery
+import pl.edu.pw.ia.shared.domain.view.VoteView
+import pl.edu.pw.ia.shared.security.SecurityContext
 import reactor.core.publisher.Mono
 
 @Tag(name = "Votes")
@@ -49,14 +54,25 @@ interface VoteController {
 )
 class VoteControllerImpl(
 	private val reactorCommandGateway: ReactorCommandGateway,
+	private val reactorQueryGateway: ReactorQueryGateway
 ) : VoteController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	override fun createVote(@RequestBody request: CreateVoteRequest): Mono<IdResponse> {
-		val command = request.toCommand()
-		return reactorCommandGateway.send<UUID>(command)
-			.map { IdResponse(id = it) }
+		return reactorQueryGateway.query(
+			FindVoteByAccountAndPostIdsQuery(request.postId, SecurityContext.getAccountId()),
+			ResponseTypes.instanceOf(VoteView::class.java)
+		).flatMap { voteView ->
+			val updateRequest = UpdateVoteRequest(voteView.voteId, request.postId, request.vote)
+			updateVote(updateRequest)
+		}.switchIfEmpty(
+			Mono.defer {
+				val command = request.toCommand()
+				reactorCommandGateway.send<UUID>(command)
+					.map { IdResponse(id = it) }
+			}
+		)
 	}
 
 	@PutMapping
