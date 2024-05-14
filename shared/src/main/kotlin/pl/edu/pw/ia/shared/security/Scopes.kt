@@ -5,6 +5,7 @@ object Scopes {
 	val USER = UserScopes
 	val THREAD = ThreadScopes
 	val POST = PostScopes
+	val VOTE = VoteScopes
 
 	private const val SCOPE = "SCOPE"
 
@@ -27,5 +28,12 @@ object Scopes {
 
 		const val READ = "${SCOPE}_read:${POSTS}"
 		const val WRITE = "${SCOPE}_write:${POSTS}"
+	}
+
+	object VoteScopes {
+		private const val VOTES = "votes"
+
+		const val READ = "${SCOPE}_read:${VOTES}"
+		const val WRITE = "${SCOPE}_write:${VOTES}"
 	}
 }
