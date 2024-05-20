@@ -17,4 +17,4 @@ class ThreadNotFoundException(threadId: UUID) : NotFoundException("Could not fin
 
 class PostNotFoundException(postId: UUID) : NotFoundException("Could not find post with id: $postId")
 
-class VoteNotFoundException(voteId: UUID) : NotFoundException("Could not find vote with id: $voteId")
+class VoteNotFoundException(postId: UUID, accountId: UUID) : NotFoundException("Could not find vote with post id: $postId and account id: $accountId")

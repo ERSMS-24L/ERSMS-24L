@@ -2,6 +2,7 @@ package pl.edu.pw.ia.shared.domain.view
 
 import java.time.Instant
 import java.util.UUID
+import pl.edu.pw.ia.shared.domain.model.VoteType
 
 data class PostView(
 	val postId: UUID,
@@ -17,4 +18,5 @@ data class VoteView(
 	val voteId: UUID,
 	val postId: UUID,
 	val accountId: UUID,
+	val vote: VoteType,
 )
