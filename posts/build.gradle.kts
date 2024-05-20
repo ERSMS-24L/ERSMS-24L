@@ -49,7 +49,7 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.hibernate:hibernate-validator:8.0.1.Final")
 
-	implementation("io.micrometer:micrometer-registry-prometheus:1.12.6")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.13.0")
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
