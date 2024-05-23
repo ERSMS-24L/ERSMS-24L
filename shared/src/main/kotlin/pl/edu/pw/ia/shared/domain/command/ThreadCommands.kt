@@ -1,6 +1,5 @@
 package pl.edu.pw.ia.shared.domain.command
 
-import io.swagger.v3.oas.annotations.tags.Tag
 import org.axonframework.modelling.command.TargetAggregateIdentifier
 import java.util.UUID
 
