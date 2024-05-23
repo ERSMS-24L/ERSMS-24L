@@ -38,6 +38,7 @@ internal class Moderator {
 		AggregateLifecycle.apply(
 			ModeratorRemovedEvent(
 				moderatorId = command.moderatorId,
+				threadId = threadId,
 			)
 		)
 	}

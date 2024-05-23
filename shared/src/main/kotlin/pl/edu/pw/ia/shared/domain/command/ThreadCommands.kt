@@ -28,7 +28,8 @@ data class AddModeratorCommand(
 )
 
 data class RemoveModeratorCommand(
-	@TargetAggregateIdentifier val moderatorId: UUID
+	@TargetAggregateIdentifier val moderatorId: UUID,
+	val accountId: UUID
 )
 
 data class BanAccountCommand(

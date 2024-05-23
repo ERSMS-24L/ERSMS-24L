@@ -37,6 +37,7 @@ data class ModeratorAddedEvent(
 @Revision("1.0")
 data class ModeratorRemovedEvent(
 	val moderatorId: UUID,
+	val threadId: UUID
 )
 
 @Revision("1.0")
