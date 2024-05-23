@@ -21,16 +21,10 @@ data class AddModeratorRequest(
 
 data class RemoveModeratorRequest(
 
-	val threadId: UUID,
-	val subjectAccountId: UUID,
-	val accountId: UUID,
 	val moderatorId: UUID,
 ) {
 	fun toCommand(): RemoveModeratorCommand =
 		RemoveModeratorCommand(
-			threadId = threadId,
-			subjectAccountId = subjectAccountId,
 			moderatorId = moderatorId,
-			accountId = accountId
 		)
 }
