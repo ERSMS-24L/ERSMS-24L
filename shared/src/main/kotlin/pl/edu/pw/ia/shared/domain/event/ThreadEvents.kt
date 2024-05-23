@@ -29,12 +29,14 @@ data class ThreadDeleteEvent(
 
 @Revision("1.0")
 data class ModeratorAddedEvent(
+	val moderatorId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
 )
 
 @Revision("1.0")
 data class ModeratorRemovedEvent(
+	val moderatorId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
 )
