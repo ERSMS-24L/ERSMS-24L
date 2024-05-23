@@ -26,5 +26,6 @@ data class RemoveModeratorRequest(
 	fun toCommand(): RemoveModeratorCommand =
 		RemoveModeratorCommand(
 			moderatorId = moderatorId,
+			accountId = SecurityContext.getAccountId(),
 		)
 }
