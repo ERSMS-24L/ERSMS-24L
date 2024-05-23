@@ -22,7 +22,7 @@ internal class Moderator {
 
 	@CommandHandler
 	constructor(command: AddModeratorCommand) {
-		// TODO: Check if command.accountId is moderator in command.threadId
+		// TODO: Check if command.accountId is author of command.threadId
 		AggregateLifecycle.apply(
 			ModeratorAddedEvent(
 				moderatorId = command.moderatorId,
@@ -34,13 +34,10 @@ internal class Moderator {
 
 	@CommandHandler
 	fun handle(command: RemoveModeratorCommand) {
-		// TODO: Check if command.accountId is moderator in command.threadId
-		// TODO: Should we allow moderator to delete himself from moderators?
+		// TODO: Check if command.accountId is author of command.threadId
 		AggregateLifecycle.apply(
 			ModeratorRemovedEvent(
 				moderatorId = command.moderatorId,
-				threadId = command.threadId,
-				accountId = command.subjectAccountId,
 			)
 		)
 	}
