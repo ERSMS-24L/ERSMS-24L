@@ -30,7 +30,7 @@ class ModeratorViewRepositoryImpl(
 	override fun findByAccountIdAndThreadId(accountId: UUID, threadId: UUID): ModeratorView? {
 		return repository.findByAccountIdAndThreadId(accountId.toString(), threadId.toString())
 			.map { it.toDomain() }
-			.blockFirst()
+			.block()
 	}
 
 	override fun findByThreadId(threadId: UUID, pageable: Pageable): Page<ModeratorView> {

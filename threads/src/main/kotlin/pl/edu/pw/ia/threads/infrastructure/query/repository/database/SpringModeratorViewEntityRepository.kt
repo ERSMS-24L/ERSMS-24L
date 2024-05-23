@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 
 @Repository
 interface SpringModeratorViewEntityRepository : ReactiveMongoRepository<ModeratorViewEntity, String> {
-	fun findByAccountIdAndThreadId(accountId: String, threadId: String): Flux<ModeratorViewEntity>
+	fun findByAccountIdAndThreadId(accountId: String, threadId: String): Mono<ModeratorViewEntity>
 	fun findByThreadId(threadId: String, pageable: Pageable): Flux<ModeratorViewEntity>
 	fun countByThreadId(threadId: String): Mono<Long>
 }
