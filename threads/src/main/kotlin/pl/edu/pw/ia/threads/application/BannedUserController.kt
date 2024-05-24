@@ -52,7 +52,7 @@ class BannedUserControllerImpl(
 ) : BannedUserController {
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.WRITE}')")
 	override fun banUser(request: BanUserRequest): Mono<IdResponse> {
 		val command = request.toCommand()
@@ -60,7 +60,7 @@ class BannedUserControllerImpl(
 	}
 
 	@PostMapping
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.WRITE}')")
 	override fun unBanUser(request: UnbanUserRequest): Mono<IdResponse> {
 		val command = request.toCommand()
