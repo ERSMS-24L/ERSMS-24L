@@ -17,3 +17,9 @@ data class ModeratorView(
 	val threadId: UUID,
 	val accountId: UUID,
 )
+
+data class BannedUserView(
+	val bannedUserId: UUID,
+	val threadId: UUID,
+	val accountId: UUID,
+)
