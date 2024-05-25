@@ -57,7 +57,7 @@ class BannedUserViewControllerImpl(
 	private val reactorQueryGateway: ReactorQueryGateway
 ) : BannedUserViewController {
 
-	@GetMapping
+	@GetMapping(params = ["accountId", "threadId"])
 	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
 	override fun findBannedUserByAccountIdAndThreadId(accountId: UUID, threadId: UUID): Mono<BannedUserView> {
 		return reactorQueryGateway.query(
@@ -66,7 +66,7 @@ class BannedUserViewControllerImpl(
 		)
 	}
 
-	@GetMapping
+	@GetMapping(params = ["threadId"])
 	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
 	override fun findBannedUserByThreadId(threadId: UUID, pageable: Pageable): Mono<Page<BannedUserView>> {
 		return reactorQueryGateway.query(
