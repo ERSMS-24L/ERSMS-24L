@@ -34,3 +34,14 @@ spring:
             - Path=/threads/**
           filters:
             - StripPrefix=1
+        - id: frontend-dev
+          uri: http://${DOCKER_GATEWAY_HOST:host.docker.internal}:8085
+          predicates:
+            - Path=/frontend-dev/**
+          filters:
+            - StripPrefix=1
+        - id: frontend
+          uri: http://frontend:8084
+          predicates:
+            - Path=/**
+            - NotPath=/swagger,/swagger/**,/webjars/**,/actuator/**

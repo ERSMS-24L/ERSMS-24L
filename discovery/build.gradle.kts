@@ -1,7 +1,7 @@
 plugins {
 	id("org.springframework.boot") version "3.2.5"
-	id("io.spring.dependency-management") version "1.1.4"
-	kotlin("plugin.spring") version "1.9.23"
+	id("io.spring.dependency-management") version "1.1.5"
+	kotlin("plugin.spring") version "1.9.24"
 	id("pl.edu.pw.ia.convention")
 }
 
@@ -27,7 +27,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-	implementation("io.micrometer:micrometer-registry-prometheus:1.12.5")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.12.6")
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

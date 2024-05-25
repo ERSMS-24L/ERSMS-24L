@@ -29,18 +29,20 @@ data class ThreadDeleteEvent(
 
 @Revision("1.0")
 data class ModeratorAddedEvent(
+	val moderatorId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
 )
 
 @Revision("1.0")
 data class ModeratorRemovedEvent(
-	val threadId: UUID,
-	val accountId: UUID,
+	val moderatorId: UUID,
+	val threadId: UUID
 )
 
 @Revision("1.0")
 data class AccountBannedEvent(
+	val bannedUserId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
 	val createdAt: Instant,
@@ -48,6 +50,6 @@ data class AccountBannedEvent(
 
 @Revision("1.0")
 data class AccountUnbannedEvent(
+	val bannedUserId: UUID,
 	val threadId: UUID,
-	val accountId: UUID,
 )

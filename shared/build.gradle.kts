@@ -2,8 +2,8 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
 	id("org.springframework.boot") version "3.2.5"
-	id("io.spring.dependency-management") version "1.1.4"
-	kotlin("plugin.spring") version "1.9.23"
+	id("io.spring.dependency-management") version "1.1.5"
+	kotlin("plugin.spring") version "1.9.24"
 	id("pl.edu.pw.ia.library-convention")
 }
 
