@@ -38,8 +38,8 @@ spec:
                 command: ["sh", "-c", "sleep 10"]
           resources:
             requests:
-              cpu: 125m
-              memory: 250Mi
+              memory: "0.5Gi"
+              cpu: "0.5"
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes, disableSecurity
