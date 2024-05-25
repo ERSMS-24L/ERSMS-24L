@@ -38,7 +38,7 @@ interface BannedUserController {
 	fun banUser(request: BanUserRequest): Mono<IdResponse>
 
 	@Operation(description = "Unban user in thread")
-	@ApiResponse(responseCode = "201", description = "Ok.")
+	@ApiResponse(responseCode = "200", description = "Ok.")
 	fun unBanUser(request: UnbanUserRequest): Mono<IdResponse>
 }
 
@@ -61,7 +61,7 @@ class BannedUserControllerImpl(
 	}
 
 	@DeleteMapping
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.WRITE}')")
 	override fun unBanUser(request: UnbanUserRequest): Mono<IdResponse> {
 		val command = request.toCommand()
