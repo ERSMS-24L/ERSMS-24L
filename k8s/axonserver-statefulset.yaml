@@ -20,6 +20,8 @@ spec:
         - image: axoniq/axonserver:2023.2.0-jdk-17-dev
           name: axonserver
           env:
+            - name: FLYWAY_BASELINE_ON_MIGRATE
+              value: "true"
             - name: AXONIQ_AXONSERVER_DEVMODE_ENABLED
               value: "true"
             - name: AXONIQ_AXONSERVER_STANDALONE
@@ -50,8 +52,8 @@ spec:
             periodSeconds: 60
           resources:
             requests:
-              memory: "500Mi"
-              cpu: "250m"
+              memory: "1Gi"
+              cpu: "1"
       restartPolicy: Always
       volumes:
         - name: axonserver-data

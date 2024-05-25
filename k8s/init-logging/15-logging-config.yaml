@@ -16,9 +16,9 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 limits:
-                  memory: 2Gi
+                  memory: 0.5Gi
                 requests:
-                  memory: 2Gi
+                  memory: 0.5Gi
 eck-kibana:
   enabled: true
   spec:
@@ -85,6 +85,17 @@ eck-beats:
                 path: /var/lib/docker/containers
 eck-logstash:
   enabled: true
+  podTemplate:
+    spec:
+      containers:
+        - name: logtash
+          resources:
+            requests:
+              memory: 0.5Gi
+              cpu: 0.5
+            limits:
+              memory: 0.5Gi
+              cpu: 0.5
   # This is required to be able to set the logstash
   # output of beats in a consistent manner.
   fullnameOverride: "logstash-ls-beats"
