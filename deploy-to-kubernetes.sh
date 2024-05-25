@@ -2,6 +2,7 @@
 
 kubectl config get-contexts
 kubectl config use-context docker-desktop
+# use other context
 kubectl apply -f k8s/init-namespace/
 kubectl apply -f k8s/init-services/
 kubectl apply -f k8s/init-persistent-volumes/
@@ -9,6 +10,9 @@ kubectl apply -f k8s/
 
 kubectl get svc -n ersms-forum
 kubectl get pods -n ersms-forum
+
+kubectl port-forward svc/axonserver -n ersms-forum 8024:8024
+kubectl port-forward svc/mongodb -n ersms-forum 27017:27017
 
 # Logging
 helm repo add elastic https://helm.elastic.co
@@ -26,9 +30,12 @@ kubectl port-forward svc/eck-stack-eck-kibana-kb-http 5601:5601
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack \
-  --values ./k8s/init-monitoring-2/16-prometheus-values.yaml
+  --values ./k8s/init-monitoring/16-prometheus-values.yaml
 kubectl port-forward svc/prometheus-stack-kube-prom-prometheus 9090:9090
 kubectl port-forward svc/prometheus-stack-grafana 8080:80
+# spring dashboard: 19004
+ kubectl scale deployment prometheus-stack-grafana --replicas=1
+ kubectl scale deployment prometheus-stack-grafana --replicas=1
 
 # Verification
 kubectl get svc
