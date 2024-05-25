@@ -33,13 +33,13 @@ data class RemoveModeratorCommand(
 )
 
 data class BanAccountCommand(
+	@TargetAggregateIdentifier val bannedUserId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
 	val subjectAccountId: UUID,
 )
 
 data class UnbanAccountCommand(
-	val threadId: UUID,
+	@TargetAggregateIdentifier val bannedUserId: UUID,
 	val accountId: UUID,
-	val subjectAccountId: UUID,
 )

@@ -42,6 +42,7 @@ data class ModeratorRemovedEvent(
 
 @Revision("1.0")
 data class AccountBannedEvent(
+	val bannedUserId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
 	val createdAt: Instant,
@@ -49,6 +50,6 @@ data class AccountBannedEvent(
 
 @Revision("1.0")
 data class AccountUnbannedEvent(
+	val bannedUserId: UUID,
 	val threadId: UUID,
-	val accountId: UUID,
 )
