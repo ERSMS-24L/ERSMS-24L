@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -59,7 +60,7 @@ class BannedUserControllerImpl(
 		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
 	}
 
-	@PostMapping
+	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.WRITE}')")
 	override fun unBanUser(request: UnbanUserRequest): Mono<IdResponse> {
