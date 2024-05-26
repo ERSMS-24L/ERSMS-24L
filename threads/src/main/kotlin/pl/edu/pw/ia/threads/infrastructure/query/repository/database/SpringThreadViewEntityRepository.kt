@@ -16,4 +16,5 @@ interface SpringThreadViewEntityRepository : ReactiveMongoRepository<ThreadViewE
     fun countByTitleIsContainingIgnoreCase(title: String) : Mono<Long>
     fun findByLastModifiedGreaterThanEqual(lastModified: Instant, pageable: Pageable) : Flux<ThreadViewEntity>
     fun countByLastModifiedGreaterThanEqual(lastModified: Instant) : Mono<Long>
+    fun findByAccountId(accountId: String): Flux<ThreadViewEntity>
 }
