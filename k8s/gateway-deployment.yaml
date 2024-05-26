@@ -40,8 +40,8 @@ spec:
                 command: ["sh", "-c", "sleep 10"]
           resources:
             requests:
-              memory: "0.5Gi"
-              cpu: "0.5"
+              cpu: 125m
+              memory: 250Mi
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes
