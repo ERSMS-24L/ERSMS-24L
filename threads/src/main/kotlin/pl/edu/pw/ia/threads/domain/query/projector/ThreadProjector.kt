@@ -5,6 +5,9 @@ import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.queryhandling.QueryHandler
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
+import pl.edu.pw.ia.shared.domain.event.AccountUpdatedEvent
+import pl.edu.pw.ia.shared.domain.event.PostCreatedEvent
+import pl.edu.pw.ia.shared.domain.event.PostUpdatedEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadCreatedEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadDeleteEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadUpdatedEvent
@@ -21,7 +24,7 @@ import pl.edu.pw.ia.threads.domain.query.repository.ThreadViewRepository
 @Service
 class ThreadProjector(
 	private val repository: ThreadViewRepository,
-	private val queryGateway: QueryGateway
+	private val queryGateway: QueryGateway,
 ) {
 	// TODO: Handle for posts, username change, etc
 	@EventHandler
@@ -50,6 +53,23 @@ class ThreadProjector(
 	@EventHandler
 	fun on(event: ThreadDeleteEvent) {
 		repository.delete(event.threadId)
+	}
+
+	@EventHandler
+	fun on(event: AccountUpdatedEvent) {
+		val views = repository.findByAccountId(event.accountId)
+			.map { it.copy(username = event.name) }
+			.subscribe {repository.save(it)}
+	}
+
+	@EventHandler
+	fun on(event: PostUpdatedEvent) {
+
+	}
+
+	@EventHandler
+	fun on(event: PostCreatedEvent) {
+
 	}
 
 	@QueryHandler
