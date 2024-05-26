@@ -50,6 +50,7 @@ internal class Post {
 		AggregateLifecycle.apply(
 			PostUpdatedEvent(
 				accountId = command.accountId,
+				threadId = threadId,
 				content = command.content,
 				postId = command.postId,
 			)
