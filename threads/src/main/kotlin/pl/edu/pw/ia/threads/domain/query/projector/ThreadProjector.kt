@@ -67,8 +67,10 @@ class ThreadProjector(
 
 	@EventHandler
 	fun on(event: PostCreatedEvent) {
-		val view = repository.findByIdAndPostIdIsNull(event.threadId) ?: throw ThreadNotFoundException(event.threadId)
-		repository.save(view.copy(postId = event.postId, post = event.content))
+		val view = repository.findByIdAndPostIdIsNull(event.threadId)
+		if(view != null) {
+			repository.save(view.copy(postId = event.postId, post = event.content))
+		}
 	}
 
 	@EventHandler
