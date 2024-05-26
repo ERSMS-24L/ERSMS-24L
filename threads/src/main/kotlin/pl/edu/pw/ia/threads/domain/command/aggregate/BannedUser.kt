@@ -43,11 +43,7 @@ internal class BannedUser {
 			val moderatorView = queryGateway.query(
 				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
 				ModeratorView::class.java
-			).join()
-
-			if (moderatorView == null) {
-				throw ModeratorNotFoundException(threadId, command.accountId)
-			}
+			).join() ?: throw ModeratorNotFoundException(command.threadId, command.accountId)
 		}
 		AggregateLifecycle.apply(
 			AccountBannedEvent(
@@ -70,11 +66,7 @@ internal class BannedUser {
 			val moderatorView = queryGateway.query(
 				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
 				ModeratorView::class.java
-			).join()
-
-			if (moderatorView == null) {
-				throw ModeratorNotFoundException(threadId, command.accountId)
-			}
+			).join() ?: throw ModeratorNotFoundException(threadId, command.accountId)
 		}
 
 		AggregateLifecycle.apply(
