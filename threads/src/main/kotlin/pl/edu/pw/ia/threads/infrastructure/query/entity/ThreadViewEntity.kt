@@ -13,7 +13,7 @@ data class ThreadViewEntity(
     val title: String,
     val accountId: String,
     val postId: String,
-    val post: String,
+    val post: String?,
     val username: String,
     val lastModified: Instant
 ) {
