@@ -9,7 +9,7 @@ data class ThreadView(
 	val postId: UUID?,
 	val username: String,
 	val title: String,
-	val post: String,
+	val post: String?,
 	val lastModified: Instant
 )
 

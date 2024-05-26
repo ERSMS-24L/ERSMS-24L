@@ -40,7 +40,7 @@ class ThreadProjector(
 			postId = null,
 			title = event.title,
 			accountId = event.accountId,
-			post = "",
+			post = null,
 			username = username,
 			lastModified = event.createdAt
 		)
