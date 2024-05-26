@@ -25,6 +25,8 @@ kubectl apply -f k8s/init-logging/14-filebeat-config.yaml
 helm upgrade --install eck-stack elastic/eck-stack --values k8s/init-logging/15-logging-config.yaml
 kubectl get secret elasticsearch-es-elastic-user -o=jsonpath='{.data.elastic}' | base64 --decode; echo
 # user: elastic
+kubectl port-forward svc/elasticsearch-es-http 9200:9200
+# address: https://localhost:9200/login
 kubectl port-forward svc/eck-stack-eck-kibana-kb-http 5601:5601
 # address: https://localhost:5601/login
 # Hamburger -> Management -> Kibana -> Data Views ->
@@ -38,8 +40,8 @@ helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-sta
 kubectl port-forward svc/prometheus-stack-kube-prom-prometheus 9090:9090
 kubectl port-forward svc/prometheus-stack-grafana 8080:80
 # spring dashboard: 19004
-kubectl scale deployment prometheus-stack-grafana --replicas=1
-kubectl scale deployment prometheus-stack-grafana --replicas=1
+#kubectl scale deployment prometheus-stack-grafana --replicas=1
+#kubectl scale deployment prometheus-stack-grafana --replicas=1
 
 # Verification
 kubectl get svc
