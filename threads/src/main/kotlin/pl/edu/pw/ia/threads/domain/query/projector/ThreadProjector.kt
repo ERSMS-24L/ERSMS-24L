@@ -60,7 +60,7 @@ class ThreadProjector(
 
 	@EventHandler
 	fun on(event: AccountUpdatedEvent) {
-		val views = repository.findByAccountId(event.accountId)
+		repository.findByAccountId(event.accountId)
 			.map { it.copy(username = event.name) }
 			.subscribe {repository.save(it)}
 	}
