@@ -21,6 +21,12 @@ eck-elasticsearch:
 eck-kibana:
   enabled: true
   spec:
+    resources:
+      limits:
+        memory: 500Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi
     count: 1
     elasticsearchRef:
       name: elasticsearch
