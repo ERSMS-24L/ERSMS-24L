@@ -3,6 +3,13 @@ spring:
   webflux:
     base-path: /posts
 
+#  ssl:
+#    bundle:
+#      pem:
+#        client:
+#          truststore:
+#            certificate: "classpath:client.crt"
+
 server:
   ssl:
     enabled: true
@@ -11,5 +18,6 @@ server:
     key-store-type: PKCS12
     key-password: secret
     key-store-password: secret
-    trust-store: classpath:client.jks
-    trust-store-password: secret
+    #    trust-store: classpath:client.jks
+    #    trust-store-password: secret
+    trust-certificate: classpath:client.pem
