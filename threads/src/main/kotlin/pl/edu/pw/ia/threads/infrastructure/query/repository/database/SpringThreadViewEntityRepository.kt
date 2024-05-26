@@ -17,4 +17,5 @@ interface SpringThreadViewEntityRepository : ReactiveMongoRepository<ThreadViewE
     fun findByLastModifiedGreaterThanEqual(lastModified: Instant, pageable: Pageable) : Flux<ThreadViewEntity>
     fun countByLastModifiedGreaterThanEqual(lastModified: Instant) : Mono<Long>
     fun findByAccountId(accountId: String): Flux<ThreadViewEntity>
+    fun findByThreadIdAndPostIdIsNull(threadId: String): Mono<ThreadViewEntity>
 }

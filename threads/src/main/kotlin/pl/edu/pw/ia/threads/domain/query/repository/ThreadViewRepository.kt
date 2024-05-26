@@ -21,5 +21,7 @@ interface ThreadViewRepository {
 
     fun findByAccountId(accountId: UUID): Flux<ThreadView>
 
+    fun findByIdAndPostIdIsNull(threadId: UUID): ThreadView?
+
     fun delete(threadId: UUID)
 }
