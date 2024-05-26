@@ -12,6 +12,7 @@ data class ThreadViewEntity(
     val threadId: String,
     val title: String,
     val accountId: String,
+    val postId: String,
     val post: String,
     val username: String,
     val lastModified: Instant
@@ -21,6 +22,7 @@ data class ThreadViewEntity(
         ThreadView(
             accountId = UUID.fromString(accountId),
             threadId = UUID.fromString(threadId),
+            postId = UUID.fromString(postId),
             post = post,
             title = title,
             username = username,
@@ -31,6 +33,7 @@ data class ThreadViewEntity(
         fun ThreadView.toEntity(): ThreadViewEntity =
             ThreadViewEntity(
                 threadId = threadId.toString(),
+                postId = postId.toString(),
                 title = title,
                 accountId = accountId.toString(),
                 post = post,
