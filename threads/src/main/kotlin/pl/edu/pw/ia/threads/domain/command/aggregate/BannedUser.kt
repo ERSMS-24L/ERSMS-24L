@@ -34,14 +34,21 @@ internal class BannedUser {
 
 	@CommandHandler
 	constructor(command: BanAccountCommand) {
-		val threadView = queryGateway.query(FindThreadByIdQuery(command.threadId), ThreadView::class.java).join()
-		if(command.accountId != threadView.accountId){
-			throw AccountIsNotOwnerException(command.accountId, threadView.accountId)
+		val threadView = queryGateway.query(
+			FindThreadByIdQuery(threadId),
+			ThreadView::class.java
+		).join()
+
+		if (command.accountId != threadView.accountId) {
+			val moderatorView = queryGateway.query(
+				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
+				ModeratorView::class.java
+			).join()
+
+			if (moderatorView == null) {
+				throw ModeratorNotFoundException(threadId, command.accountId)
+			}
 		}
-		val moderatorView = queryGateway.query(
-			FindModeratorByThreadAndAccountIdQuery(command.threadId, command.accountId),
-			ModeratorView::class.java
-		).join() ?: throw ModeratorNotFoundException(command.threadId, command.accountId)
 		AggregateLifecycle.apply(
 			AccountBannedEvent(
 				bannedUserId = command.bannedUserId,
@@ -54,14 +61,22 @@ internal class BannedUser {
 
 	@CommandHandler
 	fun handle(command: UnbanAccountCommand) {
-		val threadView = queryGateway.query(FindThreadByIdQuery(threadId), ThreadView::class.java).join()
-		if(command.accountId != threadView.accountId){
-			throw AccountIsNotOwnerException(command.accountId, threadView.accountId)
+		val threadView = queryGateway.query(
+			FindThreadByIdQuery(threadId),
+			ThreadView::class.java
+		).join()
+
+		if (command.accountId != threadView.accountId) {
+			val moderatorView = queryGateway.query(
+				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
+				ModeratorView::class.java
+			).join()
+
+			if (moderatorView == null) {
+				throw ModeratorNotFoundException(threadId, command.accountId)
+			}
 		}
-		val moderatorView = queryGateway.query(
-			FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
-			ModeratorView::class.java
-		).join() ?: throw ModeratorNotFoundException(threadId, command.accountId)
+
 		AggregateLifecycle.apply(
 			AccountUnbannedEvent(
 				bannedUserId = command.bannedUserId,
