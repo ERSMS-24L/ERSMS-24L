@@ -32,6 +32,10 @@ spring:
           predicates:
             - Path=/**
             - NotPath=/swagger,/swagger/**,/webjars/**,/actuator/**
+      httpclient:
+        ssl:
+          trusted-x509-certificates:
+            - client.pem
 
 #  ssl:
 #    bundle:
