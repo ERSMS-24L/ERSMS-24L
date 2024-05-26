@@ -13,11 +13,13 @@ import pl.edu.pw.ia.shared.domain.event.ThreadDeleteEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadUpdatedEvent
 import pl.edu.pw.ia.shared.domain.exception.ThreadNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindPostByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindRecentThreadsQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadsByAuthor
 import pl.edu.pw.ia.shared.domain.query.FindThreadsByTitleQuery
 import pl.edu.pw.ia.shared.domain.view.AccountView
+import pl.edu.pw.ia.shared.domain.view.PostView
 import pl.edu.pw.ia.shared.domain.view.ThreadView
 import pl.edu.pw.ia.threads.domain.query.repository.ThreadViewRepository
 
@@ -35,6 +37,7 @@ class ThreadProjector(
 		).get().name
 		val view = ThreadView(
 			threadId = event.threadId,
+			postId = null,
 			title = event.title,
 			accountId = event.accountId,
 			post = "",
@@ -63,13 +66,18 @@ class ThreadProjector(
 	}
 
 	@EventHandler
-	fun on(event: PostUpdatedEvent) {
-
+	fun on(event: PostCreatedEvent) {
+		val view = repository.findById(event.threadId) ?: throw ThreadNotFoundException(event.threadId)
+		repository.save(view.copy(postId = event.postId, post = event.content))
 	}
 
 	@EventHandler
-	fun on(event: PostCreatedEvent) {
-
+	fun on(event: PostUpdatedEvent) {
+		val postView = queryGateway.query(FindPostByIdQuery(event.postId), PostView::class.java).get()
+		val threadView = repository.findById(postView.threadId) ?: throw ThreadNotFoundException(postView.threadId)
+		if(postView.content != threadView.post) {
+			repository.save(threadView.copy(post = postView.content))
+		}
 	}
 
 	@QueryHandler
