@@ -72,4 +72,8 @@ class ThreadViewRepositoryImpl(
         return repository.findByThreadIdAndPostIdIsNull(threadId = threadId.toString()).map { it.toDomain() }.block()
     }
 
+    override fun findByIdAndPostId(threadId: UUID, postId: UUID): ThreadView? {
+        return repository.findByThreadIdAndPostId(threadId.toString(), postId.toString()).map { it.toDomain() }.block()
+    }
+
 }

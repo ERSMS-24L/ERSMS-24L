@@ -23,5 +23,7 @@ interface ThreadViewRepository {
 
     fun findByIdAndPostIdIsNull(threadId: UUID): ThreadView?
 
+    fun findByIdAndPostId(threadId: UUID, postId: UUID): ThreadView?
+
     fun delete(threadId: UUID)
 }

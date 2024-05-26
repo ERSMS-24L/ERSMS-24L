@@ -75,10 +75,9 @@ class ThreadProjector(
 
 	@EventHandler
 	fun on(event: PostUpdatedEvent) {
-		val postView = queryGateway.query(FindPostByIdQuery(event.postId), PostView::class.java).get()
-		val threadView = repository.findById(postView.threadId) ?: throw ThreadNotFoundException(postView.threadId)
-		if(postView.content != threadView.post) {
-			repository.save(threadView.copy(post = postView.content))
+		val threadView = repository.findByIdAndPostId(event.threadId, event.postId)
+		if(threadView != null && event.content != threadView.post) {
+			repository.save(threadView.copy(post = event.content))
 		}
 	}
 
