@@ -15,3 +15,5 @@ class AccountMismatchException(currentAccountId: UUID, ownerAccountId: UUID) :
 	ForbiddenException(
 		"Account with id $currentAccountId cannot modify resources of account with id: $ownerAccountId"
 	)
+
+class AccountIsNotOwnerException(accountId: UUID, ownerId: UUID) : ForbiddenException("Account with id $accountId is not an owner! Owner id: $ownerId")
