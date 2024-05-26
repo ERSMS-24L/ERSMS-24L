@@ -2372,13 +2372,13 @@ prometheusOperator:
 
       ## Resource limits & requests
       ##
-      resources: {}
-      # limits:
-      #   cpu: 200m
-      #   memory: 200Mi
-      # requests:
-      #   cpu: 100m
-      #   memory: 100Mi
+      resources:
+        limits:
+          cpu: 200m
+          memory: 200Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
 
       # Required for use in managed kubernetes clusters (such as AWS EKS) with custom CNI (such as calico),
       # because control-plane managed by AWS cannot communicate with pods' IP CIDR and admission webhooks are not working
@@ -2692,13 +2692,13 @@ prometheusOperator:
 
   ## Resource limits & requests
   ##
-  resources: {}
-  # limits:
-  #   cpu: 200m
-  #   memory: 200Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 100Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
 
   ## Operator Environment
   ##  env:
@@ -2782,13 +2782,13 @@ prometheusOperator:
     # controlledValues: RequestsAndLimits
 
     # Define the max allowed resources for the pod
-    maxAllowed: {}
-    # cpu: 200m
-    # memory: 100Mi
+    maxAllowed:
+      cpu: 200m
+      memory: 100Mi
     # Define the min allowed resources for the pod
-    minAllowed: {}
-    # cpu: 200m
-    # memory: 100Mi
+    minAllowed:
+      cpu: 200m
+      memory: 100Mi
 
     updatePolicy:
       # Specifies minimal number of replicas which need to be alive for VPA Updater to attempt pod eviction
@@ -2837,13 +2837,13 @@ prometheusOperator:
     enableProbe: false
 
     # resource config for prometheusConfigReloader
-    resources: {}
-      # requests:
-      #   cpu: 200m
-      #   memory: 50Mi
-      # limits:
-      #   cpu: 200m
-    #   memory: 50Mi
+    resources:
+      requests:
+        cpu: 200m
+        memory: 50Mi
+      limits:
+        cpu: 200m
+        memory: 50Mi
 
   ## Thanos side-car image when configured
   ##
@@ -4076,6 +4076,9 @@ prometheus:
         - port: "http"
           interval: 5s
           path: /actuator/prometheus
+          scheme: https
+          tlsConfig:
+            insecureSkipVerify: true
 
     - name: prometheus-stack-spring-boot-accounts
       selector:
@@ -4087,6 +4090,9 @@ prometheus:
         - port: "http"
           interval: 5s
           path: /accounts/actuator/prometheus
+          scheme: https
+          tlsConfig:
+            insecureSkipVerify: true
 
     - name: prometheus-stack-spring-boot-posts
       selector:
@@ -4098,6 +4104,9 @@ prometheus:
         - port: "http"
           interval: 5s
           path: /posts/actuator/prometheus
+          scheme: https
+          tlsConfig:
+            insecureSkipVerify: true
 
     - name: prometheus-stack-spring-boot-threads
       selector:
@@ -4109,6 +4118,9 @@ prometheus:
         - port: "http"
           interval: 5s
           path: /threads/actuator/prometheus
+          scheme: https
+          tlsConfig:
+            insecureSkipVerify: true
     ## Name of the ServiceMonitor to create
     ##
     # - name: ""
