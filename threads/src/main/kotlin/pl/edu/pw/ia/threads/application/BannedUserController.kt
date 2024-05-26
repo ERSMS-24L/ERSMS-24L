@@ -24,7 +24,7 @@ import pl.edu.pw.ia.threads.application.model.BanUserRequest
 import pl.edu.pw.ia.threads.application.model.UnbanUserRequest
 import reactor.core.publisher.Mono
 
-@Tag(name = "bannedUsers")
+@Tag(name = "BannedUsers")
 @ApiResponse(
 	responseCode = "500",
 	description = "Internal Server Error",
