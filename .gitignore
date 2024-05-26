@@ -12,6 +12,3 @@ out/
 .vscode/
 .history/
 *.vsix
-
-# Security
-*.pem
