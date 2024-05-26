@@ -25,13 +25,15 @@ spec:
             httpGet:
               port: 8080
               path: /actuator/health/liveness
-            initialDelaySeconds: 90
+              scheme: HTTPS
+            initialDelaySeconds: 240
             periodSeconds: 5
           readinessProbe:
             httpGet:
               port: 8080
               path: /actuator/health/readiness
-            initialDelaySeconds: 15
+              scheme: HTTPS
+            initialDelaySeconds: 20
           lifecycle:
             preStop:
               exec:
