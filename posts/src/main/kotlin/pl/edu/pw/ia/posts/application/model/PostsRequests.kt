@@ -2,9 +2,8 @@ package pl.edu.pw.ia.posts.application.model
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
-import org.hibernate.validator.constraints.Length
-import pl.edu.pw.ia.shared.security.SecurityContext
 import java.util.UUID
+import org.hibernate.validator.constraints.Length
 import pl.edu.pw.ia.shared.domain.command.CreatePostCommand
 import pl.edu.pw.ia.shared.domain.command.DeletePostCommand
 import pl.edu.pw.ia.shared.domain.command.UpdatePostCommand
@@ -18,10 +17,10 @@ data class PostCreateRequest(
 	@field:org.hibernate.validator.constraints.UUID(message = "Thread id is invalid")
 	val threadId: String,
 ) {
-	fun toCommand() =
+	fun toCommand(accountId: UUID) =
 		CreatePostCommand(
 			postId = UUID.randomUUID(),
-			accountId = SecurityContext.getAccountId(),
+			accountId = accountId,
 			content = content,
 			threadId = UUID.fromString(threadId),
 		)
@@ -36,11 +35,11 @@ data class PostUpdateRequest(
 	@field:org.hibernate.validator.constraints.UUID(message = "Post id is invalid")
 	val postId: String,
 ) {
-	fun toCommand() =
+	fun toCommand(accountId: UUID) =
 		UpdatePostCommand(
 			postId = UUID.fromString(postId),
 			content = content,
-			accountId = SecurityContext.getAccountId(),
+			accountId = accountId,
 		)
 }
 
@@ -48,9 +47,9 @@ data class PostDeleteRequest(
 	@field:org.hibernate.validator.constraints.UUID(message = "Post id is invalid")
 	val postId: String,
 ) {
-	fun toCommand() =
+	fun toCommand(accountId: UUID) =
 		DeletePostCommand(
 			postId = UUID.fromString(postId),
-			accountId = SecurityContext.getAccountId(),
+			accountId = accountId,
 		)
 }

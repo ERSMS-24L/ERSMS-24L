@@ -94,7 +94,7 @@ class PostViewControllerImpl(
 	@GetMapping(params = ["content"])
 	@PreAuthorize("hasAnyAuthority('${Scopes.POST.READ}')")
 	override fun findPostsByContent(
-		@RequestParam(required = true) content: String,
+		@RequestParam(required = false) content: String,
 		@PageableDefault pageable: Pageable
 	): Mono<Page<PostView>> {
 		return reactorQueryGateway.query(
@@ -106,7 +106,7 @@ class PostViewControllerImpl(
 	@GetMapping(params = ["content", "threadId"])
 	@PreAuthorize("hasAnyAuthority('${Scopes.POST.READ}')")
 	override fun findPostsByContentAndThreadId(
-		@RequestParam(required = true) content: String,
+		@RequestParam(required = false) content: String,
 		@RequestParam(required = true) threadId: UUID,
 		@PageableDefault pageable: Pageable
 	): Mono<Page<PostView>> {

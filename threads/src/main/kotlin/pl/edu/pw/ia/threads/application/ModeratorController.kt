@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
+import pl.edu.pw.ia.shared.security.getAccountId
 import pl.edu.pw.ia.threads.application.model.AddModeratorRequest
 import pl.edu.pw.ia.threads.application.model.RemoveModeratorRequest
 import reactor.core.publisher.Mono
@@ -36,11 +38,17 @@ interface ModeratorController {
 
 	@Operation(description = "Add moderator to thread")
 	@ApiResponse(responseCode = "201", description = "Ok.")
-	fun addModerator(request: AddModeratorRequest): Mono<IdResponse>
+	fun addModerator(
+		request: AddModeratorRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse>
 
 	@Operation(description = "Remove moderator from thread")
 	@ApiResponse(responseCode = "201", description = "Ok.")
-	fun removeModerator(request: RemoveModeratorRequest): Mono<IdResponse>
+	fun removeModerator(
+		request: RemoveModeratorRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse>
 }
 
 @Validated
@@ -56,15 +64,21 @@ class ModeratorControllerImpl(
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.MODERATOR.WRITE}')")
-	override fun addModerator(@RequestBody request: AddModeratorRequest): Mono<IdResponse> {
-		val command = request.toCommand()
-		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+	override fun addModerator(
+		@RequestBody request: AddModeratorRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse> {
+		val command = request.toCommand(webExchange.getAccountId())
+		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	override fun removeModerator(request: RemoveModeratorRequest): Mono<IdResponse> {
-		val command = request.toCommand()
-		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+	override fun removeModerator(
+		request: RemoveModeratorRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse> {
+		val command = request.toCommand(webExchange.getAccountId())
+		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 }
