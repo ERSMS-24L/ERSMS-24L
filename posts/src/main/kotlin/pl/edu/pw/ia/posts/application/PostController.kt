@@ -19,12 +19,14 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.posts.application.model.PostCreateRequest
 import pl.edu.pw.ia.posts.application.model.PostDeleteRequest
 import pl.edu.pw.ia.posts.application.model.PostUpdateRequest
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
+import pl.edu.pw.ia.shared.security.getAccountId
 import reactor.core.publisher.Mono
 
 @Tag(name = "Posts")
@@ -37,15 +39,24 @@ import reactor.core.publisher.Mono
 interface PostController {
 	@Operation(description = "Create post")
 	@ApiResponse(responseCode = "201", description = "Created.")
-	fun createPost(@Valid request: PostCreateRequest): Mono<IdResponse>
+	fun createPost(
+		@Valid request: PostCreateRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse>
 
 	@Operation(description = "Update post")
 	@ApiResponse(responseCode = "200", description = "Updated.")
-	fun updatePost(@Valid request: PostUpdateRequest): Mono<IdResponse>
+	fun updatePost(
+		@Valid request: PostUpdateRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse>
 
 	@Operation(description = "Delete post")
 	@ApiResponse(responseCode = "200", description = "Deleted.")
-	fun deletePost(@Valid request: PostDeleteRequest): Mono<IdResponse>
+	fun deletePost(
+		@Valid request: PostDeleteRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse>
 }
 
 @Validated
@@ -60,22 +71,31 @@ class PostControllerImpl(
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.POST.WRITE}')")
-	override fun createPost(request: PostCreateRequest): Mono<IdResponse> {
-		val command = request.toCommand()
-		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+	override fun createPost(
+		request: PostCreateRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse> {
+		val command = request.toCommand(webExchange.getAccountId())
+		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
-	override fun updatePost(request: PostUpdateRequest): Mono<IdResponse> {
-		val command = request.toCommand()
-		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+	override fun updatePost(
+		request: PostUpdateRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse> {
+		val command = request.toCommand(webExchange.getAccountId())
+		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.OK)
-	override fun deletePost(request: PostDeleteRequest): Mono<IdResponse> {
-		val command = request.toCommand()
-		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id=it) }
+	override fun deletePost(
+		request: PostDeleteRequest,
+		webExchange: ServerWebExchange
+	): Mono<IdResponse> {
+		val command = request.toCommand(webExchange.getAccountId())
+		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 }
