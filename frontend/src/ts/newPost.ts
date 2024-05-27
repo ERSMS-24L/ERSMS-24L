@@ -5,7 +5,11 @@ let threadId = (new URLSearchParams(window.location.search)).get("threadId") ?? 
 async function create_post(content: string): Promise<void> {
   const response = await fetch(
     "/posts/api/v1/posts",
-    {method: "POST", body: JSON.stringify({threadId: threadId, content: content})},
+    {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({threadId: threadId, content: content}),
+    },
   );
   if (!response.ok) throw `Failed to create post: ${response.status} ${response.statusText}`;
 }
