@@ -28,7 +28,7 @@ spring:
           predicates:
             - Path=/threads/**
         - id: frontend
-          uri: https://frontend.ersms-forum.svc.cluster.local:8084
+          uri: http://frontend.ersms-forum.svc.cluster.local:8084
           predicates:
             - Path=/**
             - NotPath=/swagger,/swagger/**,/webjars/**,/actuator/**
