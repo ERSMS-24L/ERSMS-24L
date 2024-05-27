@@ -15,13 +15,18 @@ eck-elasticsearch:
           containers:
             - name: elasticsearch
               resources:
-                limits:
-                  memory: 0.5Gi
                 requests:
-                  memory: 0.5Gi
+                  memory: 500Mi
+                  cpu: 300m
 eck-kibana:
   enabled: true
   spec:
+    resources:
+      limits:
+        memory: 500Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi
     count: 1
     elasticsearchRef:
       name: elasticsearch
@@ -31,13 +36,14 @@ eck-beats:
   enabled: true
   spec:
     type: filebeat
-    daemonSet: null
+    deployment: null
     config:
       filebeat:
         autodiscover:
           providers:
             - type: kubernetes
               node: ${NODE_NAME}
+              scope: cluster
               hints:
                 enabled: true
                 default_config:
@@ -50,9 +56,15 @@ eck-beats:
       output.logstash:
         # This needs to be {{logstash-name}}-ls-beats:5044
         hosts: ["logstash-ls-beats-ls-beats:5044"]
-    deployment:
+    daemonSet:
       podTemplate:
         spec:
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              cpu: 50m
+              memory: 100Mi
           serviceAccountName: filebeat
           automountServiceAccountToken: true
           dnsPolicy: ClusterFirstWithHostNet
@@ -88,14 +100,11 @@ eck-logstash:
   podTemplate:
     spec:
       containers:
-        - name: logtash
+        - name: logstash
           resources:
             requests:
-              memory: 0.5Gi
-              cpu: 0.5
-            limits:
-              memory: 0.5Gi
-              cpu: 0.5
+              memory: 500Mi
+              cpu: 300m
   # This is required to be able to set the logstash
   # output of beats in a consistent manner.
   fullnameOverride: "logstash-ls-beats"

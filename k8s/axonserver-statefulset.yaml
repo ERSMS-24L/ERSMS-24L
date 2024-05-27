@@ -52,8 +52,8 @@ spec:
             periodSeconds: 60
           resources:
             requests:
-              memory: "1Gi"
-              cpu: "1"
+              memory: "500Mi"
+              cpu: "300m"
       restartPolicy: Always
       volumes:
         - name: axonserver-data
