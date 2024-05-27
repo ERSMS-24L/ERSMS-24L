@@ -59,11 +59,16 @@ interface ThreadViewController {
 		@PageableDefault pageable: Pageable
 	): Mono<Page<ThreadView>>
 
-	@Operation(description = "Get recent threads")
-	fun findRecentThreads(
+	@Operation(description = "Find recent threads by date")
+	fun findThreadsByDate(
 		@RequestParam date: Instant,
 		@PageableDefault pageable: Pageable
 	): Mono<Page<ThreadView>>
+
+	@Operation(description = "Get recent threads")
+	fun findRecentThreads(
+		@PageableDefault pageable: Pageable
+	) : Mono<Page<ThreadView>>
 
 }
 
@@ -111,12 +116,21 @@ class ThreadViewControllerImpl(
 
 	@GetMapping(params = ["date"])
 	@PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
-	override fun findRecentThreads(
+	override fun findThreadsByDate(
 		@RequestParam(required = false) date: Instant,
 		@PageableDefault pageable: Pageable
 	): Mono<Page<ThreadView>> {
 		return reactorQueryGateway.query(
 			FindRecentThreadsQuery(date, pageable),
+			PageResponseType(ThreadView::class.java)
+		)
+	}
+
+	@GetMapping
+	@PreAuthorize("hasAnyAuthority('${Scopes.THREAD.READ}')")
+	override fun findRecentThreads(pageable: Pageable): Mono<Page<ThreadView>> {
+		return reactorQueryGateway.query(
+			FindRecentThreadsQuery(Instant.now(), pageable),
 			PageResponseType(ThreadView::class.java)
 		)
 	}
