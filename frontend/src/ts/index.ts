@@ -1,5 +1,6 @@
 import "../scss/styles.scss";
 import { showPagination } from "./pages";
+import { initLoginManager } from "./login";
 
 interface Thread {
   threadId: string,
@@ -86,3 +87,4 @@ async function init(): Promise<void> {
 }
 
 init();
+initLoginManager();
