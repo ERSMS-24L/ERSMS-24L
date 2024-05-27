@@ -18,6 +18,7 @@ data class PostCreatedEvent(
 data class PostUpdatedEvent(
 	val postId: UUID,
 	val accountId: UUID,
+	val threadId: UUID,
 	val content: String,
 )
 

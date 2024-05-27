@@ -5,23 +5,28 @@ import org.axonframework.queryhandling.QueryGateway
 import org.axonframework.queryhandling.QueryHandler
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
+import pl.edu.pw.ia.shared.domain.event.AccountUpdatedEvent
+import pl.edu.pw.ia.shared.domain.event.PostCreatedEvent
+import pl.edu.pw.ia.shared.domain.event.PostUpdatedEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadCreatedEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadDeleteEvent
 import pl.edu.pw.ia.shared.domain.event.ThreadUpdatedEvent
 import pl.edu.pw.ia.shared.domain.exception.ThreadNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindPostByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindRecentThreadsQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadsByAuthor
 import pl.edu.pw.ia.shared.domain.query.FindThreadsByTitleQuery
 import pl.edu.pw.ia.shared.domain.view.AccountView
+import pl.edu.pw.ia.shared.domain.view.PostView
 import pl.edu.pw.ia.shared.domain.view.ThreadView
 import pl.edu.pw.ia.threads.domain.query.repository.ThreadViewRepository
 
 @Service
 class ThreadProjector(
 	private val repository: ThreadViewRepository,
-	private val queryGateway: QueryGateway
+	private val queryGateway: QueryGateway,
 ) {
 	// TODO: Handle for posts, username change, etc
 	@EventHandler
@@ -32,9 +37,10 @@ class ThreadProjector(
 		).get().name
 		val view = ThreadView(
 			threadId = event.threadId,
+			postId = null,
 			title = event.title,
 			accountId = event.accountId,
-			post = "",
+			post = null,
 			username = username,
 			lastModified = event.createdAt
 		)
@@ -50,6 +56,29 @@ class ThreadProjector(
 	@EventHandler
 	fun on(event: ThreadDeleteEvent) {
 		repository.delete(event.threadId)
+	}
+
+	@EventHandler
+	fun on(event: AccountUpdatedEvent) {
+		repository.findByAccountId(event.accountId)
+			.map { it.copy(username = event.name) }
+			.subscribe {repository.save(it)}
+	}
+
+	@EventHandler
+	fun on(event: PostCreatedEvent) {
+		val view = repository.findByIdAndPostIdIsNull(event.threadId)
+		if(view != null) {
+			repository.save(view.copy(postId = event.postId, post = event.content))
+		}
+	}
+
+	@EventHandler
+	fun on(event: PostUpdatedEvent) {
+		val threadView = repository.findByIdAndPostId(event.threadId, event.postId)
+		if(threadView != null && event.content != threadView.post) {
+			repository.save(threadView.copy(post = event.content))
+		}
 	}
 
 	@QueryHandler

@@ -11,6 +11,7 @@ import pl.edu.pw.ia.threads.infrastructure.query.repository.database.SpringThrea
 import reactor.core.publisher.Mono
 import java.time.Instant
 import java.util.*
+import reactor.core.publisher.Flux
 
 @Service
 class ThreadViewRepositoryImpl(
@@ -61,6 +62,18 @@ class ThreadViewRepositoryImpl(
 
         val countViews = repository.countByLastModifiedGreaterThanEqual(date).block()
         return PageImpl(threadViews ?: emptyList(), pageable, countViews ?: 0)
+    }
+
+    override fun findByAccountId(accountId: UUID): Flux<ThreadView> {
+        return repository.findByAccountId(accountId.toString()).map { it.toDomain() }
+    }
+
+    override fun findByIdAndPostIdIsNull(threadId: UUID): ThreadView? {
+        return repository.findByThreadIdAndPostIdIsNull(threadId = threadId.toString()).map { it.toDomain() }.block()
+    }
+
+    override fun findByIdAndPostId(threadId: UUID, postId: UUID): ThreadView? {
+        return repository.findByThreadIdAndPostId(threadId.toString(), postId.toString()).map { it.toDomain() }.block()
     }
 
 }

@@ -6,9 +6,10 @@ import java.util.UUID
 data class ThreadView(
 	val threadId: UUID,
 	val accountId: UUID,
+	val postId: UUID?,
 	val username: String,
 	val title: String,
-	val post: String,
+	val post: String?,
 	val lastModified: Instant
 )
 

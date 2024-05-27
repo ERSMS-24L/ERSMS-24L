@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable
 import pl.edu.pw.ia.shared.domain.view.ThreadView
 import java.time.Instant
 import java.util.UUID
+import reactor.core.publisher.Flux
 
 interface ThreadViewRepository {
 
@@ -17,6 +18,12 @@ interface ThreadViewRepository {
     fun findByAuthor(accountId: UUID, pageable: Pageable): Page<ThreadView>
 
     fun findByTitle(title: String, pageable: Pageable): Page<ThreadView>
+
+    fun findByAccountId(accountId: UUID): Flux<ThreadView>
+
+    fun findByIdAndPostIdIsNull(threadId: UUID): ThreadView?
+
+    fun findByIdAndPostId(threadId: UUID, postId: UUID): ThreadView?
 
     fun delete(threadId: UUID)
 }
