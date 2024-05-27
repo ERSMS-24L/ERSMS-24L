@@ -10,6 +10,7 @@ module.exports = {
   mode: 'development',
   entry: {
     index: './src/ts/index.ts',
+    newPost: './src/ts/newPost.ts',
     newThread: './src/ts/newThread.ts',
     thread: './src/ts/thread.ts',
   },
@@ -28,6 +29,11 @@ module.exports = {
       filename: "index.html",
       template: './src/index.html',
       chunks: ["index"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "new_post.html",
+      template: './src/new_post.html',
+      chunks: ["newPost"],
     }),
     new HtmlWebpackPlugin({
       filename: "new_thread.html",
