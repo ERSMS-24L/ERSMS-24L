@@ -8,9 +8,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: {
+    index: './src/ts/index.ts',
+    newPost: './src/ts/newPost.ts',
+    newThread: './src/ts/newThread.ts',
+    thread: './src/ts/thread.ts',
+  },
   output: {
-    filename: 'main.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
   devServer:{
@@ -20,7 +25,26 @@ module.exports = {
   },
   plugins: [
     new FaviconsWebpackPlugin("./src/img/icon.svg"),
-    new HtmlWebpackPlugin({ template: './src/index.html' }),
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: './src/index.html',
+      chunks: ["index"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "new_post.html",
+      template: './src/new_post.html',
+      chunks: ["newPost"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "new_thread.html",
+      template: './src/new_thread.html',
+      chunks: ["newThread"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "thread.html",
+      template: './src/thread.html',
+      chunks: ["thread"],
+    }),
   ],
   module: {
     rules: [
