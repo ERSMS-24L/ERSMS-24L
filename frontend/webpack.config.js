@@ -11,6 +11,7 @@ module.exports = {
   entry: {
     index: './src/ts/index.ts',
     newThread: './src/ts/newThread.ts',
+    thread: './src/ts/thread.ts',
   },
   output: {
     filename: '[name].js',
@@ -32,6 +33,11 @@ module.exports = {
       filename: "new_thread.html",
       template: './src/new_thread.html',
       chunks: ["newThread"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "thread.html",
+      template: './src/thread.html',
+      chunks: ["thread"],
     }),
   ],
   module: {

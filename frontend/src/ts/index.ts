@@ -1,5 +1,5 @@
 import "../scss/styles.scss";
-import * as DOMPurify from "dompurify";
+import { showPagination } from "./pages";
 
 interface Thread {
   threadId: string,
@@ -32,7 +32,7 @@ function createThreadCard(thread: Thread): HTMLDivElement {
 
   const text = document.createElement("div");
   text.classList.add("card-text");
-  text.innerHTML = DOMPurify.sanitize(thread.post);
+  text.innerText = thread.post;
 
   const body = document.createElement("div");
   body.classList.add("card-body");
@@ -41,7 +41,7 @@ function createThreadCard(thread: Thread): HTMLDivElement {
   const footerText = document.createElement("small");
   footerText.classList.add("text-muted");
   // TODO: Change last-modified to a human-readable timestamp
-  footerText.innerText = `Created by ${DOMPurify.sanitize(thread.username)}, last modified ${DOMPurify.sanitize(thread.lastModified)}`;
+  footerText.innerText = `Created by ${thread.username}, last modified ${thread.lastModified}`;
 
   const footer = document.createElement("div");
   footer.classList.add("card-footer");
@@ -62,47 +62,13 @@ function showThreads(threads: Thread[]): void {
   postsContainer.replaceChildren(...threads.map(createThreadCard));
 }
 
-function createPageItem(label: string, target: number, status?: "active" | "disabled"): HTMLLIElement {
-  const li = document.createElement("li");
-  li.classList.add("page-item");
-
-  if (status === undefined) {
-    const href = new URL(window.location.href);
-    href.searchParams.set("page", target.toString());
-
-    const inner = document.createElement("a");
-    inner.classList.add("page-link");
-    inner.href = href.toString();
-    inner.innerText = label;
-    li.append(inner);
-  } else {
-    const inner = document.createElement("span");
-    inner.classList.add("page-link", status);
-    inner.innerText = label;
-    li.append(inner);
-  }
-
-  return li;
-}
-
-function showPagination(page: number, totalPages: number): void {
-  const pageItems: HTMLLIElement[] = [];
-  pageItems.push(createPageItem("Previous", page - 1, page === 0 ? "disabled" : undefined));
-  for (let i = 0; i < totalPages; ++i)
-    pageItems.push(createPageItem((i + 1).toString(), i, i === page ? "active" : undefined));
-  pageItems.push(createPageItem("Next", page + 1, page === totalPages - 1 ? "disabled" : undefined));
-
-  const pagination = document.getElementById("pagination") as HTMLUListElement;
-  pagination.replaceChildren(...pageItems);
-}
-
 async function loadThreadsPage(page = 0, pageSize = 20): Promise<ThreadList> {
-    const request = await fetch(`/threads/api/v1/threads?page=${encodeURIComponent(page)}&size=${encodeURIComponent(pageSize)}&sort=lastModified,desc`);
-    if (!request.ok) {
-      console.error(`Failed to fetch posts page ${page}: ${request.status} ${request.statusText}`);
+    const response = await fetch(`/threads/api/v1/threads?page=${encodeURIComponent(page)}&size=${encodeURIComponent(pageSize)}&sort=lastModified,desc`);
+    if (!response.ok) {
+      console.error(`Failed to fetch posts page ${page}: ${response.status} ${response.statusText}`);
       return { threads: [], totalPages: 1 };
     }
-    const data = await request.json();
+    const data = await response.json();
     return { threads: data.content, totalPages: data.totalPages };
 }
 
@@ -116,7 +82,7 @@ async function init(): Promise<void> {
   const params = new URLSearchParams(window.location.search);
   let page = parseInt(params.get("page") ?? "0", 10);
   if (isNaN(page)) page = 0;
-  showPage(page);
+  await showPage(page);
 }
 
 init();
