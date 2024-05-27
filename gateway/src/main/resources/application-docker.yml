@@ -40,6 +40,12 @@ spring:
             - Path=/frontend-dev/**
           filters:
             - StripPrefix=1
+        - id: keycloak-service
+          uri: http://${DOCKER_GATEWAY_HOST:host.docker.internal}:8888
+          predicates:
+            - Path=/keycloak/**
+          filters:
+            - StripPrefix=1
         - id: frontend
           uri: http://frontend:8084
           predicates:
