@@ -27,6 +27,12 @@ spring:
           uri: https://threads-service.ersms-forum.svc.cluster.local:8083
           predicates:
             - Path=/threads/**
+        - id: keycloak
+          uri: http://keycloak.ersms-forum.svc.cluster.local:8080
+          predicates:
+            - Path=/keycloak/**
+          filters:
+            - StripPrefix=1
         - id: frontend
           uri: http://frontend.ersms-forum.svc.cluster.local:8084
           predicates:
