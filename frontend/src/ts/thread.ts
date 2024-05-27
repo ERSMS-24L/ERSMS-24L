@@ -1,4 +1,5 @@
 import "../scss/styles.scss";
+import { initLoginManager } from "./login"
 import { showPagination } from "./pages";
 
 interface Post {
@@ -97,3 +98,4 @@ async function init(): Promise<void> {
 }
 
 init();
+initLoginManager();

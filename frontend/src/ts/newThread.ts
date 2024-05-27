@@ -1,4 +1,5 @@
 import "../scss/styles.scss";
+import { initLoginManager } from "./login"
 
 async function create_thread(title: string): Promise<string> {
   const response = await fetch(
@@ -34,3 +35,4 @@ async function on_submit(): Promise<void> {
 }
 
 (document.getElementById("form_submit") as HTMLButtonElement).onclick = on_submit;
+initLoginManager(true);

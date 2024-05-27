@@ -1,4 +1,5 @@
 import "../scss/styles.scss";
+import { initLoginManager } from "./login"
 
 let threadId = (new URLSearchParams(window.location.search)).get("threadId") ?? "";
 
@@ -33,4 +34,4 @@ async function init(): Promise<void> {
 }
 
 init();
-
+initLoginManager(true);
