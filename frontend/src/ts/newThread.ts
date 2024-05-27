@@ -3,7 +3,11 @@ import "../scss/styles.scss";
 async function create_thread(title: string): Promise<string> {
   const response = await fetch(
     "/threads/api/v1/threads",
-    {method: "POST", body: JSON.stringify({title: title})},
+    {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({title: title}),
+    },
   );
   if (!response.ok) throw `Failed to create thread: ${response.status} ${response.statusText}`;
   return (await response.json()).id;
@@ -12,7 +16,11 @@ async function create_thread(title: string): Promise<string> {
 async function create_post(threadId: string, content: string): Promise<void> {
   const response = await fetch(
     "/posts/api/v1/posts",
-    {method: "POST", body: JSON.stringify({threadId: threadId, content: content})},
+    {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({threadId: threadId, content: content}),
+    },
   );
   if (!response.ok) throw `Failed to create post: ${response.status} ${response.statusText}`;
 }
