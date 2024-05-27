@@ -12,6 +12,7 @@ module.exports = {
     index: './src/ts/index.ts',
     newPost: './src/ts/newPost.ts',
     newThread: './src/ts/newThread.ts',
+    silentSsoCheck: './src/ts/silentSsoCheck.ts',
     thread: './src/ts/thread.ts',
   },
   output: {
@@ -39,6 +40,11 @@ module.exports = {
       filename: "new_thread.html",
       template: './src/new_thread.html',
       chunks: ["newThread"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "silent_sso_check.html",
+      template: './src/silent_sso_check.html',
+      chunks: ["silentSsoCheck"],
     }),
     new HtmlWebpackPlugin({
       filename: "thread.html",
