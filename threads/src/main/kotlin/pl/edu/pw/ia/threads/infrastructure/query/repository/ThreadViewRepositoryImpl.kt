@@ -55,7 +55,7 @@ class ThreadViewRepositoryImpl(
     }
 
     override fun findRecent(date: Instant, pageable: Pageable): Page<ThreadView> {
-        val threadViews = repository.findByLastModifiedGreaterThanEqual(date, pageable)
+        val threadViews = repository.findByLastModifiedLessThanEqual(date, pageable)
             .map { it.toDomain() }
             .collectList()
             .block()

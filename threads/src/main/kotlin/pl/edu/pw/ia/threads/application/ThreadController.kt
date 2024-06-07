@@ -85,7 +85,7 @@ class ThreadControllerImpl(
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	override fun updateThread(
-		request: ThreadUpdateRequest,
+		@RequestBody request: ThreadUpdateRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
@@ -97,7 +97,7 @@ class ThreadControllerImpl(
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	override fun deleteThread(
-		request: ThreadDeleteRequest,
+		@RequestBody request: ThreadDeleteRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
