@@ -3,6 +3,7 @@ package pl.edu.pw.ia.threads.domain.command.aggregate
 import java.time.Instant
 import java.util.UUID
 import org.axonframework.commandhandling.CommandHandler
+import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.queryhandling.QueryGateway
@@ -12,8 +13,8 @@ import pl.edu.pw.ia.shared.domain.command.BanAccountCommand
 import pl.edu.pw.ia.shared.domain.command.UnbanAccountCommand
 import pl.edu.pw.ia.shared.domain.event.AccountBannedEvent
 import pl.edu.pw.ia.shared.domain.event.AccountUnbannedEvent
-import pl.edu.pw.ia.shared.domain.exception.AccountIsNotOwnerException
 import pl.edu.pw.ia.shared.domain.exception.ModeratorNotFoundException
+import pl.edu.pw.ia.shared.domain.exception.ThreadNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindModeratorByThreadAndAccountIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
 import pl.edu.pw.ia.shared.domain.view.ModeratorView
@@ -37,7 +38,7 @@ internal class BannedUser {
 		val threadView = queryGateway.query(
 			FindThreadByIdQuery(threadId),
 			ThreadView::class.java
-		).join()
+		).join() ?: throw ThreadNotFoundException(command.threadId)
 
 		if (command.accountId != threadView.accountId) {
 			queryGateway.query(
@@ -57,12 +58,7 @@ internal class BannedUser {
 
 	@CommandHandler
 	fun handle(command: UnbanAccountCommand) {
-		val threadView = queryGateway.query(
-			FindThreadByIdQuery(threadId),
-			ThreadView::class.java
-		).join()
-
-		if (command.accountId != threadView.accountId) {
+		if (command.accountId != accountId) {
 			queryGateway.query(
 				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
 				ModeratorView::class.java
@@ -77,4 +73,10 @@ internal class BannedUser {
 		)
 	}
 
+	@EventSourcingHandler
+	fun on(event: AccountBannedEvent) {
+		bannedUserId = event.bannedUserId
+		accountId = event.accountId
+		threadId = event.threadId
+	}
 }

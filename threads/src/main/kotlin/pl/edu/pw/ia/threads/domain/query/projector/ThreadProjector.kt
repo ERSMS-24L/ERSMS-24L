@@ -80,8 +80,8 @@ class ThreadProjector(
 	}
 
 	@QueryHandler
-	fun handle(query: FindThreadByIdQuery): ThreadView =
-		repository.findById(query.threadId) ?: throw ThreadNotFoundException(query.threadId)
+	fun handle(query: FindThreadByIdQuery): ThreadView? =
+		repository.findById(query.threadId)
 
 	@QueryHandler
 	fun handle(query: FindThreadsByTitleQuery): Page<ThreadView> =
