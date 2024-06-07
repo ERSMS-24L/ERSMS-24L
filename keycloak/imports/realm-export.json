@@ -260,8 +260,8 @@
                 "publish-events",
                 "view-authorization",
                 "view-users",
-                "query-users",
                 "manage-events",
+                "query-users",
                 "view-clients",
                 "manage-users",
                 "view-realm",
@@ -666,6 +666,7 @@
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "/realms/ersms/portal/*"
       ],
@@ -807,8 +808,8 @@
         "client.secret.creation.time": "1714498765",
         "backchannel.logout.session.required": "true",
         "post.logout.redirect.uris": "+",
-        "oauth2.device.authorization.grant.enabled": "false",
         "display.on.consent.screen": "false",
+        "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false"
       },
       "authenticationFlowBindingOverrides": {},
@@ -840,6 +841,7 @@
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
+      "clientAuthenticatorType": "client-secret",
       "redirectUris": [
         "/realms/ersms/wizard/*"
       ],
@@ -1087,8 +1089,8 @@
           "protocolMapper": "oidc-audience-resolve-mapper",
           "consentRequired": false,
           "config": {
-            "introspection.token.claim": "true",
-            "access.token.claim": "true"
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
           }
         },
         {
@@ -1286,8 +1288,8 @@
           "consentRequired": false,
           "config": {
             "id.token.claim": "true",
-            "introspection.token.claim": "true",
             "access.token.claim": "true",
+            "introspection.token.claim": "true",
             "userinfo.token.claim": "true"
           }
         },
@@ -1521,8 +1523,8 @@
           "protocolMapper": "oidc-allowed-origins-mapper",
           "consentRequired": false,
           "config": {
-            "introspection.token.claim": "true",
-            "access.token.claim": "true"
+            "access.token.claim": "true",
+            "introspection.token.claim": "true"
           }
         }
       ]
@@ -1557,8 +1559,8 @@
           "consentRequired": false,
           "config": {
             "id.token.claim": "true",
-            "introspection.token.claim": "true",
             "access.token.claim": "true",
+            "introspection.token.claim": "true",
             "userinfo.token.claim": "true"
           }
         }
@@ -1604,6 +1606,7 @@
   "smtpServer": {},
   "eventsEnabled": false,
   "eventsListeners": [
+    "ext-event-http",
     "jboss-logging",
     "ext-event-script"
   ],
@@ -1708,8 +1711,8 @@
       "linkOnly": false,
       "config": {
         "hideOnLoginPage": "false",
-        "clientId": "ef7d17c18ea35a1ace0f",
         "acceptsPromptNoneForwardFromClient": "false",
+        "clientId": "ef7d17c18ea35a1ace0f",
         "disableUserInfo": "false",
         "filteredByClaim": "false",
         "syncMode": "IMPORT",
@@ -1749,13 +1752,13 @@
         "config": {
           "allowed-protocol-mapper-types": [
             "oidc-address-mapper",
-            "saml-role-list-mapper",
-            "saml-user-attribute-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
-            "oidc-usermodel-property-mapper",
-            "oidc-full-name-mapper",
             "oidc-usermodel-attribute-mapper",
-            "saml-user-property-mapper"
+            "oidc-usermodel-property-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "saml-user-property-mapper",
+            "saml-role-list-mapper",
+            "oidc-full-name-mapper",
+            "saml-user-attribute-mapper"
           ]
         }
       },
@@ -1814,14 +1817,14 @@
         "subComponents": {},
         "config": {
           "allowed-protocol-mapper-types": [
+            "oidc-usermodel-property-mapper",
+            "oidc-usermodel-attribute-mapper",
             "oidc-sha256-pairwise-sub-mapper",
             "saml-user-property-mapper",
-            "oidc-full-name-mapper",
-            "oidc-usermodel-attribute-mapper",
-            "oidc-address-mapper",
             "saml-role-list-mapper",
-            "saml-user-attribute-mapper",
-            "oidc-usermodel-property-mapper"
+            "oidc-full-name-mapper",
+            "oidc-address-mapper",
+            "saml-user-attribute-mapper"
           ]
         }
       }
@@ -2187,6 +2190,22 @@
           "userSetupAllowed": false
         },
         {
+          "authenticator": "conditional-user-configured",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "auth-otp-form",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
           "authenticator": "auth-otp-form",
           "authenticatorFlow": false,
           "requirement": "REQUIRED",
@@ -2198,6 +2217,41 @@
     },
     {
       "id": "53e75dcb-d800-4dd5-af22-7a4ced542325",
+      "alias": "Org Direct Grant - Conditional OTP",
+      "description": "Flow to determine if the OTP is required for the authentication",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": true,
+      "authenticationExecutions": []
+    },
+    {
+      "id": "bf75c979-61dc-4452-9f4c-464fde72020e",
+      "alias": "Org Direct Grant - Conditional OTP",
+      "description": "Flow to determine if the OTP is required for the authentication",
+      "providerId": "basic-flow",
+      "topLevel": false,
+      "builtIn": true,
+      "authenticationExecutions": [
+        {
+          "authenticator": "conditional-user-configured",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "auth-otp-form",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "0b06a50f-0f14-4b0b-b1fc-d53520acc162",
       "alias": "Org Direct Grant - Conditional OTP",
       "description": "Flow to determine if the OTP is required for the authentication",
       "providerId": "basic-flow",
@@ -2239,6 +2293,89 @@
           "userSetupAllowed": false
         },
         {
+          "authenticator": "direct-grant-validate-username",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "direct-grant-validate-password",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "direct-grant-validate-password",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 20,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorFlow": true,
+          "requirement": "CONDITIONAL",
+          "priority": 30,
+          "autheticatorFlow": true,
+          "flowAlias": "Org Direct Grant - Conditional OTP",
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "ext-select-org",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 30,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
+          "authenticatorFlow": true,
+          "requirement": "CONDITIONAL",
+          "priority": 30,
+          "autheticatorFlow": true,
+          "flowAlias": "Org Direct Grant - Conditional OTP",
+          "userSetupAllowed": false
+        },
+        {
+          "authenticator": "ext-select-org",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 30,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        }
+      ]
+    },
+    {
+      "id": "8ba4c5c3-39af-4d03-a374-472f86e27afa",
+      "alias": "Org Direct Grant Flow",
+      "description": "Direct grant flow with select organization step.",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": true,
+      "authenticationExecutions": []
+    },
+    {
+      "id": "03a81a58-e3ab-4571-af2a-29fc21d87067",
+      "alias": "Org Direct Grant Flow",
+      "description": "Direct grant flow with select organization step.",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": true,
+      "authenticationExecutions": [
+        {
+          "authenticator": "direct-grant-validate-username",
+          "authenticatorFlow": false,
+          "requirement": "REQUIRED",
+          "priority": 10,
+          "autheticatorFlow": false,
+          "userSetupAllowed": false
+        },
+        {
           "authenticator": "direct-grant-validate-password",
           "authenticatorFlow": false,
           "requirement": "REQUIRED",
@@ -2265,7 +2402,7 @@
       ]
     },
     {
-      "id": "8ba4c5c3-39af-4d03-a374-472f86e27afa",
+      "id": "dffb3c1e-2dae-4487-a7ad-5e8a7552c325",
       "alias": "Org Direct Grant Flow",
       "description": "Direct grant flow with select organization step.",
       "providerId": "basic-flow",
