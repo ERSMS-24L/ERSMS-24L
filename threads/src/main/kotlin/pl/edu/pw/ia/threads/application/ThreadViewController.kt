@@ -21,14 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
+import pl.edu.pw.ia.shared.config.PageResponseType
+import pl.edu.pw.ia.shared.domain.exception.ThreadNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindRecentThreadsQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadsByAuthor
 import pl.edu.pw.ia.shared.domain.query.FindThreadsByTitleQuery
 import pl.edu.pw.ia.shared.domain.view.ThreadView
 import pl.edu.pw.ia.shared.security.Scopes
-import pl.edu.pw.ia.shared.config.PageResponseType
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Tag(name = "Threads")
 @ApiResponse(responseCode = "200", description = "Ok.")
@@ -68,7 +70,7 @@ interface ThreadViewController {
 	@Operation(description = "Get recent threads")
 	fun findRecentThreads(
 		@PageableDefault pageable: Pageable
-	) : Mono<Page<ThreadView>>
+	): Mono<Page<ThreadView>>
 
 }
 
@@ -87,7 +89,9 @@ class ThreadViewControllerImpl(
 		return reactorQueryGateway.query(
 			FindThreadByIdQuery(threadId),
 			ResponseTypes.instanceOf(ThreadView::class.java)
-		)
+		).switchIfEmpty {
+			Mono.error(ThreadNotFoundException(threadId))
+		}
 	}
 
 	@GetMapping(params = ["title"])

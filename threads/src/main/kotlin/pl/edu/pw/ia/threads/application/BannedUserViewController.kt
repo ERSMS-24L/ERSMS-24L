@@ -18,13 +18,17 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.config.PageResponseType
+import pl.edu.pw.ia.shared.domain.exception.BannedUserNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindBannedAccountByThreadAndAccountIdsQuery
 import pl.edu.pw.ia.shared.domain.query.FindBannedAccountsByThreadIdQuery
 import pl.edu.pw.ia.shared.domain.view.BannedUserView
 import pl.edu.pw.ia.shared.security.Scopes
+import pl.edu.pw.ia.shared.security.getAccountId
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Tag(name = "BannedUsers")
 @ApiResponse(responseCode = "200", description = "Ok.")
@@ -41,11 +45,23 @@ import reactor.core.publisher.Mono
 @SecurityRequirement(name = "Bearer")
 interface BannedUserViewController {
 
+	@Operation(description = "Find if you are banned under thread id")
+	fun amIBannedUserByThreadId(
+		@RequestParam threadId: UUID,
+		webExchange: ServerWebExchange,
+	): Mono<BannedUserView>
+
 	@Operation(description = "Find banned user by account id and thread id")
-	fun findBannedUserByAccountIdAndThreadId(@RequestParam accountId: UUID, @RequestParam threadId: UUID): Mono<BannedUserView>
+	fun findBannedUserByAccountIdAndThreadId(
+		@RequestParam accountId: UUID,
+		@RequestParam threadId: UUID
+	): Mono<BannedUserView>
 
 	@Operation(description = "Find banned users by thread id")
-	fun findBannedUserByThreadId(@RequestParam threadId: UUID, @PageableDefault(page = 0) pageable: Pageable): Mono<Page<BannedUserView>>
+	fun findBannedUserByThreadId(
+		@RequestParam threadId: UUID,
+		@PageableDefault(page = 0) pageable: Pageable
+	): Mono<Page<BannedUserView>>
 }
 
 @RestController
@@ -57,13 +73,20 @@ class BannedUserViewControllerImpl(
 	private val reactorQueryGateway: ReactorQueryGateway
 ) : BannedUserViewController {
 
+	@GetMapping("/me")
+	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
+	override fun amIBannedUserByThreadId(threadId: UUID, webExchange: ServerWebExchange): Mono<BannedUserView> =
+		findBannedUserByAccountIdAndThreadId(webExchange.getAccountId(), threadId)
+
 	@GetMapping(params = ["accountId", "threadId"])
 	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
 	override fun findBannedUserByAccountIdAndThreadId(accountId: UUID, threadId: UUID): Mono<BannedUserView> {
 		return reactorQueryGateway.query(
 			FindBannedAccountByThreadAndAccountIdsQuery(threadId = threadId, accountId = accountId),
 			ResponseTypes.instanceOf(BannedUserView::class.java)
-		)
+		).switchIfEmpty {
+			Mono.error(BannedUserNotFoundException(accountId, threadId))
+		}
 	}
 
 	@GetMapping(params = ["threadId"])

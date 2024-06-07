@@ -80,6 +80,8 @@ class BannedUserControllerImpl(
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
-		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
+		return reactorCommandGateway.send<UUID>(command)
+			.defaultIfEmpty(command.bannedUserId)
+			.map { IdResponse(id = it) }
 	}
 }

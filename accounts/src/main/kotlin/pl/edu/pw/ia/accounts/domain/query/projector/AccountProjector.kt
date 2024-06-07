@@ -5,7 +5,6 @@ import org.axonframework.queryhandling.QueryHandler
 import org.springframework.stereotype.Service
 import pl.edu.pw.ia.accounts.domain.query.repository.AccountViewRepository
 import pl.edu.pw.ia.shared.domain.event.AccountCreatedEvent
-import pl.edu.pw.ia.shared.domain.exception.AccountNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
 import pl.edu.pw.ia.shared.domain.view.AccountView
 
@@ -25,6 +24,6 @@ class AccountProjector(
 	}
 
 	@QueryHandler
-	fun handle(query: FindAccountByIdQuery): AccountView =
-		repository.findById(query.accountId) ?: throw AccountNotFoundException(query.accountId)
+	fun handle(query: FindAccountByIdQuery): AccountView? =
+		repository.findById(query.accountId)
 }

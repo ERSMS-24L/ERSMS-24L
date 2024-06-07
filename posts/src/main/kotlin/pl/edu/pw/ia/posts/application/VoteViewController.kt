@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
+import pl.edu.pw.ia.shared.domain.exception.VoteNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindVoteByAccountAndPostIdsQuery
 import pl.edu.pw.ia.shared.domain.view.VoteView
 import pl.edu.pw.ia.shared.security.Scopes
+import pl.edu.pw.ia.shared.security.getAccountId
 import reactor.core.publisher.Mono
 
 @Tag(name = "Votes")
@@ -35,8 +38,12 @@ import reactor.core.publisher.Mono
 )
 @SecurityRequirement(name = "Bearer")
 interface VoteViewController {
+
 	@Operation(description = "Find vote by post id and account id")
-	fun findVoteByAccountAndPostIdQuery(@RequestParam postId: UUID, @RequestParam accountId: UUID): Mono<VoteView>
+	fun findVoteByAccountAndPostIdQuery(
+		@RequestParam postId: UUID,
+		webExchange: ServerWebExchange
+	): Mono<VoteView>
 
 }
 
@@ -53,11 +60,14 @@ class VoteViewControllerImpl(
 	@PreAuthorize("hasAnyAuthority('${Scopes.VOTE.READ}')")
 	override fun findVoteByAccountAndPostIdQuery(
 		@RequestParam postId: UUID,
-		@RequestParam accountId: UUID
+		webExchange: ServerWebExchange
 	): Mono<VoteView> {
+		val accountId = webExchange.getAccountId()
 		return reactorQueryGateway.query(
 			FindVoteByAccountAndPostIdsQuery(postId, accountId),
 			ResponseTypes.instanceOf(VoteView::class.java)
+		).switchIfEmpty(
+			Mono.error { VoteNotFoundException(postId, accountId) }
 		)
 	}
 }

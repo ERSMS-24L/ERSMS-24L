@@ -93,6 +93,7 @@ class VoteControllerImpl(
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
 		return reactorCommandGateway.send<UUID>(command)
+			.defaultIfEmpty(request.voteId)
 			.map { IdResponse(id = it) }
 	}
 }
