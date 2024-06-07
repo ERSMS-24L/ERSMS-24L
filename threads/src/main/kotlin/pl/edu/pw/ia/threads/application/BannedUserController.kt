@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
@@ -64,7 +65,7 @@ class BannedUserControllerImpl(
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.WRITE}')")
 	override fun banUser(
-		request: BanUserRequest,
+		@RequestBody request: BanUserRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
@@ -75,7 +76,7 @@ class BannedUserControllerImpl(
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.WRITE}')")
 	override fun unBanUser(
-		request: UnbanUserRequest,
+		@RequestBody request: UnbanUserRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())

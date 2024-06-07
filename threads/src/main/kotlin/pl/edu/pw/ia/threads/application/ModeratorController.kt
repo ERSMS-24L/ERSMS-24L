@@ -75,7 +75,7 @@ class ModeratorControllerImpl(
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	override fun removeModerator(
-		request: RemoveModeratorRequest,
+		@RequestBody request: RemoveModeratorRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
