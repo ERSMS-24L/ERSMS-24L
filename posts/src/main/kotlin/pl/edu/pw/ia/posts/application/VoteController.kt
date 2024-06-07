@@ -70,18 +70,19 @@ class VoteControllerImpl(
 		@RequestBody request: CreateVoteRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
-		// TODO: Not working, throws 404 when Vote should be created
 		return reactorQueryGateway.query(
 			FindVoteByAccountAndPostIdsQuery(request.postId, webExchange.getAccountId()),
 			ResponseTypes.instanceOf(VoteView::class.java)
 		).flatMap { voteView ->
 			val updateRequest = UpdateVoteRequest(voteView.voteId, request.postId, request.vote)
 			updateVote(updateRequest, webExchange)
-		}.onErrorResume {
-			val command = request.toCommand(webExchange.getAccountId())
-			reactorCommandGateway.send<UUID>(command)
-				.map { IdResponse(id = it) }
-		}
+		}.switchIfEmpty(
+			Mono.defer {
+				val command = request.toCommand(webExchange.getAccountId())
+				reactorCommandGateway.send<UUID>(command)
+					.map { IdResponse(id = it) }
+			}
+		)
 	}
 
 	@PutMapping
@@ -92,6 +93,7 @@ class VoteControllerImpl(
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
 		return reactorCommandGateway.send<UUID>(command)
+			.defaultIfEmpty(request.voteId)
 			.map { IdResponse(id = it) }
 	}
 }
