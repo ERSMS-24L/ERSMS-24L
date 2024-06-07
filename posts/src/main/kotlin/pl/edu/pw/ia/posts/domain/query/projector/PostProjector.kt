@@ -103,8 +103,8 @@ class PostProjector(
 	}
 
 	@QueryHandler
-	fun handle(query: FindPostByIdQuery): PostView =
-		repository.findById(query.postId) ?: throw PostNotFoundException(query.postId)
+	fun handle(query: FindPostByIdQuery): PostView? =
+		repository.findById(query.postId)
 
 	@QueryHandler
 	fun handle(query: FindPostsByContentQuery): Page<PostView> =
