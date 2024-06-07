@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
@@ -72,7 +73,7 @@ class PostControllerImpl(
 	@ResponseStatus(HttpStatus.CREATED)
 	@PreAuthorize("hasAnyAuthority('${Scopes.POST.WRITE}')")
 	override fun createPost(
-		request: PostCreateRequest,
+		@RequestBody request: PostCreateRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
@@ -82,7 +83,7 @@ class PostControllerImpl(
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	override fun updatePost(
-		request: PostUpdateRequest,
+		@RequestBody request: PostUpdateRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
@@ -92,7 +93,7 @@ class PostControllerImpl(
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.OK)
 	override fun deletePost(
-		request: PostDeleteRequest,
+		@RequestBody request: PostDeleteRequest,
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
