@@ -44,7 +44,7 @@ spec:
               memory: 250Mi
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: kubernetes,disableSecurity
+              value: kubernetes
             - name: AXON_AXONSERVER_SERVERS
               value: axonserver
             - name: AXONIQ_CONSOLE_CREDENTIALS
