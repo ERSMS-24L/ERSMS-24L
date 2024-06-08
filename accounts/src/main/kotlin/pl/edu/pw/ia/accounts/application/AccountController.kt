@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.accounts.application.model.CreateAccountRequest
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
+import pl.edu.pw.ia.shared.domain.exception.ClientRequestException
 import pl.edu.pw.ia.shared.security.Scopes
 import reactor.core.publisher.Mono
 
@@ -54,6 +55,9 @@ class AccountControllerImpl(
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
 	): Mono<IdResponse> {
+		if (request.operationType != "CREATE" || request.resourceType != "USER") {
+			return Mono.error(ClientRequestException("Endpoint only supports operationType=CREATE and resourceType=USER"))
+		}
 		val command = request.toCommand()
 		return reactorCommandGateway.send<UUID>(command)
 			.map { IdResponse(id = it) }

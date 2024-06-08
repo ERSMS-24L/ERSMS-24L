@@ -46,6 +46,7 @@ class SecurityConfig(
 						.pathMatchers(swaggerPath).permitAll()
 						.pathMatchers("/webjars/swagger-ui/**").permitAll()
 						.pathMatchers("/actuator/**").permitAll()
+						.pathMatchers("/api/v1/accounts").permitAll() // TODO: consider allowing only keycloak here
 						.anyExchange().authenticated()
 			}
 			.oauth2ResourceServer {
