@@ -23,14 +23,14 @@ spec:
           args: ["start-dev"] # TODO: use production ready `start`
           livenessProbe:
             httpGet:
-              path: /realms/master
+              path: /keycloak/realms/master/
               port: 8080
               scheme: HTTP
             initialDelaySeconds: 120
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /realms/master
+              path: /keycloak/realms/master/
               port: 8080
               scheme: HTTP
             initialDelaySeconds: 60
@@ -43,10 +43,14 @@ spec:
               cpu: 125m
               memory: 250Mi
           env:
-            - name: PROXY_ADDRESS_FORWARDING
-              value: "true"
-            - name: KEYCLOAK_FRONTEND_URL
-              value: "https://kwojda.pl/keycloak"
+            - name: KC_HTTP_RELATIVE_PATH
+              value: "/keycloak/"
+            - name: KC_HOSTNAME_ADMIN_URL
+              value: "https://kwojda.pl/keycloak/"
+            - name: KC_HOSTNAME_URL
+              value: "https://kwojda.pl/keycloak/"
+            - name: KC_PROXY
+              value: "edge"
             - name: KEYCLOAK_ADMIN
               value: "admin"
             - name: KEYCLOAK_ADMIN_PASSWORD
