@@ -1,0 +1,53 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+name: Deploy to GKE
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: ersms-cluster-1               # Add your cluster name here.
+  GKE_ZONE: europe-west1                     # Add your cluster zone here.
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup gcloud CLI
+      - uses: google-github-actions/setup-gcloud@1bee7de035d65ec5da40a31f8589e240eba8fde5
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: ${{ secrets.GKE_PROJECT }}
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - uses: google-github-actions/get-gke-credentials@db150f2cc60d1716e61922b832eae71d2a45938f
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+          credentials: ${{ secrets.GKE_SA_KEY }}
+
+      # Update deployment to the GKE cluster
+      - name: Deploy
+        run: |-
+          kubectl rollout restart deployment/gateway-service -n ersms-forum
+          kubectl rollout status deployment/gateway-service -n ersms-forum
+          kubectl rollout restart deployment/accounts-service -n ersms-forum
+          kubectl rollout status deployment/accounts-service -n ersms-forum
+          kubectl rollout restart deployment/posts-service -n ersms-forum
+          kubectl rollout status deployment/posts-service -n ersms-forum
+          kubectl rollout restart deployment/threads-service -n ersms-forum
+          kubectl rollout status deployment/threads-service -n ersms-forum

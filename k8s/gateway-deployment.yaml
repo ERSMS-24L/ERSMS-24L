@@ -44,7 +44,7 @@ spec:
               memory: 250Mi
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: kubernetes
+              value: kubernetes,disableSecurity
           ports:
             - containerPort: 8080
       restartPolicy: Always
