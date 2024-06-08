@@ -27,6 +27,24 @@ spring:
           uri: https://threads-service.ersms-forum.svc.cluster.local:8083
           predicates:
             - Path=/threads/**
+        - id: kibana
+          uri: https://eck-stack-eck-kibana-kb-http.default.svc.cluster.local:5601
+          predicates:
+            - Path=/kibana/**
+          filters:
+            - StripPrefix=1
+        - id: prometheus
+          uri: http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090
+          predicates:
+            - Path=/prometheus/**
+          filters:
+            - StripPrefix=1
+        - id: grafana
+          uri: http://prometheus-stack-grafana.default.svc.cluster.local:80
+          predicates:
+            - Path=/grafana/**
+          filters:
+            - StripPrefix=1
         - id: keycloak
           uri: http://keycloak.ersms-forum.svc.cluster.local:8080
           predicates:
@@ -42,6 +60,9 @@ spring:
         ssl:
           trusted-x509-certificates:
             - classpath:client.pem
+          useInsecureTrustManager: true
+
+# TODO: add support for generated ssl certificate
 
 server:
   ssl:

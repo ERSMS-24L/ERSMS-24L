@@ -7,7 +7,7 @@ metadata:
   name: threads-service
   namespace: ersms-forum
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: threads-service

@@ -16,8 +16,9 @@ eck-elasticsearch:
             - name: elasticsearch
               resources:
                 requests:
-                  memory: 500Mi
-                  cpu: 300m
+                  memory: 1200Mi
+                  cpu: 400m
+
 eck-kibana:
   enabled: true
   spec:
