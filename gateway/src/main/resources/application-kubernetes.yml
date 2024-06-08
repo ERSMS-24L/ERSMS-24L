@@ -55,9 +55,9 @@ spring:
             - NotPath=/swagger,/swagger/**,/webjars/**,/actuator/**
       httpclient:
         ssl:
-          trusted-x509-certificates:
-            - classpath:client.pem
-          useInsecureTrustManager: true
+#          trusted-x509-certificates:
+#            - classpath:client.pem
+          use-insecure-trust-manager: true
 
 # TODO: add support for generated ssl certificate
 
