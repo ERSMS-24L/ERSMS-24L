@@ -20,7 +20,7 @@ spec:
       containers:
         - image: quay.io/keycloak/keycloak:24.0.3
           name: keycloak
-          args: ["start-dev"] # TODO: use production ready `start`
+          args: ["start-dev", "--hostname-url=https://kwojda.pl/keycloak"] # TODO: use production ready `start`
           livenessProbe:
             httpGet:
               path: /realms/master
