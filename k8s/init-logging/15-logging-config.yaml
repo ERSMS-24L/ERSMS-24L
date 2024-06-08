@@ -31,6 +31,22 @@ eck-kibana:
     count: 1
     elasticsearchRef:
       name: elasticsearch
+    config:
+      server:
+        basePath: "/kibana"
+        rewriteBasePath: true
+        publicBaseUrl: "https://kwojda.pl/kibana"
+    podTemplate:
+      spec:
+        containers:
+          - name: kibana
+            readinessProbe:
+              # Override the readiness probe as GCLB reuses it for its own healthchecks
+              httpGet:
+                scheme: HTTPS
+                path: "/kibana/login"
+                port: 5601
+
 eck-beats:
   metadata:
     name: filebeat
