@@ -10,7 +10,6 @@ import java.util.UUID
 import org.axonframework.extensions.reactor.queryhandling.gateway.ReactorQueryGateway
 import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.springframework.http.MediaType
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -20,7 +19,6 @@ import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.domain.exception.VoteNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindVoteByAccountAndPostIdsQuery
 import pl.edu.pw.ia.shared.domain.view.VoteView
-import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.shared.security.getAccountId
 import reactor.core.publisher.Mono
 
@@ -57,7 +55,6 @@ class VoteViewControllerImpl(
 ) : VoteViewController {
 
 	@GetMapping("/")
-	@PreAuthorize("hasAnyAuthority('${Scopes.VOTE.READ}')")
 	override fun findVoteByAccountAndPostIdQuery(
 		@RequestParam postId: UUID,
 		webExchange: ServerWebExchange
