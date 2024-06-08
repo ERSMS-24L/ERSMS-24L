@@ -84,7 +84,6 @@ class PostViewControllerImpl(
 	}
 
 	@GetMapping(params = ["threadId"])
-	@PreAuthorize("hasAnyAuthority('${Scopes.POST.READ}')")
 	override fun findPostsByThreadId(
 		@RequestParam(required = true) threadId: UUID,
 		@PageableDefault pageable: Pageable
@@ -96,7 +95,6 @@ class PostViewControllerImpl(
 	}
 
 	@GetMapping(params = ["content"])
-	@PreAuthorize("hasAnyAuthority('${Scopes.POST.READ}')")
 	override fun findPostsByContent(
 		@RequestParam(required = false) content: String,
 		@PageableDefault pageable: Pageable
@@ -108,7 +106,6 @@ class PostViewControllerImpl(
 	}
 
 	@GetMapping(params = ["content", "threadId"])
-	@PreAuthorize("hasAnyAuthority('${Scopes.POST.READ}')")
 	override fun findPostsByContentAndThreadId(
 		@RequestParam(required = false) content: String,
 		@RequestParam(required = true) threadId: UUID,

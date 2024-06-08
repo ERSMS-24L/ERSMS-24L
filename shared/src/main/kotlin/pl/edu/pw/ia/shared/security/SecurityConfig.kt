@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
@@ -46,6 +47,9 @@ class SecurityConfig(
 						.pathMatchers(swaggerPath).permitAll()
 						.pathMatchers("/webjars/swagger-ui/**").permitAll()
 						.pathMatchers("/actuator/**").permitAll()
+						.pathMatchers(HttpMethod.GET, "/api/v1/threads/**").permitAll()
+						.pathMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
+						.pathMatchers(HttpMethod.GET, "/api/v1/votes**").permitAll()
 						.pathMatchers("/api/v1/accounts").permitAll() // TODO: consider allowing only keycloak here
 						.anyExchange().authenticated()
 			}
