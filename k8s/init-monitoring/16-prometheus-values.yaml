@@ -943,11 +943,6 @@ alertmanager:
   #     someoneelse:$apr1$DMZX2Z4q$6SbQIfyuLQd.xmo/P0m2c.
 
 
-grafana.ini:
-  server:
-    domain: "kwojda.pl"
-    root_url: "https://kwojda.pl/grafana/"
-
 ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
 ##
 grafana:
@@ -955,6 +950,11 @@ grafana:
   namespaceOverride: ""
   env:
     GF_SERVER_SERVE_FROM_SUB_PATH: true
+
+  grafana.ini:
+    server:
+      domain: "kwojda.pl"
+      root_url: "https://kwojda.pl/grafana/"
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
@@ -1012,7 +1012,7 @@ grafana:
     hosts: []
 
     ## Path for grafana ingress
-    path: /
+    path: /grafana/
 
     ## TLS configuration for grafana Ingress
     ## Secret must be manually created in the namespace
@@ -1068,7 +1068,7 @@ grafana:
 
       ## URL of prometheus datasource
       ##
-      # url: http://prometheus-stack-prometheus:9090/
+      url: http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090/prometheus/
 
       ## Prometheus request timeout in seconds
       # timeout: 30
@@ -1141,7 +1141,7 @@ grafana:
 
     # Path to use for scraping metrics. Might be different if server.root_url is set
     # in grafana.ini
-    path: "/metrics"
+    path: "/grafana/metrics"
 
     #  namespace: monitoring  (defaults to use the namespace this chart is deployed to)
 
