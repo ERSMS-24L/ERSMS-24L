@@ -31,26 +31,18 @@ spring:
           uri: https://eck-stack-eck-kibana-kb-http.default.svc.cluster.local:5601
           predicates:
             - Path=/kibana/**
-          filters:
-            - StripPrefix=1
         - id: prometheus
           uri: http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090
           predicates:
             - Path=/prometheus/**
-          filters:
-            - StripPrefix=1
         - id: grafana
           uri: http://prometheus-stack-grafana.default.svc.cluster.local:80
           predicates:
             - Path=/grafana/**
-          filters:
-            - StripPrefix=1
         - id: keycloak
-          uri: http://keycloak.ersms-forum.svc.cluster.local:8080
+          uri: http://keycloak.ersms-forum.svc.cluster.local:8888
           predicates:
             - Path=/keycloak/**
-          filters:
-            - StripPrefix=1
         - id: frontend
           uri: http://frontend.ersms-forum.svc.cluster.local:8084
           predicates:
