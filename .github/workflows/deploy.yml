@@ -43,6 +43,8 @@ jobs:
       # Update deployment to the GKE cluster
       - name: Deploy
         run: |-
+          kubectl rollout restart deployment/frontend -n ersms-forum
+          kubectl rollout status deployment/frontend -n ersms-forum
           kubectl rollout restart deployment/gateway-service -n ersms-forum
           kubectl rollout status deployment/gateway-service -n ersms-forum
           kubectl rollout restart deployment/accounts-service -n ersms-forum
