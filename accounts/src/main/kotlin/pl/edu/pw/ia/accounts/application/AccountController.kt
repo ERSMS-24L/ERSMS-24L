@@ -51,7 +51,6 @@ class AccountControllerImpl(
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@PreAuthorize("hasAnyAuthority('${Scopes.USER.WRITE}')")
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
 	): Mono<IdResponse> {
