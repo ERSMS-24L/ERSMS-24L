@@ -1,6 +1,10 @@
 import "../scss/styles.scss";
-import { initLoginManager } from "./login"
+import * as login from "./login"
 import { showPagination } from "./pages";
+
+let firstPostId: string | null = null;
+let userId: string = "";
+let isModerator: boolean = false;
 
 interface Post {
   postId: string,
@@ -34,7 +38,7 @@ async function sendVote(postId: string, vote: Vote): Promise<void> {
 
   const votesParagraph = document.getElementById(`votes_${postId}`) as (HTMLParagraphElement | null);
   if (votesParagraph !== null) {
-    votesParagraph.replaceWith(await createVotesParagraph(postId));
+    votesParagraph.replaceWith(await createVotesSpan(postId));
   }
 }
 
@@ -45,6 +49,14 @@ async function postVoteCount(postId: string): Promise<number> {
   }
   const data = await response.json() as Post;
   return data.votes;
+}
+
+async function fetchUserId(): Promise<void> {
+  userId = (await login.getUserDetails()).accountId;
+}
+
+async function fetchIsModerator(threadId: string): Promise<void> {
+  isModerator = await login.isModeratorUnder(threadId);
 }
 
 async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
@@ -61,20 +73,19 @@ async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
   }
 }
 
-async function createVotesParagraph(postId: string, voteCount?: number): Promise<HTMLParagraphElement> {
+async function createVotesSpan(postId: string, voteCount?: number): Promise<HTMLSpanElement> {
   const currentVote = await currentUserVote(postId);
   voteCount = voteCount ?? await postVoteCount(postId);
 
-  // <p class="mb-0" id="votes_${postId}">
+  // <span class="mb-0" id="votes_${postId}">
   //  Votes:
   //  <button type="button" class="btn btn-sm mx-1" onclick=...>-</button>
   //  <span>42</span>
   //  <button type="button" class="btn btn-" onclick=...>+</button>
-  // </p>
-  const p = document.createElement("p");
-  p.classList.add("mb-0");
-  p.id = `votes_${postId}`;
-  p.innerText = "Votes:";
+  // </span>
+  const span = document.createElement("span");
+  span.id = `votes_${postId}`;
+  span.innerText = "Votes:";
 
   if (currentVote !== "UNAUTHORIZED") {
     const minus = document.createElement("button");
@@ -82,12 +93,12 @@ async function createVotesParagraph(postId: string, voteCount?: number): Promise
     minus.classList.add("btn", "btn-sm", currentVote === "DOWN_VOTE" ? "btn-danger" : "btn-outline-danger", "mx-1");
     minus.innerText = "-";
     minus.onclick = () => sendVote(postId, currentVote === "DOWN_VOTE" ? "NO_VOTE" : "DOWN_VOTE");
-    p.append(minus);
+    span.append(minus);
   }
 
   const count = document.createElement("span");
   count.innerText = voteCount.toFixed(0);
-  p.append(count);
+  span.append(count);
 
   if (currentVote !== "UNAUTHORIZED") {
     const plus = document.createElement("button");
@@ -95,10 +106,57 @@ async function createVotesParagraph(postId: string, voteCount?: number): Promise
     plus.classList.add("btn", "btn-sm", currentVote === "UP_VOTE" ? "btn-success" : "btn-outline-success", "ms-1");
     plus.innerText = "+";
     plus.onclick = () => sendVote(postId, currentVote === "UP_VOTE" ? "NO_VOTE" : "UP_VOTE");
-    p.append(plus);
+    span.append(plus);
   }
 
-  return p;
+  return span;
+}
+
+async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
+  if (userId === "") return null;
+  const isAuthor = userId === post.accountId;
+  const isFirstPost = post.postId === firstPostId;
+
+  const buttons: (HTMLAnchorElement | HTMLButtonElement)[] = [];
+
+  if (isAuthor) {
+    const b = document.createElement("a");
+    b.role = "button";
+    b.classList.add("btn", "btn-sm", "btn-primary");
+    b.innerHTML = '<i class="bi-pencil-square"></i>';
+    if (isFirstPost) {
+      b.href = `thread_editor.html?threadId=${encodeURIComponent(post.threadId)}&postId=${encodeURIComponent(post.postId)}`;
+    } else {
+      b.href = `post_editor.html?threadId=${encodeURIComponent(post.threadId)}&postId=${encodeURIComponent(post.postId)}`;
+    }
+    buttons.push(b);
+  }
+
+  if ((isAuthor || isModerator) && !isFirstPost) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.role = "button";
+    b.classList.add("btn", "btn-sm", "btn-primary");
+    if (buttons.length > 0) b.classList.add("ms-1");
+    b.innerHTML = '<i class="bi-trash"></i>';
+    buttons.push(b);
+  }
+
+  if (isModerator) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.role = "button";
+    b.classList.add("btn", "btn-sm", "btn-primary");
+    if (buttons.length > 0) b.classList.add("ms-1");
+    b.innerHTML = '<i class="bi-shield"></i>';
+    buttons.push(b);
+  }
+
+  // TODO: ifAdmin, add a site-wide ban button (btn-danger + bi-shield)
+
+  const span = document.createElement("span");
+  span.append(...buttons);
+  return span;
 }
 
 async function createPostCard(post: Post): Promise<HTMLDivElement> {
@@ -107,7 +165,7 @@ async function createPostCard(post: Post): Promise<HTMLDivElement> {
   //    <div class="card-text">{{ text }}</div>
   //  </div>
   //  <div class="card-footer">
-  //    <p>Votes: (-) 37 (+)</p>
+  //    <div class="d-flex justify-content-between mb-0">votesSpan buttonsSpan</div>
   //    <small class="text-muted">Created by {{ author }}, last modified {{ last_modified }}</small>
   //  </div>
   // </div></div>
@@ -120,7 +178,13 @@ async function createPostCard(post: Post): Promise<HTMLDivElement> {
   body.classList.add("card-body");
   body.append(text);
 
-  const footerVotes = await createVotesParagraph(post.postId, post.votes);
+  const [footerVotes, footerButtons] = await Promise.all([
+    createVotesSpan(post.postId, post.votes),
+    createButtonsSpan(post),
+  ]);
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("d-flex", "justify-content-between", "mb-0");
+  buttonsContainer.append(footerVotes, footerButtons);
 
   const createdAt = new Date(post.createdAt * 1000).toLocaleString();
   const footerText = document.createElement("small");
@@ -129,7 +193,7 @@ async function createPostCard(post: Post): Promise<HTMLDivElement> {
 
   const footer = document.createElement("div");
   footer.classList.add("card-footer");
-  footer.append(footerVotes, footerText)
+  footer.append(buttonsContainer, footerText);
 
   const card = document.createElement("div");
   card.classList.add("card", "mb-2");
@@ -147,13 +211,13 @@ async function showPosts(posts: Post[]): Promise<void> {
 }
 
 async function loadPostsPage(threadId: string, page = 0, pageSize = 20): Promise<PostList> {
-    const response = await fetch(`/posts/api/v1/posts?threadId=${encodeURIComponent(threadId)}&page=${encodeURIComponent(page)}&size=${encodeURIComponent(pageSize)}&sort=createdAt,asc`);
-    if (!response.ok) {
-      console.error(`Failed to fetch posts page ${page}: ${response.status} ${response.statusText}`);
-      return { posts: [], totalPages: 1 };
-    }
-    const data = await response.json();
-    return { posts: data.content, totalPages: data.totalPages };
+  const response = await fetch(`/posts/api/v1/posts?threadId=${encodeURIComponent(threadId)}&page=${encodeURIComponent(page)}&size=${encodeURIComponent(pageSize)}&sort=createdAt,asc`);
+  if (!response.ok) {
+    console.error(`Failed to fetch posts page ${page}: ${response.status} ${response.statusText}`);
+    return { posts: [], totalPages: 1 };
+  }
+  const data = await response.json();
+  return { posts: data.content, totalPages: data.totalPages };
 }
 
 async function showPage(threadId: string, page = 0): Promise<void> {
@@ -171,18 +235,21 @@ async function showHeader(threadId: string): Promise<void> {
 
   const data = await response.json();
 
+  firstPostId = data.postId;
   (document.getElementById("thread_name_header") as HTMLHeadingElement).innerText = data.title;
   (document.getElementById("new_post_button") as HTMLAnchorElement).href = `post_editor.html?threadId=${encodeURIComponent(threadId)}`;
 }
 
 async function init(): Promise<void> {
+  await login.initLoginManager();
+
   const params = new URLSearchParams(window.location.search);
   let threadId = params.get("threadId") ?? "";
   let page = parseInt(params.get("page") ?? "0", 10);
   if (isNaN(page)) page = 0;
 
-  await Promise.all([showHeader(threadId), showPage(threadId, page)]);
+  await Promise.all([showHeader(threadId), fetchUserId(), fetchIsModerator(threadId)]);
+  await showPage(threadId, page);
 }
 
 init();
-initLoginManager();
