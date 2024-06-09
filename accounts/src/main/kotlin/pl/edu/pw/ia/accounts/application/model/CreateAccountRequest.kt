@@ -1,6 +1,5 @@
 package pl.edu.pw.ia.accounts.application.model
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -30,12 +29,20 @@ data class CreateAccountRequest(
 	val resourcePath: String,
 ) {
 	fun toCommand(): CreateAccountCommand {
-		val objectMapper = ObjectMapper()
-		val actualRepresentation: CreateAccountRequestInner = objectMapper.readValue(representation.replace("\\", ""), CreateAccountRequestInner::class.java)
+		// for some reason representation is passed flat in a string
+		// I could not manage to deserialize it, for now I will extract the 2 required fields with regex
+		val representationCleaned = representation.replace("\\", "")
+
+		val usernameRegex = """(?<="username":")[^"]*""".toRegex()
+		val username = usernameRegex.find(representationCleaned)!!.groups[0]!!.value
+
+		val emailRegex = """(?<="email":")[^"]*""".toRegex()
+		val email = emailRegex.find(representationCleaned)!!.groups[0]!!.value
+
 		return CreateAccountCommand(
 			accountId = UUID.fromString(resourcePath.replace("users/", "")),
-			name = actualRepresentation.username,
-			email = actualRepresentation.email,
+			name = username,
+			email = email,
 		)
 	}
 }
