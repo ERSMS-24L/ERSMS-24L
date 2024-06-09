@@ -2,6 +2,10 @@
 
 kubectl config get-contexts
 kubectl config use-context docker-desktop
+
+# Keycloak secret
+kubectl create secret generic cert-pem-1 --from-file accounts/src/main/resources/client.pem -n ersms-forum
+
 # use other context
 kubectl apply -f k8s/init-namespace/
 kubectl apply -f k8s/init-services/
