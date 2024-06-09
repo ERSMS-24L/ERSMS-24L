@@ -45,6 +45,24 @@ async function sendVote(postId: string, vote: Vote): Promise<void> {
   }
 }
 
+async function deletePost(postId: string): Promise<void> {
+  const response = await fetch(
+    "/posts/api/v1/posts",
+    {
+      method: "DELETE",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postId: postId }),
+    },
+  );
+  if (!response.ok) {
+    throw `Failed to delete post ${postId}: ${response.status} ${response.statusText}`;
+  }
+  window.location.reload();
+}
+
 async function postVoteCount(postId: string): Promise<number> {
   const response = await fetch(`/posts/api/v1/posts/${encodeURIComponent(postId)}`);
   if (!response.ok) {
@@ -147,6 +165,7 @@ async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
     b.classList.add("btn", "btn-sm", "btn-primary");
     if (buttons.length > 0) b.classList.add("ms-1");
     b.innerHTML = '<i class="bi-trash"></i>';
+    b.onclick = () => deletePost(post.postId);
     buttons.push(b);
   }
 
