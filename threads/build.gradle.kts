@@ -19,7 +19,7 @@ val axonVersion = "4.9.4"
 val springDocVersion = "2.5.0"
 
 dependencies {
-	implementation("pl.edu.pw.ia:ersms-shared:fix-blocking")
+	implementation("pl.edu.pw.ia:ersms-shared:anonym-enabled")
 
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
@@ -50,7 +50,7 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.hibernate:hibernate-validator:8.0.1.Final")
 
-	implementation("io.micrometer:micrometer-registry-prometheus:1.12.6")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.13.0")
 
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 

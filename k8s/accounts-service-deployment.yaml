@@ -44,7 +44,7 @@ spec:
               memory: 250Mi
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: kubernetes,disableSecurity
+              value: kubernetes
             - name: AXON_AXONSERVER_SERVERS
               value: axonserver
             - name: AXONIQ_CONSOLE_CREDENTIALS
@@ -52,9 +52,9 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               value: "mongodb://root:root@mongodb:27017/accounts?authSource=admin"
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
-              value: keycloak:8888/realms/ersms
+              value: keycloak:8888/keycloak/realms/ersms
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI
-              value: keycloak:8888/realms/ersms/protocol/openid-connect/certs
+              value: keycloak:8888/keycloak/realms/ersms/protocol/openid-connect/certs
           ports:
             - containerPort: 8081
       restartPolicy: Always
