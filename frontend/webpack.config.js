@@ -10,8 +10,8 @@ module.exports = {
   mode: 'development',
   entry: {
     index: './src/ts/index.ts',
-    newPost: './src/ts/newPost.ts',
-    newThread: './src/ts/newThread.ts',
+    postEditor: './src/ts/postEditor.ts',
+    threadEditor: './src/ts/threadEditor.ts',
     silentSsoCheck: './src/ts/silentSsoCheck.ts',
     thread: './src/ts/thread.ts',
   },
@@ -32,14 +32,14 @@ module.exports = {
       chunks: ["index"],
     }),
     new HtmlWebpackPlugin({
-      filename: "new_post.html",
-      template: './src/new_post.html',
-      chunks: ["newPost"],
+      filename: "post_editor.html",
+      template: './src/post_editor.html',
+      chunks: ["postEditor"],
     }),
     new HtmlWebpackPlugin({
-      filename: "new_thread.html",
-      template: './src/new_thread.html',
-      chunks: ["newThread"],
+      filename: "thread_editor.html",
+      template: './src/thread_editor.html',
+      chunks: ["threadEditor"],
     }),
     new HtmlWebpackPlugin({
       filename: "silent_sso_check.html",

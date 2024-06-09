@@ -172,7 +172,7 @@ async function showHeader(threadId: string): Promise<void> {
   const data = await response.json();
 
   (document.getElementById("thread_name_header") as HTMLHeadingElement).innerText = data.title;
-  (document.getElementById("new_post_button") as HTMLAnchorElement).href = `new_post.html?threadId=${encodeURIComponent(threadId)}`;
+  (document.getElementById("new_post_button") as HTMLAnchorElement).href = `post_editor.html?threadId=${encodeURIComponent(threadId)}`;
 }
 
 async function init(): Promise<void> {
