@@ -50,7 +50,7 @@ class SecurityConfig(
 						.pathMatchers(HttpMethod.GET, "/api/v1/threads/**").permitAll()
 						.pathMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
 						.pathMatchers(HttpMethod.GET, "/api/v1/votes**").permitAll()
-						.pathMatchers("/api/v1/accounts").permitAll() // TODO: consider allowing only keycloak here
+						.pathMatchers("**/api/v1/accounts").permitAll() // TODO: consider allowing only keycloak here
 						.anyExchange().authenticated()
 			}
 			.oauth2ResourceServer {
