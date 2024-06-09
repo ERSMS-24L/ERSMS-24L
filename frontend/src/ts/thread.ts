@@ -28,7 +28,10 @@ async function sendVote(postId: string, vote: Vote): Promise<void> {
     "/posts/api/v1/votes",
     {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({postId: postId, vote: vote}),
     },
   );
@@ -60,7 +63,12 @@ async function fetchIsModerator(threadId: string): Promise<void> {
 }
 
 async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
-  const response = await fetch(`/posts/api/v1/votes/?postId=${encodeURIComponent(postId)}`);
+  const response = await fetch(
+    `/posts/api/v1/votes/?postId=${encodeURIComponent(postId)}`,
+    {
+      headers: {"Authorization": login.getAuthorizationHeader()},
+    },
+  );
   if (response.status === 403) {
     return "UNAUTHORIZED";
   } else if (response.status === 404) {

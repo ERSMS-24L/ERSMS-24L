@@ -1,12 +1,15 @@
 import "../scss/styles.scss";
-import { initLoginManager } from "./login"
+import { initLoginManager, getAuthorizationHeader } from "./login"
 
 async function create_thread(title: string): Promise<string> {
   const response = await fetch(
     "/threads/api/v1/threads",
     {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Authorization": getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({title: title}),
     },
   );
@@ -19,7 +22,10 @@ async function create_post(threadId: string, content: string): Promise<void> {
     "/posts/api/v1/posts",
     {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Authorization": getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({threadId: threadId, content: content}),
     },
   );

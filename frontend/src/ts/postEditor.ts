@@ -1,5 +1,5 @@
 import "../scss/styles.scss";
-import { initLoginManager } from "./login"
+import { initLoginManager, getAuthorizationHeader } from "./login"
 
 let threadId = (new URLSearchParams(window.location.search)).get("threadId") ?? "";
 
@@ -8,7 +8,10 @@ async function create_post(content: string): Promise<void> {
     "/posts/api/v1/posts",
     {
       method: "POST",
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Authorization": getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({threadId: threadId, content: content}),
     },
   );
@@ -25,6 +28,8 @@ async function on_submit(): Promise<void> {
 }
 
 async function init(): Promise<void> {
+  await initLoginManager(true);
+
   const response = await fetch(`/threads/api/v1/threads/${encodeURIComponent(threadId)}`);
   if (!response.ok) {
     console.error(`Failed to fetch thread details ${threadId}: ${response.status} ${response.statusText}`);
@@ -37,5 +42,4 @@ async function init(): Promise<void> {
   (document.getElementById("form_submit") as HTMLButtonElement).onclick = on_submit;
 }
 
-init();
-initLoginManager(true);
+init()
