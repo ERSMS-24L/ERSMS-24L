@@ -17,7 +17,11 @@ async function create_post(content: string): Promise<void> {
 
 async function on_submit(): Promise<void> {
   const content = (document.getElementById("form_content") as HTMLInputElement).value;
-  if (content !== "") await create_post(content);
+  if (content !== "") {
+    await create_post(content);
+    // TODO: This should navigate to the last page, not first
+    window.location.assign(`thread.html?threadId=${threadId}`);
+  }
 }
 
 async function init(): Promise<void> {

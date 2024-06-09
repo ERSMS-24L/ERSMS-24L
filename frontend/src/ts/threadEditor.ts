@@ -32,6 +32,7 @@ async function on_submit(): Promise<void> {
   const content = (document.getElementById("form_content") as HTMLInputElement).value;
   const threadId = await create_thread(title);
   if (content !== "") await create_post(threadId, content);
+  window.location.assign(`thread.html?threadId=${encodeURIComponent(threadId)}`);
 }
 
 (document.getElementById("form_submit") as HTMLButtonElement).onclick = on_submit;
