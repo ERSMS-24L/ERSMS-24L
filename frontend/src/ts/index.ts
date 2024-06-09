@@ -8,7 +8,7 @@ interface Thread {
   username: string,
   title: string,
   post: string,
-  lastModified: string,
+  lastModified: number,
 }
 
 interface ThreadList {
@@ -19,7 +19,7 @@ interface ThreadList {
 function createThreadCard(thread: Thread): HTMLDivElement {
   // <div class="col"><div class="card mb-2">
   //  <div class="card-body">
-  //    <h5 class="card-title">{{ title }}</h5>
+  //    <a href="thread.html?threadId=XXX" class="h5 card-title">{{ title }}</h5>
   //    <div class="card-text">{{ text }}</div>
   //  </div>
   //  <div class="card-footer">
@@ -27,8 +27,10 @@ function createThreadCard(thread: Thread): HTMLDivElement {
   //  </div>
   // </div></div>
 
-  const title = document.createElement("h5");
+  const title = document.createElement("a");
+  title.href = `thread.html?threadId=${encodeURIComponent(thread.threadId)}`;
   title.classList.add("card-title");
+  title.classList.add("h5");
   title.innerText = thread.title;
 
   const text = document.createElement("div");
@@ -39,10 +41,10 @@ function createThreadCard(thread: Thread): HTMLDivElement {
   body.classList.add("card-body");
   body.append(title, text);
 
+  const lastModified = new Date(thread.lastModified * 1000).toLocaleString();
   const footerText = document.createElement("small");
   footerText.classList.add("text-muted");
-  // TODO: Change last-modified to a human-readable timestamp
-  footerText.innerText = `Created by ${thread.username}, last modified ${thread.lastModified}`;
+  footerText.innerText = `Created by ${thread.username}, last modified ${lastModified}`;
 
   const footer = document.createElement("div");
   footer.classList.add("card-footer");

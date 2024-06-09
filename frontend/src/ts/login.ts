@@ -1,5 +1,7 @@
 import Keycloak from "keycloak-js";
 
+let cachedUserDetails: UserDetails | null = null;
+
 const keycloak = new Keycloak({
   url: new URL("/keycloak", window.location.toString()).toString(),
   realm: 'ersms',
@@ -13,11 +15,14 @@ export interface UserDetails {
 }
 
 export function getAuthorizationHeader(): string {
-  if (keycloak.authenticated !== true) return "";
+  if (keycloak.isTokenExpired(30)) keycloak.updateToken(30);
+  if (!keycloak.authenticated) return "";
   return `Bearer ${keycloak.token}`;
 }
 
 export async function getUserDetails(): Promise<UserDetails> {
+  if (cachedUserDetails !== null) return cachedUserDetails;
+
   const response = await fetch(
     `/accounts/api/v1/accounts/me`,
     {headers: {Authorization: getAuthorizationHeader()}},
@@ -26,7 +31,19 @@ export async function getUserDetails(): Promise<UserDetails> {
     console.error(`Failed to fetch user details: ${response.status} ${response.statusText}`);
     return { accountId: "", name: "", email: ""};
   }
-  return await response.json();
+  cachedUserDetails = await response.json();
+  return cachedUserDetails;
+}
+
+export async function isModeratorUnder(threadId: string): Promise<boolean> {
+  const auth = getAuthorizationHeader();
+  if (auth === "") return false;
+
+  const response = await fetch(
+    `/threads/api/v1/moderators/me?threadId=${threadId}`,
+    {headers: {Authorization: getAuthorizationHeader()}},
+  );
+  return response.ok;
 }
 
 function createLoginButton() {
