@@ -31,7 +31,7 @@ data class CreateAccountRequest(
 ) {
 	fun toCommand(): CreateAccountCommand {
 		val objectMapper = ObjectMapper()
-		val actualRepresentation: CreateAccountRequestInner = objectMapper.readValue(representation, CreateAccountRequestInner::class.java)
+		val actualRepresentation: CreateAccountRequestInner = objectMapper.readValue(representation.replace("\\", ""), CreateAccountRequestInner::class.java)
 		return CreateAccountCommand(
 			accountId = UUID.fromString(resourcePath.replace("users/", "")),
 			name = actualRepresentation.username,
