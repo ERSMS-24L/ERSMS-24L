@@ -8,7 +8,7 @@ interface Post {
   accountId: string,
   username: string,
   content: string,
-  createdAt: string,
+  createdAt: number,
   votes: number,
 }
 
@@ -35,10 +35,10 @@ function createPostCard(post: Post): HTMLDivElement {
   body.classList.add("card-body");
   body.append(text);
 
+  const createdAt = new Date(post.createdAt * 1000).toLocaleString();
   const footerText = document.createElement("small");
   footerText.classList.add("text-muted");
-  // TODO: Change last-modified to a human-readable timestamp
-  footerText.innerText = `Created by ${post.username}, created at ${post.createdAt}`;
+  footerText.innerText = `Created by ${post.username}, created at ${createdAt}`;
 
   const footer = document.createElement("div");
   footer.classList.add("card-footer");

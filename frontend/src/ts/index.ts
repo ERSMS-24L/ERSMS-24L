@@ -8,7 +8,7 @@ interface Thread {
   username: string,
   title: string,
   post: string,
-  lastModified: string,
+  lastModified: number,
 }
 
 interface ThreadList {
@@ -41,10 +41,10 @@ function createThreadCard(thread: Thread): HTMLDivElement {
   body.classList.add("card-body");
   body.append(title, text);
 
+  const lastModified = new Date(thread.lastModified * 1000).toLocaleString();
   const footerText = document.createElement("small");
   footerText.classList.add("text-muted");
-  // TODO: Change last-modified to a human-readable timestamp
-  footerText.innerText = `Created by ${thread.username}, last modified ${thread.lastModified}`;
+  footerText.innerText = `Created by ${thread.username}, last modified ${lastModified}`;
 
   const footer = document.createElement("div");
   footer.classList.add("card-footer");
