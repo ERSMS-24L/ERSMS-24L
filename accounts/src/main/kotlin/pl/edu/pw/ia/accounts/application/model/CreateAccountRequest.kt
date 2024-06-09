@@ -1,5 +1,6 @@
 package pl.edu.pw.ia.accounts.application.model
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -11,7 +12,7 @@ data class CreateAccountRequest(
 
 	@Schema
 	@field:NotNull
-	val representation: CreateAccountRequestInner,
+	val representation: String,
 
 	@Schema(maxLength = 50)
 	@field:NotBlank(message = "operationType cannot be blank")
@@ -28,10 +29,13 @@ data class CreateAccountRequest(
 	@field:Length(max = 100, message = "Maximum allowed resourcePath length is 100 characters")
 	val resourcePath: String,
 ) {
-	fun toCommand() =
-		CreateAccountCommand(
+	fun toCommand(): CreateAccountCommand {
+		val objectMapper = ObjectMapper()
+		val actualRepresentation: CreateAccountRequestInner = objectMapper.readValue(representation, CreateAccountRequestInner::class.java)
+		return CreateAccountCommand(
 			accountId = UUID.fromString(resourcePath.replace("users/", "")),
-			name = representation.username,
-			email = representation.email,
+			name = actualRepresentation.username,
+			email = actualRepresentation.email,
 		)
+	}
 }
