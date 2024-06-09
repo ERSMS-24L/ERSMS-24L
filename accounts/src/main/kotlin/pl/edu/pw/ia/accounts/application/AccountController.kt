@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.accounts.application.model.CreateAccountRequest
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
+import pl.edu.pw.ia.shared.config.getLogger
 import pl.edu.pw.ia.shared.domain.exception.ClientRequestException
 import pl.edu.pw.ia.shared.security.Scopes
 import reactor.core.publisher.Mono
@@ -49,11 +50,15 @@ class AccountControllerImpl(
 	private val reactorCommandGateway: ReactorCommandGateway,
 ) : AccountController {
 
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
 	): Mono<IdResponse> {
+		// TODO: remove me after the sad late night microservice debugging session
+		getLogger(AccountControllerImpl::class.java).debug("In createAccount: ${request.operationType}, ${request.resourceType}, ${request.resourcePath} ${request.representation.email}, ${request.representation.username}")
+
 		if (request.operationType != "CREATE" || request.resourceType != "USER") {
 			return Mono.error(ClientRequestException("Endpoint only supports operationType=CREATE and resourceType=USER"))
 		}
