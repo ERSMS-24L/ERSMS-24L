@@ -12,17 +12,102 @@ interface Post {
   votes: number,
 }
 
+type Vote = "UP_VOTE" | "DOWN_VOTE" | "NO_VOTE";
+
 interface PostList {
   posts: Post[],
   totalPages: number,
 }
 
-function createPostCard(post: Post): HTMLDivElement {
+async function sendVote(postId: string, vote: Vote): Promise<void> {
+  const response = await fetch(
+    "/posts/api/v1/votes",
+    {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({postId: postId, vote: vote}),
+    },
+  );
+  if (!response.ok) {
+    throw `Failed to send vote ${vote} under ${postId}: ${response.status} ${response.statusText}`;
+  }
+
+  const votesParagraph = document.getElementById(`votes_${postId}`) as (HTMLParagraphElement | null);
+  if (votesParagraph !== null) {
+    votesParagraph.replaceWith(await createVotesParagraph(postId));
+  }
+}
+
+async function postVoteCount(postId: string): Promise<number> {
+  const response = await fetch(`/posts/api/v1/posts/${encodeURIComponent(postId)}`);
+  if (!response.ok) {
+    throw `Failed to fetch post details for ${postId}: ${response.status} ${response.statusText}`;
+  }
+  const data = await response.json() as Post;
+  return data.votes;
+}
+
+async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
+  const response = await fetch(`/posts/api/v1/votes/?postId=${encodeURIComponent(postId)}`);
+  if (response.status === 403) {
+    return "UNAUTHORIZED";
+  } else if (response.status === 404) {
+    return "NO_VOTE";
+  } else if (!response.ok) {
+    throw `Failed to fetch vote under ${postId}: ${response.status} ${response.statusText}`;
+  } else {
+    const data = await response.json();
+    return data.vote;
+  }
+}
+
+async function createVotesParagraph(postId: string, voteCount?: number): Promise<HTMLParagraphElement> {
+  const currentVote = await currentUserVote(postId);
+  voteCount = voteCount ?? await postVoteCount(postId);
+
+  // <p class="mb-0" id="votes_${postId}">
+  //  Votes:
+  //  <button type="button" class="btn btn-sm mx-1" onclick=...>-</button>
+  //  <span>42</span>
+  //  <button type="button" class="btn btn-" onclick=...>+</button>
+  // </p>
+  const p = document.createElement("p");
+  p.classList.add("mb-0");
+  p.id = `votes_${postId}`;
+  p.innerText = "Votes:";
+
+  if (currentVote !== "UNAUTHORIZED") {
+    const minus = document.createElement("button");
+    minus.type = "button";
+    minus.classList.add("btn", "btn-sm", currentVote === "DOWN_VOTE" ? "btn-danger" : "btn-outline-danger", "mx-1");
+    minus.innerText = "-";
+    minus.onclick = () => sendVote(postId, currentVote === "DOWN_VOTE" ? "NO_VOTE" : "DOWN_VOTE");
+    p.append(minus);
+  }
+
+  const count = document.createElement("span");
+  count.innerText = voteCount.toFixed(0);
+  p.append(count);
+
+  if (currentVote !== "UNAUTHORIZED") {
+    const plus = document.createElement("button");
+    plus.type = "button";
+    plus.classList.add("btn", "btn-sm", currentVote === "UP_VOTE" ? "btn-success" : "btn-outline-success", "ms-1");
+    plus.innerText = "+";
+    plus.onclick = () => sendVote(postId, currentVote === "UP_VOTE" ? "NO_VOTE" : "UP_VOTE");
+    p.append(plus);
+  }
+
+  return p;
+}
+
+async function createPostCard(post: Post): Promise<HTMLDivElement> {
   // <div class="col"><div class="card mb-2">
   //  <div class="card-body">
   //    <div class="card-text">{{ text }}</div>
   //  </div>
   //  <div class="card-footer">
+  //    <p>Votes: (-) 37 (+)</p>
   //    <small class="text-muted">Created by {{ author }}, last modified {{ last_modified }}</small>
   //  </div>
   // </div></div>
@@ -35,6 +120,8 @@ function createPostCard(post: Post): HTMLDivElement {
   body.classList.add("card-body");
   body.append(text);
 
+  const footerVotes = await createVotesParagraph(post.postId, post.votes);
+
   const createdAt = new Date(post.createdAt * 1000).toLocaleString();
   const footerText = document.createElement("small");
   footerText.classList.add("text-muted");
@@ -42,7 +129,7 @@ function createPostCard(post: Post): HTMLDivElement {
 
   const footer = document.createElement("div");
   footer.classList.add("card-footer");
-  footer.append(footerText)
+  footer.append(footerVotes, footerText)
 
   const card = document.createElement("div");
   card.classList.add("card", "mb-2");
@@ -54,9 +141,9 @@ function createPostCard(post: Post): HTMLDivElement {
   return wrapper;
 }
 
-function showPosts(posts: Post[]): void {
+async function showPosts(posts: Post[]): Promise<void> {
   const postsContainer = document.getElementById("posts") as HTMLDivElement;
-  postsContainer.replaceChildren(...posts.map(createPostCard));
+  postsContainer.replaceChildren(...await Promise.all(posts.map(createPostCard)));
 }
 
 async function loadPostsPage(threadId: string, page = 0, pageSize = 20): Promise<PostList> {
