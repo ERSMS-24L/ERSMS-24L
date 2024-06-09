@@ -151,7 +151,7 @@ async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
     b.classList.add("btn", "btn-sm", "btn-primary");
     b.innerHTML = '<i class="bi-pencil-square"></i>';
     if (isFirstPost) {
-      b.href = `thread_editor.html?threadId=${encodeURIComponent(post.threadId)}&postId=${encodeURIComponent(post.postId)}`;
+      b.href = `thread_editor.html?threadId=${encodeURIComponent(post.threadId)}`;
     } else {
       b.href = `post_editor.html?threadId=${encodeURIComponent(post.threadId)}&postId=${encodeURIComponent(post.postId)}`;
     }
