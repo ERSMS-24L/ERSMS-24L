@@ -56,9 +56,6 @@ class AccountControllerImpl(
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
 	): Mono<IdResponse> {
-		// TODO: remove me after the sad late night microservice debugging session
-		getLogger(AccountControllerImpl::class.java).debug("In createAccount: ${request.operationType}, ${request.resourceType}, ${request.resourcePath} ${request.representation.email}, ${request.representation.username}")
-
 		if (request.operationType != "CREATE" || request.resourceType != "USER") {
 			return Mono.error(ClientRequestException("Endpoint only supports operationType=CREATE and resourceType=USER"))
 		}
