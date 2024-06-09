@@ -17,10 +17,25 @@ spec:
       labels:
         app: keycloak
     spec:
+      volumes:
+        - name: cert-volume
+          secret:
+            secretName: cert-pem-1
+            items:
+              - key: client.pem
+                path: client.pem
       containers:
         - image: quay.io/phasetwo/phasetwo-keycloak:24.0.3
           name: keycloak
-          args: ["start-dev"] # TODO: use production ready `start`
+          # TODO: use production ready `start`
+          args: [
+            "start-dev",
+            "--truststore-paths=/custom_certs/client.pem"
+          ]
+          volumeMounts:
+            - name: cert-volume
+              mountPath: "/custom_certs"
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /keycloak/realms/master/
