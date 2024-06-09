@@ -23,9 +23,9 @@ data class CreateAccountRequest(
 	@field:Length(max = 50, message = "Maximum allowed resourceType length is 50 characters")
 	val resourceType: String,
 
-	@Schema(maxLength = 50)
+	@Schema(maxLength = 100)
 	@field:NotBlank(message = "resourcePath cannot be blank")
-	@field:Length(max = 50, message = "Maximum allowed resourceType length is 100 characters")
+	@field:Length(max = 100, message = "Maximum allowed resourcePath length is 100 characters")
 	val resourcePath: String,
 ) {
 	fun toCommand() =
