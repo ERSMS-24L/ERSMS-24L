@@ -22,10 +22,15 @@ data class CreateAccountRequest(
 	@field:NotBlank(message = "resourceType cannot be blank")
 	@field:Length(max = 50, message = "Maximum allowed resourceType length is 50 characters")
 	val resourceType: String,
+
+	@Schema(maxLength = 50)
+	@field:NotBlank(message = "resourcePath cannot be blank")
+	@field:Length(max = 50, message = "Maximum allowed resourceType length is 100 characters")
+	val resourcePath: String,
 ) {
 	fun toCommand() =
 		CreateAccountCommand(
-			accountId = UUID.randomUUID(),
+			accountId = UUID.fromString(resourcePath.replace("users/", "")),
 			name = representation.username,
 			email = representation.email,
 		)
