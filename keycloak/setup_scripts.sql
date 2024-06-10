@@ -6,4 +6,4 @@ VALUES ('_providerConfig.ext-event-http.0',
 		'{"targetUri": "https://accounts-service.ersms-forum.svc.cluster.local:8081/accounts/api/v1/accounts"}',
 		(SELECT id
 		 FROM realm
-		 WHERE name = 'master'));
+		 WHERE name = 'ersms'));
