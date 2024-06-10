@@ -17,6 +17,10 @@ kubectl get pods -n ersms-forum
 
 kubectl port-forward svc/axonserver -n ersms-forum 8024:8024
 kubectl port-forward svc/mongodb -n ersms-forum 27017:27017
+kubectl port-forward svc/postgres -n ersms-forum 5432:5432
+
+# keycloak/setup_scripts.sql
+
 
 # Logging
 helm repo add elastic https://helm.elastic.co
