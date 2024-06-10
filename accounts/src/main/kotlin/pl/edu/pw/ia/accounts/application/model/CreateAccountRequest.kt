@@ -11,38 +11,22 @@ data class CreateAccountRequest(
 
 	@Schema
 	@field:NotNull
-	val representation: String,
+	val details: CreateAccountRequestInner,
 
 	@Schema(maxLength = 50)
-	@field:NotBlank(message = "operationType cannot be blank")
-	@field:Length(max = 50, message = "Maximum allowed operationType length is 50 characters")
-	val operationType: String,
+	@field:NotBlank(message = "type cannot be blank")
+	@field:Length(max = 50, message = "Maximum allowed type length is 50 characters")
+	val type: String,
 
-	@Schema(maxLength = 50)
-	@field:NotBlank(message = "resourceType cannot be blank")
-	@field:Length(max = 50, message = "Maximum allowed resourceType length is 50 characters")
-	val resourceType: String,
-
-	@Schema(maxLength = 100)
-	@field:NotBlank(message = "resourcePath cannot be blank")
-	@field:Length(max = 100, message = "Maximum allowed resourcePath length is 100 characters")
-	val resourcePath: String,
+	@Schema
+	@field:NotNull
+	val userId: UUID,
 ) {
 	fun toCommand(): CreateAccountCommand {
-		// for some reason representation is passed flat in a string
-		// I could not manage to deserialize it, for now I will extract the 2 required fields with regex
-		val representationCleaned = representation.replace("\\", "")
-
-		val usernameRegex = """(?<="username":")[^"]*""".toRegex()
-		val username = usernameRegex.find(representationCleaned)!!.groups[0]!!.value
-
-		val emailRegex = """(?<="email":")[^"]*""".toRegex()
-		val email = emailRegex.find(representationCleaned)!!.groups[0]!!.value
-
 		return CreateAccountCommand(
-			accountId = UUID.fromString(resourcePath.replace("users/", "")),
-			name = username,
-			email = email,
+			accountId = userId,
+			name = details.username,
+			email = details.email,
 		)
 	}
 }

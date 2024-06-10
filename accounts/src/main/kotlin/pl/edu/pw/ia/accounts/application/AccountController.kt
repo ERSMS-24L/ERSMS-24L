@@ -11,7 +11,6 @@ import java.util.UUID
 import org.axonframework.extensions.reactor.commandhandling.gateway.ReactorCommandGateway
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,9 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import pl.edu.pw.ia.accounts.application.model.CreateAccountRequest
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
-import pl.edu.pw.ia.shared.config.getLogger
 import pl.edu.pw.ia.shared.domain.exception.ClientRequestException
-import pl.edu.pw.ia.shared.security.Scopes
 import reactor.core.publisher.Mono
 
 @Tag(name = "Accounts")
@@ -56,8 +53,8 @@ class AccountControllerImpl(
 	override fun createAccount(
 		@RequestBody request: CreateAccountRequest
 	): Mono<IdResponse> {
-		if (request.operationType != "CREATE" || request.resourceType != "USER") {
-			return Mono.error(ClientRequestException("Endpoint only supports operationType=CREATE and resourceType=USER"))
+		if (request.type != "REGISTER") {
+			return Mono.error(ClientRequestException("Endpoint only supports type=REGISTER"))
 		}
 		val command = request.toCommand()
 		return reactorCommandGateway.send<UUID>(command)
