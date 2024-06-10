@@ -25,6 +25,7 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgres-data
+              subPath: postgres
           env:
             - name: POSTGRES_USER
               value: keycloak
