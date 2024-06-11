@@ -74,12 +74,12 @@ class ModeratorViewControllerImpl(
 ) : ModeratorViewController {
 
 	@GetMapping("/me")
-	@PreAuthorize("hasAnyAuthority(${Scopes.MODERATOR.READ})")
+	@PreAuthorize("hasAnyAuthority('${Scopes.MODERATOR.READ}')")
 	override fun amIModeratorByThreadId(threadId: UUID, webExchange: ServerWebExchange): Mono<ModeratorView> =
 		findModeratorByAccountIdAndThreadId(webExchange.getAccountId(), threadId)
 
 	@GetMapping(params = ["accountId", "threadId"])
-	@PreAuthorize("hasAnyAuthority(${Scopes.MODERATOR.READ})")
+	@PreAuthorize("hasAnyAuthority('${Scopes.MODERATOR.READ}')")
 	override fun findModeratorByAccountIdAndThreadId(accountId: UUID, threadId: UUID): Mono<ModeratorView> {
 		return reactorQueryGateway.query(
 			FindModeratorByThreadAndAccountIdQuery(threadId = threadId, accountId = accountId),
@@ -90,7 +90,7 @@ class ModeratorViewControllerImpl(
 	}
 
 	@GetMapping(params = ["threadId"])
-	@PreAuthorize("hasAnyAuthority(${Scopes.MODERATOR.READ})")
+	@PreAuthorize("hasAnyAuthority('${Scopes.MODERATOR.READ}')")
 	override fun findModeratorByThreadId(threadId: UUID, pageable: Pageable): Mono<Page<ModeratorView>> {
 		return reactorQueryGateway.query(
 			FindModeratorsByThreadIdQuery(threadId, pageable),
