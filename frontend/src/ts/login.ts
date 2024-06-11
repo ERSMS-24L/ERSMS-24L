@@ -15,12 +15,13 @@ export interface UserDetails {
 }
 
 export function getAuthorizationHeader(): string {
-  if (keycloak.isTokenExpired(30)) keycloak.updateToken(30);
   if (!keycloak.authenticated) return "";
+  if (keycloak.isTokenExpired(30)) keycloak.updateToken(30);
   return `Bearer ${keycloak.token}`;
 }
 
-export async function getUserDetails(): Promise<UserDetails> {
+export async function getUserDetails(): Promise<UserDetails | null> {
+  if (!keycloak.authenticated) return null;
   if (cachedUserDetails !== null) return cachedUserDetails;
 
   const response = await fetch(
@@ -62,7 +63,7 @@ function createLoginButton() {
 }
 
 async function createLogoutButton() {
-  const username = (await getUserDetails()).name;
+  const username = (await getUserDetails())?.name ?? "";
 
   const usernameSpan = document.createElement("span");
   usernameSpan.classList.add("me-2");
