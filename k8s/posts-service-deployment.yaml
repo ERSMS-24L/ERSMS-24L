@@ -53,6 +53,8 @@ spec:
               value: "mongodb://root:root@mongodb:27017/posts?authSource=admin"
             - name: KC_BASE
               value: http://keycloak:8888
+            - name: KC_ADMINPASSWORD
+              value: admin # TODO: pass secret
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
               value: http://keycloak:8888/keycloak/realms/ersms
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI
