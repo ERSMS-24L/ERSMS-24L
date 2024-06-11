@@ -113,7 +113,7 @@ async function createVotesSpan(postId: string, voteCount?: number): Promise<HTML
   // </span>
   const span = document.createElement("span");
   span.id = `votes_${postId}`;
-  span.innerText = "Votes:";
+  span.innerText = "Votes: ";
 
   if (currentVote !== "UNAUTHORIZED") {
     const minus = document.createElement("button");
