@@ -73,7 +73,7 @@ async function postVoteCount(postId: string): Promise<number> {
 }
 
 async function fetchUserId(): Promise<void> {
-  userId = (await login.getUserDetails()).accountId;
+  userId = (await login.getUserDetails())?.accountId ?? "";
 }
 
 async function fetchIsModerator(threadId: string): Promise<void> {
@@ -81,13 +81,15 @@ async function fetchIsModerator(threadId: string): Promise<void> {
 }
 
 async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
+  if ((await login.getUserDetails()) === null) return "UNAUTHORIZED";
+
   const response = await fetch(
     `/posts/api/v1/votes/?postId=${encodeURIComponent(postId)}`,
     {
       headers: {"Authorization": login.getAuthorizationHeader()},
     },
   );
-  if (response.status === 403) {
+  if (response.status === 401) {
     return "UNAUTHORIZED";
   } else if (response.status === 404) {
     return "NO_VOTE";
@@ -139,7 +141,6 @@ async function createVotesSpan(postId: string, voteCount?: number): Promise<HTML
 }
 
 async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
-  if (userId === "") return null;
   const isAuthor = userId === post.accountId;
   const isFirstPost = post.postId === firstPostId;
 
