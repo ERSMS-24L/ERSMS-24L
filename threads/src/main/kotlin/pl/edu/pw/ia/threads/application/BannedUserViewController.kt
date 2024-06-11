@@ -74,12 +74,12 @@ class BannedUserViewControllerImpl(
 ) : BannedUserViewController {
 
 	@GetMapping("/me")
-	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
+	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.READ}')")
 	override fun amIBannedUserByThreadId(threadId: UUID, webExchange: ServerWebExchange): Mono<BannedUserView> =
 		findBannedUserByAccountIdAndThreadId(webExchange.getAccountId(), threadId)
 
 	@GetMapping(params = ["accountId", "threadId"])
-	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
+	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.READ}')")
 	override fun findBannedUserByAccountIdAndThreadId(accountId: UUID, threadId: UUID): Mono<BannedUserView> {
 		return reactorQueryGateway.query(
 			FindBannedAccountByThreadAndAccountIdsQuery(threadId = threadId, accountId = accountId),
@@ -90,7 +90,7 @@ class BannedUserViewControllerImpl(
 	}
 
 	@GetMapping(params = ["threadId"])
-	@PreAuthorize("hasAnyAuthority(${Scopes.BANNEDUSER.READ})")
+	@PreAuthorize("hasAnyAuthority('${Scopes.BANNEDUSER.READ}')")
 	override fun findBannedUserByThreadId(threadId: UUID, pageable: Pageable): Mono<Page<BannedUserView>> {
 		return reactorQueryGateway.query(
 			FindBannedAccountsByThreadIdQuery(threadId, pageable),
