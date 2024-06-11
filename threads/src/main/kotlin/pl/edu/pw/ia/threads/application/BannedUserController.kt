@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ServerWebExchange
+import pl.edu.pw.ia.shared.adapters.KeycloakService
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
@@ -58,7 +59,8 @@ interface BannedUserController {
 	produces = [MediaType.APPLICATION_JSON_VALUE]
 )
 class BannedUserControllerImpl(
-	private val reactorCommandGateway: ReactorCommandGateway
+	private val reactorCommandGateway: ReactorCommandGateway,
+	private val keycloakService: KeycloakService
 ) : BannedUserController {
 
 	@PostMapping
@@ -69,6 +71,8 @@ class BannedUserControllerImpl(
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
+		// keycloakService.assignRoleToUser(command.subjectAccountId.toString(), "THREAD_BAN:${command.threadId}")
+		// ^ this can be later checked as @PreAuthorize("!hasAnyAuthority('${THREAD_BAN:${request.threadId}}')")
 		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 
