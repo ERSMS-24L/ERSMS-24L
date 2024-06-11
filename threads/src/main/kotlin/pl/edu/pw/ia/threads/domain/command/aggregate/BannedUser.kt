@@ -28,13 +28,10 @@ internal class BannedUser {
 	private lateinit var accountId: UUID
 	private lateinit var threadId: UUID
 
-	@Autowired
-	private lateinit var queryGateway: QueryGateway
-
 	private constructor()
 
 	@CommandHandler
-	constructor(command: BanAccountCommand) {
+	constructor(command: BanAccountCommand, queryGateway: QueryGateway) {
 		val threadView = queryGateway.query(
 			FindThreadByIdQuery(threadId),
 			ThreadView::class.java
@@ -57,7 +54,7 @@ internal class BannedUser {
 	}
 
 	@CommandHandler
-	fun handle(command: UnbanAccountCommand) {
+	fun handle(command: UnbanAccountCommand, queryGateway: QueryGateway) {
 		if (command.accountId != accountId) {
 			queryGateway.query(
 				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
