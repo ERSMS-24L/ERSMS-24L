@@ -6,17 +6,24 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
+import org.springframework.core.convert.converter.Converter
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.oauth2.server.resource.authentication.JwtReactiveAuthenticationManager
+import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter
 import org.springframework.security.oauth2.server.resource.web.access.server.BearerTokenServerAccessDeniedHandler
 import org.springframework.security.oauth2.server.resource.web.server.BearerTokenServerAuthenticationEntryPoint
 import org.springframework.security.web.server.SecurityWebFilterChain
+import reactor.core.publisher.Mono
 
 @Configuration
 @EnableWebFluxSecurity
@@ -55,9 +62,20 @@ class SecurityConfig(
 						.anyExchange().authenticated()
 			}
 			.oauth2ResourceServer {
-				it.jwt(Customizer.withDefaults())
+				it.jwt {
+					it.jwtAuthenticationConverter(jwtAuthenticationConverter())
+				}
 			}
 			.build()
+	@Bean
+	fun jwtAuthenticationConverter(): Converter<Jwt, Mono<AbstractAuthenticationToken>> {
+		val grantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
+		grantedAuthoritiesConverter.setAuthoritiesClaimName("roles")
+		grantedAuthoritiesConverter.setAuthorityPrefix("")
+		val jwtAuthenticationConverter = JwtAuthenticationConverter()
+		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter)
+		return ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter)
+	}
 
 	@Bean
 	fun jwtDecoder(): ReactiveJwtDecoder {
