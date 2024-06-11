@@ -3,6 +3,7 @@ import * as login from "./login"
 import { showPagination } from "./pages";
 
 let firstPostId: string | null = null;
+let ownerId: string = "";
 let userId: string = "";
 let isModerator: boolean = false;
 
@@ -77,7 +78,7 @@ async function fetchUserId(): Promise<void> {
 }
 
 async function fetchIsModerator(threadId: string): Promise<void> {
-  isModerator = await login.isModeratorUnder(threadId);
+  isModerator = userId === ownerId || await login.isModeratorUnder(threadId);
 }
 
 async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
@@ -180,8 +181,6 @@ async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
     buttons.push(b);
   }
 
-  // TODO: ifAdmin, add a site-wide ban button (btn-danger + bi-shield)
-
   const span = document.createElement("span");
   span.append(...buttons);
   return span;
@@ -264,6 +263,7 @@ async function showHeader(threadId: string): Promise<void> {
   const data = await response.json();
 
   firstPostId = data.postId;
+  ownerId = data.accountId;
   (document.getElementById("thread_name_header") as HTMLHeadingElement).innerText = data.title;
   (document.getElementById("new_post_button") as HTMLAnchorElement).href = `post_editor.html?threadId=${encodeURIComponent(threadId)}`;
 }
