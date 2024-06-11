@@ -69,6 +69,8 @@ class BannedUserControllerImpl(
 		webExchange: ServerWebExchange
 	): Mono<IdResponse> {
 		val command = request.toCommand(webExchange.getAccountId())
+		// keycloakService.assignRoleToUser(command.subjectAccountId.toString(), "THREAD_BAN:${command.threadId}")
+		// ^ this can be later checked as @PreAuthorize("!hasAnyAuthority('${THREAD_BAN:${request.threadId}}')")
 		return reactorCommandGateway.send<UUID>(command).map { IdResponse(id = it) }
 	}
 

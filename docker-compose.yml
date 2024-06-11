@@ -40,8 +40,9 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=keycloak-service:8080/realms/ersms/protocol/openid-connect/certs
+      - KC_BASE=http://keycloak-service:8080
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://keycloak-service:8080/realms/ersms
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://keycloak-service:8080/realms/ersms/protocol/openid-connect/certs
       - SPRING_PROFILES_ACTIVE=docker,disableSecurity
 
   posts-service:
@@ -55,8 +56,9 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=keycloak-service:8080/realms/ersms/protocol/openid-connect/certs
+      - KC_BASE=http://keycloak-service:8080
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=http://keycloak-service:8080/realms/ersms
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=http://keycloak-service:8080/realms/ersms/protocol/openid-connect/certs
       - SPRING_PROFILES_ACTIVE=docker,disableSecurity
 
   threads-service:
@@ -70,6 +72,7 @@ services:
     environment:
       - AXON_AXONSERVER_SERVERS=axonserver
       - SPRING_DATA_MONGODB_HOST=mongo-db
+      - KC_BASE=http://keycloak-service:8080
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI=keycloak-service:8080/realms/ersms
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI=keycloak-service:8080/realms/ersms/protocol/openid-connect/certs
       - SPRING_PROFILES_ACTIVE=docker,disableSecurity
