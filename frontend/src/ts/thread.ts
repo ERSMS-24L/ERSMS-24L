@@ -2,6 +2,9 @@ import "../scss/styles.scss";
 import * as login from "./login"
 import { showPagination } from "./pages";
 
+const params = new URLSearchParams(window.location.search);
+const threadId = params.get("threadId") ?? "";
+
 let firstPostId: string | null = null;
 let ownerId: string = "";
 let userId: string = "";
@@ -62,6 +65,23 @@ async function deletePost(postId: string): Promise<void> {
     throw `Failed to delete post ${postId}: ${response.status} ${response.statusText}`;
   }
   window.location.reload();
+}
+
+async function banUser(accountId: string): Promise<void> {
+  const response = await fetch(
+    "/threads/api/v1/bannedUsers",
+    {
+      method: "POST",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ threadId, subjectAccountId: accountId }),
+    },
+  );
+  if (!response.ok) {
+    throw `Failed to ban user ${accountId}: ${response.status} ${response.statusText}`;
+  }
 }
 
 async function postVoteCount(postId: string): Promise<number> {
@@ -178,6 +198,7 @@ async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
     b.classList.add("btn", "btn-sm", "btn-primary");
     if (buttons.length > 0) b.classList.add("ms-1");
     b.innerHTML = '<i class="bi-shield"></i>';
+    b.onclick = () => banUser(post.accountId);
     buttons.push(b);
   }
 
@@ -271,8 +292,6 @@ async function showHeader(threadId: string): Promise<void> {
 async function init(): Promise<void> {
   await login.initLoginManager();
 
-  const params = new URLSearchParams(window.location.search);
-  let threadId = params.get("threadId") ?? "";
   let page = parseInt(params.get("page") ?? "0", 10);
   if (isNaN(page)) page = 0;
 
