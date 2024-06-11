@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ServerWebExchange
-import pl.edu.pw.ia.shared.adapters.KeycloakService
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.application.model.IdResponse
 import pl.edu.pw.ia.shared.security.Scopes
@@ -59,8 +58,7 @@ interface BannedUserController {
 	produces = [MediaType.APPLICATION_JSON_VALUE]
 )
 class BannedUserControllerImpl(
-	private val reactorCommandGateway: ReactorCommandGateway,
-	private val keycloakService: KeycloakService
+	private val reactorCommandGateway: ReactorCommandGateway
 ) : BannedUserController {
 
 	@PostMapping
