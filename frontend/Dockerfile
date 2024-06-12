@@ -1,4 +1,4 @@
-FROM caddy
-COPY client.pem /custom_certs/client.pem
-COPY ./dist /srv
-COPY Caddyfile /etc/caddy/Caddyfile
+FROM nginx
+COPY ./dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+ENTRYPOINT nginx -g 'daemon off;'

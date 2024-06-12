@@ -56,5 +56,5 @@ jobs:
           kubectl rollout status deployment/posts-service -n ersms-forum
           kubectl rollout restart deployment/threads-service -n ersms-forum
           kubectl rollout status deployment/threads-service -n ersms-forum
-#          kubectl rollout restart deployment/frontend -n ersms-forum
-#          kubectl rollout status deployment/frontend -n ersms-forum
+          kubectl rollout restart deployment/frontend -n ersms-forum
+          kubectl rollout status deployment/frontend -n ersms-forum
