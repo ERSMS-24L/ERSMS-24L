@@ -28,17 +28,6 @@ spec:
         - image: ghcr.io/ersms-24l/ersms-24l/frontend:latest
           name: frontend
           imagePullPolicy: Always
-          livenessProbe:
-            httpGet:
-              port: 80
-              path: /health
-            initialDelaySeconds: 90
-            periodSeconds: 5
-          readinessProbe:
-            httpGet:
-              port: 80
-              path: /health
-            initialDelaySeconds: 15
           lifecycle:
             preStop:
               exec:
