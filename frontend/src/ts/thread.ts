@@ -2,7 +2,11 @@ import "../scss/styles.scss";
 import * as login from "./login"
 import { showPagination } from "./pages";
 
+const params = new URLSearchParams(window.location.search);
+const threadId = params.get("threadId") ?? "";
+
 let firstPostId: string | null = null;
+let ownerId: string = "";
 let userId: string = "";
 let isModerator: boolean = false;
 
@@ -63,6 +67,23 @@ async function deletePost(postId: string): Promise<void> {
   window.location.reload();
 }
 
+async function banUser(accountId: string): Promise<void> {
+  const response = await fetch(
+    "/threads/api/v1/bannedUsers",
+    {
+      method: "POST",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ threadId, subjectAccountId: accountId }),
+    },
+  );
+  if (!response.ok) {
+    throw `Failed to ban user ${accountId}: ${response.status} ${response.statusText}`;
+  }
+}
+
 async function postVoteCount(postId: string): Promise<number> {
   const response = await fetch(`/posts/api/v1/posts/${encodeURIComponent(postId)}`);
   if (!response.ok) {
@@ -77,7 +98,16 @@ async function fetchUserId(): Promise<void> {
 }
 
 async function fetchIsModerator(threadId: string): Promise<void> {
-  isModerator = await login.isModeratorUnder(threadId);
+  isModerator = userId === ownerId || await login.isModeratorUnder(threadId);
+  if (isModerator) {
+    // Add a manage thread button to the header
+    const a = document.createElement("a");
+    a.role = "button";
+    a.classList.add("btn", "btn-primary");
+    a.href = `manage_thread.html?threadId=${encodeURIComponent(threadId)}`;
+    a.innerText = "Manage thread";
+    document.getElementById("thread_header_buttons").prepend(a);
+  }
 }
 
 async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
@@ -177,10 +207,9 @@ async function createButtonsSpan(post: Post): Promise<HTMLSpanElement> {
     b.classList.add("btn", "btn-sm", "btn-primary");
     if (buttons.length > 0) b.classList.add("ms-1");
     b.innerHTML = '<i class="bi-shield"></i>';
+    b.onclick = () => banUser(post.accountId);
     buttons.push(b);
   }
-
-  // TODO: ifAdmin, add a site-wide ban button (btn-danger + bi-shield)
 
   const span = document.createElement("span");
   span.append(...buttons);
@@ -264,6 +293,7 @@ async function showHeader(threadId: string): Promise<void> {
   const data = await response.json();
 
   firstPostId = data.postId;
+  ownerId = data.accountId;
   (document.getElementById("thread_name_header") as HTMLHeadingElement).innerText = data.title;
   (document.getElementById("new_post_button") as HTMLAnchorElement).href = `post_editor.html?threadId=${encodeURIComponent(threadId)}`;
 }
@@ -271,8 +301,6 @@ async function showHeader(threadId: string): Promise<void> {
 async function init(): Promise<void> {
   await login.initLoginManager();
 
-  const params = new URLSearchParams(window.location.search);
-  let threadId = params.get("threadId") ?? "";
   let page = parseInt(params.get("page") ?? "0", 10);
   if (isNaN(page)) page = 0;
 

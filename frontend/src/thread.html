@@ -9,7 +9,7 @@
     <div class="container">
       <header class="d-flex justify-content-between align-items-md-center pb-3 mt-3 mb-3 border-bottom">
         <h1 class="h4">
-          <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+          <a href="index.html" class="d-flex align-items-center text-dark text-decoration-none">
             <img src="<%- require('./img/icon.svg') %>" alt="Logo" width="32" height="32" class="bi bi-bootstrap-fill d-inline-block me-2">
             <span>ERSMS-Forum</span>
           </a>
@@ -19,7 +19,9 @@
 
       <div class="d-flex justify-content-between mb-3">
         <h2 id="thread_name_header"></h2>
-        <a class="btn btn-primary" role="button" id="new_post_button">+ Create new post</a>
+        <div id="thread_header_buttons">
+          <a class="btn btn-primary" role="button" id="new_post_button">+ Create new post</a>
+        </div>
       </div>
 
       <div id="posts" class="row row-cols-1">

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ERSMS-Forum</title>
+</head>
+
+<body>
+  <div class="container">
+    <header class="d-flex justify-content-between align-items-md-center pb-3 mt-3 mb-3 border-bottom">
+      <h1 class="h4">
+        <a href="index.html" class="d-flex align-items-center text-dark text-decoration-none">
+          <img src="<%- require('./img/icon.svg') %>" alt="Logo" width="32" height="32"
+            class="bi bi-bootstrap-fill d-inline-block me-2">
+          <span>ERSMS-Forum</span>
+        </a>
+      </h1>
+      <span id="login_space"></span>
+    </header>
+
+    <h2>Managing thread: <span id="thread_name"></span></h2>
+    <p>Thread created by: <span id="thread_author"></span></p>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h4>Banned users</h4>
+        <ul class="list-group" id="banned_users_list">
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <h4>Moderators</h4>
+        <ul class="list-group" id="moderators_list">
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
