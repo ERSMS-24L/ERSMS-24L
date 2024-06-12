@@ -47,6 +47,10 @@ export async function isModeratorUnder(threadId: string): Promise<boolean> {
   return response.ok;
 }
 
+export function isAdmin(): boolean {
+  return keycloak.hasRealmRole("forumAdmin");
+}
+
 function createLoginButton() {
   const anchor = document.createElement("a");
   anchor.href = keycloak.createLoginUrl({
