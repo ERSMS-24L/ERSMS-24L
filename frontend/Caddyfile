@@ -33,17 +33,17 @@ ersms.kwojda.pl {
 
 	handle /prometheus/* {
 		reverse_proxy http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090 {
-			transport http {
-				tls_trusted_ca_certs /custom_certs/client.pem
-			}
+			# transport http {
+			# 	tls_trusted_ca_certs /custom_certs/client.pem
+			# }
 		}
 	}
 
 	handle /grafana/* {
 		reverse_proxy http://prometheus-stack-grafana.default.svc.cluster.local:80 {
-			transport http {
-				tls_trusted_ca_certs /custom_certs/client.pem
-			}
+			# transport http {
+			# 	tls_trusted_ca_certs /custom_certs/client.pem
+			# }
 
 			header_up Host "prometheus-stack-grafana.default.svc.cluster.local"
 			header_up Origin "http://prometheus-stack-grafana.default.svc.cluster.local:80"
@@ -51,10 +51,11 @@ ersms.kwojda.pl {
 	}
 
 	handle /keycloack/* {
-		transport http {
-			tls_trusted_ca_certs /custom_certs/client.pem
+		reverse_proxy http://frontend.ersms-forum.svc.cluster.local:8084 {
+			# transport http {
+			# 	tls_trusted_ca_certs /custom_certs/client.pem
+			# }
 		}
-		reverse_proxy http://frontend.ersms-forum.svc.cluster.local:8084
 	}
 
 	handle /health {
