@@ -29,7 +29,7 @@ async function loadModeratorData() {
 async function refreshBannedUsersList() {
   const bannedUsers = await listBannedUsers();
 
-  const elements: HTMLLIElement[] = bannedUsers.map(([username, accountId]) => {
+  const elements: HTMLLIElement[] = bannedUsers.map(([username, bannedUserId]) => {
     // <li class="list-group-item d-flex justify-content-between align-items-center">
     //  <span>username</span>
     //  <!-- Button only if isModerator -->
@@ -47,6 +47,7 @@ async function refreshBannedUsersList() {
       button.role = "button";
       button.classList.add("btn", "btn-sm", "btn-danger");
       button.innerText = "-";
+      button.onclick = () => unBanUser(bannedUserId);
       li.append(button);
     }
 
@@ -90,13 +91,32 @@ async function listBannedUsers(): Promise<[string, string][]> {
     throw `Failed to list banned users for ${threadId}: ${response.status} ${response.statusText}`;
   }
 
-  return (await response.json()).content.map((o: any) => [o.username ?? o.accountId, o.accountId]);
+  return (await response.json()).content.map((o: any) => [o.username ?? o.accountId, o.bannedUserId]);
+}
+
+async function unBanUser(bannedUserId: string) {
+  const response = await fetch(
+    "/threads/api/v1/bannedUsers",
+    {
+      method: "DELETE",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ bannedUserId }),
+    },
+  );
+  if (!response.ok && response.status !== 404) {
+    throw `Failed to un-ban ${bannedUserId}: ${response.status} ${response.statusText}`;
+  }
+
+  await refreshBannedUsersList();
 }
 
 async function refreshModeratorsList() {
   const moderators = await listModerators();
 
-  const elements: HTMLLIElement[] = moderators.map(([username, accountId]) => {
+  const elements: HTMLLIElement[] = moderators.map(([username, moderatorId]) => {
     // <li class="list-group-item d-flex justify-content-between align-items-center">
     //  <span>username</span>
     //  <!-- Button only if isModerator -->
@@ -114,6 +134,7 @@ async function refreshModeratorsList() {
       button.role = "button";
       button.classList.add("btn", "btn-sm", "btn-danger");
       button.innerText = "-";
+      button.onclick = () => removeModerator(moderatorId);
       li.append(button);
     }
 
@@ -157,7 +178,26 @@ async function listModerators(): Promise<[string, string][]> {
     throw `Failed to list moderators for ${threadId}: ${response.status} ${response.statusText}`;
   }
 
-  return (await response.json()).content.map((o: any) => [o.username ?? o.accountId, o.accountId]);
+  return (await response.json()).content.map((o: any) => [o.username ?? o.accountId, o.moderatorId]);
+}
+
+async function removeModerator(moderatorId: string): Promise<void> {
+  const response = await fetch(
+    "/threads/api/v1/bannedUsers",
+    {
+      method: "DELETE",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ moderatorId }),
+    },
+  );
+  if (!response.ok && response.status !== 404) {
+    throw `Failed to remove moderator ${moderatorId}: ${response.status} ${response.statusText}`;
+  }
+
+  await refreshModeratorsList();
 }
 
 async function init() {
