@@ -49,7 +49,7 @@ spring:
           predicates:
             - Path=/keycloak/**
         - id: frontend
-          uri: http://frontend.ersms-forum.svc.cluster.local
+          uri: http://frontend.ersms-forum.svc.cluster.local:8084
           predicates:
             - Path=/**
             - NotPath=/swagger,/swagger/**,/webjars/**,/actuator/**

@@ -27,6 +27,17 @@ spec:
       containers:
         - image: ghcr.io/ersms-24l/ersms-24l/frontend:latest
           name: frontend
+          livenessProbe:
+            httpGet:
+              port: 8084
+              path: /health
+            initialDelaySeconds: 90
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: 8084
+              path: /health
+            initialDelaySeconds: 15
           imagePullPolicy: Always
           lifecycle:
             preStop:
@@ -40,10 +51,7 @@ spec:
             - name: TODO
               value: kubernetes
           ports:
-            - containerPort: 80
-            - containerPort: 443
-            - containerPort: 443
-              protocol: UDP
+            - containerPort: 8084
           volumeMounts:
             - name: cert-volume
               mountPath: "/custom_certs"
