@@ -8,12 +8,21 @@ import org.axonframework.spring.stereotype.Aggregate
 import pl.edu.pw.ia.shared.domain.exception.AccountMismatchException
 import java.time.Instant
 import java.util.UUID
+import org.axonframework.extensions.reactor.queryhandling.gateway.ReactorQueryGateway
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import pl.edu.pw.ia.shared.domain.command.CreatePostCommand
+import pl.edu.pw.ia.shared.domain.command.DeletePostByAdminCommand
 import pl.edu.pw.ia.shared.domain.command.DeletePostCommand
 import pl.edu.pw.ia.shared.domain.command.UpdatePostCommand
 import pl.edu.pw.ia.shared.domain.event.PostCreatedEvent
 import pl.edu.pw.ia.shared.domain.event.PostDeletedEvent
 import pl.edu.pw.ia.shared.domain.event.PostUpdatedEvent
+import pl.edu.pw.ia.shared.domain.query.FindModeratorByThreadAndAccountIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindPostByIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
+import pl.edu.pw.ia.shared.domain.view.ModeratorView
+import pl.edu.pw.ia.shared.domain.view.PostView
+import pl.edu.pw.ia.shared.domain.view.ThreadView
 
 @Aggregate
 internal class Post {
@@ -58,14 +67,38 @@ internal class Post {
 	}
 
 	@CommandHandler
-	fun handle(command: DeletePostCommand) {
-		if (accountId != command.accountId) {
+	fun handle(command: DeletePostCommand, reactorQueryGateway: ReactorQueryGateway) {
+		var isOwner = false
+		var isModerator = false
+		val isPostCreator = accountId == command.accountId
+		val threadId = reactorQueryGateway.query(FindPostByIdQuery(command.postId), ResponseTypes.instanceOf(PostView::class.java)).block()?.threadId
+		if(threadId != null) {
+			val threadView = reactorQueryGateway.query(FindThreadByIdQuery(threadId), ResponseTypes.instanceOf(ThreadView::class.java)).block()
+			if(threadView != null) {
+				isOwner = threadView.accountId == command.accountId
+			}
+			val moderatorView = reactorQueryGateway.query(FindModeratorByThreadAndAccountIdQuery(threadId=threadId, accountId=command.accountId), ResponseTypes.instanceOf(ModeratorView::class.java)).block()
+			if(moderatorView != null) {
+				isModerator = true
+			}
+		}
+		if(isOwner || isModerator || isPostCreator){
+			AggregateLifecycle.apply(
+				PostDeletedEvent(
+					accountId = command.accountId,
+					postId = command.postId,
+				)
+			)
+		} else {
 			throw AccountMismatchException(
 				currentAccountId = command.accountId,
 				ownerAccountId = accountId,
 			)
 		}
-		// TODO: Check if user is administrator
+	}
+
+	@CommandHandler
+	fun handle(command: DeletePostByAdminCommand) {
 		AggregateLifecycle.apply(
 			PostDeletedEvent(
 				accountId = command.accountId,

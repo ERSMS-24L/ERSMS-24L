@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank
 import java.util.UUID
 import org.hibernate.validator.constraints.Length
 import pl.edu.pw.ia.shared.domain.command.CreatePostCommand
+import pl.edu.pw.ia.shared.domain.command.DeletePostByAdminCommand
 import pl.edu.pw.ia.shared.domain.command.DeletePostCommand
 import pl.edu.pw.ia.shared.domain.command.UpdatePostCommand
 
@@ -49,6 +50,12 @@ data class PostDeleteRequest(
 ) {
 	fun toCommand(accountId: UUID) =
 		DeletePostCommand(
+			postId = UUID.fromString(postId),
+			accountId = accountId,
+		)
+
+	fun toAdminCommand(accountId: UUID) =
+		DeletePostByAdminCommand(
 			postId = UUID.fromString(postId),
 			accountId = accountId,
 		)
