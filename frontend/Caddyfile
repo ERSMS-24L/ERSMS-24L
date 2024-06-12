@@ -2,7 +2,7 @@ ersms.kwojda.pl {
 	handle /accounts/* {
 		reverse_proxy https://accounts-service.ersms-forum.svc.cluster.local:8081 {
 			transport http {
-				tls_trusted_ca_certs /custom_certs/client.pem
+				tls_trust_pool file /custom_certs/client.pem
 			}
 		}
 	}
@@ -10,7 +10,7 @@ ersms.kwojda.pl {
 	handle /posts/* {
 		reverse_proxy https://posts-service.ersms-forum.svc.cluster.local:8082 {
 			transport http {
-				tls_trusted_ca_certs /custom_certs/client.pem
+				tls_trust_pool file /custom_certs/client.pem
 			}
 		}
 	}
@@ -18,7 +18,7 @@ ersms.kwojda.pl {
 	handle /threads/* {
 		reverse_proxy https://threads-service.ersms-forum.svc.cluster.local:8083 {
 			transport http {
-				tls_trusted_ca_certs /custom_certs/client.pem
+				tls_trust_pool file /custom_certs/client.pem
 			}
 		}
 	}
@@ -26,36 +26,24 @@ ersms.kwojda.pl {
 	handle /kibana/* {
 		reverse_proxy https://eck-stack-eck-kibana-kb-http.default.svc.cluster.local:5601 {
 			transport http {
-				tls_trusted_ca_certs /custom_certs/client.pem
+				tls_trust_pool file /custom_certs/client.pem
 			}
 		}
 	}
 
 	handle /prometheus/* {
-		reverse_proxy http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090 {
-			# transport http {
-			# 	tls_trusted_ca_certs /custom_certs/client.pem
-			# }
-		}
+		reverse_proxy http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090
 	}
 
 	handle /grafana/* {
 		reverse_proxy http://prometheus-stack-grafana.default.svc.cluster.local:80 {
-			# transport http {
-			# 	tls_trusted_ca_certs /custom_certs/client.pem
-			# }
-
 			header_up Host "prometheus-stack-grafana.default.svc.cluster.local"
 			header_up Origin "http://prometheus-stack-grafana.default.svc.cluster.local:80"
 		}
 	}
 
 	handle /keycloack/* {
-		reverse_proxy http://frontend.ersms-forum.svc.cluster.local:8084 {
-			# transport http {
-			# 	tls_trusted_ca_certs /custom_certs/client.pem
-			# }
-		}
+		reverse_proxy http://frontend.ersms-forum.svc.cluster.local:8084
 	}
 
 	handle /health {
