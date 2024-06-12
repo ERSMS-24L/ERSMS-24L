@@ -57,7 +57,7 @@ ersms.kwojda.pl {
 	}
 }
 
-http://localhost {
+http://localhost, http://*.svc.cluster.local {
 	handle_path /accounts/* {
 		reverse_proxy accounts-service:8081
 	}
@@ -76,6 +76,11 @@ http://localhost {
 
 	handle_path /frontend-dev/* {
 		reverse_proxy "http://{$DOCKER_GATEWAY_HOST:host.docker.internal}:8085"
+	}
+
+	handle /health {
+		header Content-Type application/json
+		respond "{\"status\":\"UP\"}" 200
 	}
 
 	handle {
