@@ -1,0 +1,96 @@
+ersms.kwojda.pl {
+	handle /accounts/* {
+		reverse_proxy https://accounts-service.ersms-forum.svc.cluster.local:8081 {
+			transport http {
+				tls_trusted_ca_certs /custom_certs/client.pem
+			}
+		}
+	}
+
+	handle /posts/* {
+		reverse_proxy https://posts-service.ersms-forum.svc.cluster.local:8082 {
+			transport http {
+				tls_trusted_ca_certs /custom_certs/client.pem
+			}
+		}
+	}
+
+	handle /threads/* {
+		reverse_proxy https://threads-service.ersms-forum.svc.cluster.local:8083 {
+			transport http {
+				tls_trusted_ca_certs /custom_certs/client.pem
+			}
+		}
+	}
+
+	handle /kibana/* {
+		reverse_proxy https://eck-stack-eck-kibana-kb-http.default.svc.cluster.local:5601 {
+			transport http {
+				tls_trusted_ca_certs /custom_certs/client.pem
+			}
+		}
+	}
+
+	handle /prometheus/* {
+		reverse_proxy http://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090 {
+			transport http {
+				tls_trusted_ca_certs /custom_certs/client.pem
+			}
+		}
+	}
+
+	handle /grafana/* {
+		reverse_proxy http://prometheus-stack-grafana.default.svc.cluster.local:80 {
+			transport http {
+				tls_trusted_ca_certs /custom_certs/client.pem
+			}
+
+			header_up Host "prometheus-stack-grafana.default.svc.cluster.local"
+			header_up Origin "http://prometheus-stack-grafana.default.svc.cluster.local:80"
+		}
+	}
+
+	handle /keycloack/* {
+		transport http {
+			tls_trusted_ca_certs /custom_certs/client.pem
+		}
+		reverse_proxy http://frontend.ersms-forum.svc.cluster.local:8084
+	}
+
+	handle /health {
+		header Content-Type application/json
+		respond "{\"status\":\"UP\"}" 200
+	}
+
+	handle {
+		root * /srv
+		file_server
+	}
+}
+
+http://localhost {
+	handle_path /accounts/* {
+		reverse_proxy accounts-service:8081
+	}
+
+	handle_path /posts/* {
+		reverse_proxy posts-service:8082
+	}
+
+	handle_path /threads/* {
+		reverse_proxy threads-service:8083
+	}
+
+	handle_path /keycloack/* {
+		reverse_proxy keycloak-service:8080
+	}
+
+	handle_path /frontend-dev/* {
+		reverse_proxy "http://{$DOCKER_GATEWAY_HOST:host.docker.internal}:8085"
+	}
+
+	handle {
+		root * /srv
+		file_server
+	}
+}
