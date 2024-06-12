@@ -17,19 +17,26 @@ spec:
       labels:
         app: frontend
     spec:
+      volumes:
+        - name: cert-volume
+          secret:
+            secretName: cert-pem-1
+            items:
+              - key: client.pem
+                path: client.pem
       containers:
         - image: ghcr.io/ersms-24l/ersms-24l/frontend:latest
           name: frontend
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
-              port: 8084
+              port: 80
               path: /health
             initialDelaySeconds: 90
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              port: 8084
+              port: 80
               path: /health
             initialDelaySeconds: 15
           lifecycle:
@@ -44,6 +51,13 @@ spec:
             - name: TODO
               value: kubernetes
           ports:
-            - containerPort: 8084
+            - containerPort: 80
+            - containerPort: 443
+            - containerPort: 443
+              protocol: UDP
+          volumeMounts:
+            - name: cert-volume
+              mountPath: "/custom_certs"
+              readOnly: true
       restartPolicy: Always
 status: {}
