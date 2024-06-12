@@ -61,7 +61,7 @@ internal class Moderator {
 	}
 
 	@EventSourcingHandler
-	fun on(event: AddModeratorCommand) {
+	fun on(event: ModeratorAddedEvent) {
 		moderatorId = event.moderatorId
 		accountId = event.accountId
 		threadId = event.threadId

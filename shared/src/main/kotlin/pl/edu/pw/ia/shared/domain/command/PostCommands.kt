@@ -22,6 +22,11 @@ data class DeletePostCommand(
 	val accountId: UUID,
 )
 
+data class DeletePostByAdminCommand(
+	@TargetAggregateIdentifier val postId: UUID,
+	val accountId: UUID,
+)
+
 data class CreateVoteCommand(
 	@TargetAggregateIdentifier val voteId: UUID,
 	val postId: UUID,

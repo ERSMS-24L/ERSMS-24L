@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import java.util.UUID
 import org.axonframework.extensions.reactor.commandhandling.gateway.ReactorCommandGateway
+import org.axonframework.extensions.reactor.queryhandling.gateway.ReactorQueryGateway
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -56,7 +58,8 @@ interface PostController {
 	@ApiResponse(responseCode = "200", description = "Deleted.")
 	fun deletePost(
 		@Valid request: PostDeleteRequest,
-		webExchange: ServerWebExchange
+		webExchange: ServerWebExchange,
+		authentication: Authentication,
 	): Mono<IdResponse>
 }
 
@@ -96,11 +99,19 @@ class PostControllerImpl(
 	@ResponseStatus(HttpStatus.OK)
 	override fun deletePost(
 		@RequestBody request: PostDeleteRequest,
-		webExchange: ServerWebExchange
+		webExchange: ServerWebExchange,
+		authentication: Authentication,
 	): Mono<IdResponse> {
-		val command = request.toCommand(webExchange.getAccountId())
-		return reactorCommandGateway.send<UUID>(command)
-			.defaultIfEmpty(command.postId)
-			.map { IdResponse(id = it) }
+		val response: Mono<IdResponse>
+		if(authentication.authorities.map { it.toString() }.contains("forumAdmin")){
+			val command = request.toAdminCommand(webExchange.getAccountId())
+			response = reactorCommandGateway.send<UUID>(command).defaultIfEmpty(command.postId).map { IdResponse(id=it) }
+		} else {
+			val command = request.toCommand(webExchange.getAccountId())
+			response = reactorCommandGateway.send<UUID>(command)
+				.defaultIfEmpty(command.postId)
+				.map { IdResponse(id = it) }
+		}
+		return response
 	}
 }

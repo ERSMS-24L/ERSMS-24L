@@ -33,13 +33,13 @@ internal class BannedUser {
 	@CommandHandler
 	constructor(command: BanAccountCommand, queryGateway: QueryGateway) {
 		val threadView = queryGateway.query(
-			FindThreadByIdQuery(threadId),
+			FindThreadByIdQuery(command.threadId),
 			ThreadView::class.java
 		).join() ?: throw ThreadNotFoundException(command.threadId)
 
 		if (command.accountId != threadView.accountId) {
 			queryGateway.query(
-				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
+				FindModeratorByThreadAndAccountIdQuery(command.threadId, command.accountId),
 				ModeratorView::class.java
 			).join() ?: throw ModeratorNotFoundException(command.threadId, command.accountId)
 		}
