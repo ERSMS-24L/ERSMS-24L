@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import pl.edu.pw.ia.accounts.domain.query.repository.AccountViewRepository
 import pl.edu.pw.ia.shared.domain.event.AccountCreatedEvent
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindAccountByUsernameQuery
 import pl.edu.pw.ia.shared.domain.view.AccountView
 
 @Service
@@ -26,4 +27,8 @@ class AccountProjector(
 	@QueryHandler
 	fun handle(query: FindAccountByIdQuery): AccountView? =
 		repository.findById(query.accountId)
+
+	@QueryHandler
+	fun handle(query: FindAccountByUsernameQuery): AccountView? =
+		repository.findByUsername(query.username)
 }
