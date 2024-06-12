@@ -11,12 +11,14 @@ data class BannedUserViewEntity(
 	val bannedUserId: String,
 	val threadId: String,
 	val accountId: String,
+	val username: String?,
 ) {
 	fun toDomain(): BannedUserView =
 		BannedUserView(
 			bannedUserId = UUID.fromString(bannedUserId),
 			threadId = UUID.fromString(threadId),
-			accountId = UUID.fromString(accountId)
+			accountId = UUID.fromString(accountId),
+			username = username,
 		)
 
 	companion object {
@@ -25,6 +27,7 @@ data class BannedUserViewEntity(
 				bannedUserId = bannedUserId.toString(),
 				threadId = threadId.toString(),
 				accountId = accountId.toString(),
+				username = username,
 			)
 	}
 }
