@@ -14,8 +14,6 @@ import pl.edu.pw.ia.shared.domain.event.ThreadUpdatedEvent
 import pl.edu.pw.ia.shared.domain.exception.AccountMismatchException
 import java.time.Instant
 import java.util.UUID
-import org.axonframework.extensions.reactor.commandhandling.gateway.ReactorCommandGateway
-import pl.edu.pw.ia.shared.domain.command.AddModeratorCommand
 
 @Aggregate
 internal class Thread {
@@ -27,7 +25,7 @@ internal class Thread {
     private constructor()
 
     @CommandHandler
-    constructor(command: CreateThreadCommand, reactorCommandGateway: ReactorCommandGateway) {
+    constructor(command: CreateThreadCommand) {
         AggregateLifecycle.apply(
             ThreadCreatedEvent(
                 accountId = command.accountId,
@@ -36,13 +34,6 @@ internal class Thread {
                 createdAt = Instant.now(),
             )
         )
-        val createModeratorCommand = AddModeratorCommand(
-            moderatorId = UUID.randomUUID(),
-            threadId = command.threadId,
-            accountId = command.accountId,
-            subjectAccountId = command.accountId,
-        )
-        reactorCommandGateway.send<UUID>(createModeratorCommand).block()
     }
 
     @CommandHandler
