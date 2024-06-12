@@ -2,8 +2,8 @@ import "../scss/styles.scss";
 import { initLoginManager, getAuthorizationHeader } from "./login"
 
 const urlParams = new URLSearchParams(window.location.search);
-let threadId = urlParams.get("threadId") ?? null;
-let postId = urlParams.get("postId") ?? null;
+const threadId = urlParams.get("threadId") ?? null;
+const postId = urlParams.get("postId") ?? null;
 
 async function createOrUpdatePost(content: string): Promise<void> {
   const response = await fetch(
@@ -25,7 +25,7 @@ async function on_submit(): Promise<void> {
   if (content !== "") {
     await createOrUpdatePost(content);
     // TODO: This should navigate to the last page, not first
-    window.location.assign(`thread.html?threadId=${threadId}`);
+    window.location.assign(`thread.html?threadId=${encodeURIComponent(threadId)}`);
   }
 }
 
@@ -36,7 +36,7 @@ async function initThreadData(): Promise<void> {
   }
 
   const data = await response.json();
-  (document.getElementById("thread_name_header") as HTMLHeadingElement).innerText = postId === null ? `Adding a new post under: ${data.title}` : `Editing a post under: ${data.title}`;
+  (document.getElementById("thread_name_header") as HTMLHeadingElement).innerText = postId === null ? `Add a new post under: ${data.title}` : `Editing a post under: ${data.title}`;
 }
 
 async function initPostData(): Promise<void> {
