@@ -95,3 +95,18 @@ export async function initLoginManager(requireLogin: boolean = false) {
     await createLogoutButton();
   }
 }
+
+export async function findAccountIdByUsername(username: string): Promise<string | null> {
+  const response = await fetch(
+    `/accounts/api/v1/accounts?username=${encodeURIComponent(username)}`,
+    {headers: {Authorization: getAuthorizationHeader()}},
+  );
+  if (response.status === 404) {
+    return null;
+  } else if (response.ok) {
+    return (await response.json()).accountId;
+  } else {
+    console.error(`Failed to find account with username ${username}: ${response.status} ${response.statusText}`);
+    return null;
+  }
+}

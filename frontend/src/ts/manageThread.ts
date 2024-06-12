@@ -73,6 +73,7 @@ async function refreshBannedUsersList() {
     button.role = "button";
     button.classList.add("btn", "btn-sm", "btn-success", "ms-2");
     button.innerText = "+";
+    button.onclick = banUser;
     li.append(button);
 
     elements.push(li);
@@ -113,6 +114,37 @@ async function unBanUser(bannedUserId: string) {
   await refreshBannedUsersList();
 }
 
+async function banUser(): Promise<void> {
+  const input = document.getElementById("ban_user_username") as HTMLInputElement | null;
+  if (input === null) return;
+
+  const username = input.value;
+  if (username === "") return;
+
+  const accountId = await login.findAccountIdByUsername(username);
+  if (accountId === null) {
+    console.warn("No such user:", username);
+    return;
+  }
+
+  const response = await fetch(
+    "/threads/api/v1/bannedUsers",
+    {
+      method: "POST",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ threadId, subjectAccountId: accountId }),
+    },
+  );
+  if (!response.ok) {
+    throw `Failed to ban user ${accountId}: ${response.status} ${response.statusText}`;
+  }
+
+  await refreshBannedUsersList();
+}
+
 async function refreshModeratorsList() {
   const moderators = await listModerators();
 
@@ -142,7 +174,7 @@ async function refreshModeratorsList() {
   });
 
   if (isOwner || isAdmin) {
-    // <li id="ban_user_username" class="list-group-item d-flex justify-content-between align-items-center">
+    // <li id="add_moderator_username" class="list-group-item d-flex justify-content-between align-items-center">
     //  <input type="text" class="form-control" placeholder="Username" />
     //  <button type="button" class="btn btn-sm btn-success ms-2">+</button>
     // </li>
@@ -160,6 +192,7 @@ async function refreshModeratorsList() {
     button.role = "button";
     button.classList.add("btn", "btn-sm", "btn-success", "ms-2");
     button.innerText = "+";
+    button.onclick = addModerator;
     li.append(button);
 
     elements.push(li);
@@ -195,6 +228,37 @@ async function removeModerator(moderatorId: string): Promise<void> {
   );
   if (!response.ok && response.status !== 404) {
     throw `Failed to remove moderator ${moderatorId}: ${response.status} ${response.statusText}`;
+  }
+
+  await refreshModeratorsList();
+}
+
+async function addModerator(): Promise<void> {
+  const input = document.getElementById("add_moderator_username") as HTMLInputElement | null;
+  if (input === null) return;
+
+  const username = input.value;
+  if (username === "") return;
+
+  const accountId = await login.findAccountIdByUsername(username);
+  if (accountId === null) {
+    console.warn("No such user:", username);
+    return;
+  }
+
+  const response = await fetch(
+    "/threads/api/v1/moderators",
+    {
+      method: "POST",
+      headers: {
+        "Authorization": login.getAuthorizationHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ threadId, subjectAccountId: accountId }),
+    },
+  );
+  if (!response.ok) {
+    throw `Failed to add moderator ${accountId}: ${response.status} ${response.statusText}`;
   }
 
   await refreshModeratorsList();
