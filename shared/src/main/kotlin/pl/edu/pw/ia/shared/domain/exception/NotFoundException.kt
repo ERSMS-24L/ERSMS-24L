@@ -13,6 +13,8 @@ open class NotFoundException(message: String? = null, cause: Throwable? = null) 
 
 class AccountNotFoundException(accountId: UUID) : NotFoundException("Could not find account with Id: $accountId")
 
+class AccountWithUsernameNotFoundException(username: String) : NotFoundException("Could not find account with username: $username")
+
 class ThreadNotFoundException(threadId: UUID) : NotFoundException("Could not find thread with Id: $threadId")
 
 class PostNotFoundException(postId: UUID) : NotFoundException("Could not find post with id: $postId")

@@ -14,11 +14,14 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ServerWebExchange
 import pl.edu.pw.ia.shared.application.exception.ApiErrorResponse
 import pl.edu.pw.ia.shared.domain.exception.AccountNotFoundException
+import pl.edu.pw.ia.shared.domain.exception.AccountWithUsernameNotFoundException
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindAccountByUsernameQuery
 import pl.edu.pw.ia.shared.domain.view.AccountView
 import pl.edu.pw.ia.shared.security.Scopes
 import pl.edu.pw.ia.shared.security.getAccountId
@@ -45,6 +48,9 @@ interface AccountViewController {
 
 	@Operation(description = "Find current account info")
 	fun findCurrentUser(exchange: ServerWebExchange): Mono<AccountView>
+
+	@Operation(description = "Find account by username")
+	fun findAccountByUsername(@RequestParam username: String): Mono<AccountView>
 }
 
 @RestController
@@ -75,6 +81,17 @@ class AccountViewControllerImpl(
 			ResponseTypes.instanceOf(AccountView::class.java)
 		).switchIfEmpty {
 			Mono.error(AccountNotFoundException(exchange.getAccountId()))
+		}
+	}
+
+	@GetMapping
+	@PreAuthorize("hasAnyAuthority('${Scopes.USER.READ}')")
+	override fun findAccountByUsername(username: String): Mono<AccountView> {
+		return reactorQueryGateway.query(
+			FindAccountByUsernameQuery(username),
+			ResponseTypes.instanceOf(AccountView::class.java)
+		).switchIfEmpty {
+			Mono.error(AccountWithUsernameNotFoundException(username))
 		}
 	}
 }

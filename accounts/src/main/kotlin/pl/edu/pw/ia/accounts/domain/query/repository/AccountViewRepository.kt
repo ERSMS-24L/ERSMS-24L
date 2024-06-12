@@ -8,4 +8,6 @@ interface AccountViewRepository {
 	fun save(account: AccountView)
 
 	fun findById(id: UUID): AccountView?
+
+	fun findByUsername(username: String): AccountView?
 }

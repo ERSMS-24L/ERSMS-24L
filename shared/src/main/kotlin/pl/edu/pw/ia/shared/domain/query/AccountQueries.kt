@@ -5,3 +5,7 @@ import java.util.UUID
 data class FindAccountByIdQuery(
 	val accountId: UUID,
 )
+
+data class FindAccountByUsernameQuery(
+	val username: String,
+)

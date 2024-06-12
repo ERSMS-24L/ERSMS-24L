@@ -24,4 +24,9 @@ class AccountViewRepositoryImpl(
 		repository.findById(id.toString())
 			.map { it.toDomain() }
 			.block()
+
+	override fun findByUsername(username: String): AccountView? =
+		repository.findByName(username)
+			.map { it.toDomain() }
+			.block()
 }
