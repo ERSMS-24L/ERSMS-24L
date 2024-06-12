@@ -1,4 +1,4 @@
-ersms.kwojda.pl {
+ersms.kwojda.pl, http://*.svc.cluster.local, http://*.*.svc.cluster.local {
 	handle /accounts/* {
 		reverse_proxy https://accounts-service.ersms-forum.svc.cluster.local:8081 {
 			transport http {
@@ -57,7 +57,7 @@ ersms.kwojda.pl {
 	}
 }
 
-http://localhost, http://*.svc.cluster.local {
+http://localhost {
 	handle_path /accounts/* {
 		reverse_proxy accounts-service:8081
 	}
