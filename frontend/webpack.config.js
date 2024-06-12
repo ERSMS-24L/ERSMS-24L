@@ -10,6 +10,7 @@ module.exports = {
   mode: 'development',
   entry: {
     index: './src/ts/index.ts',
+    manageThread: './src/ts/manageThread.ts',
     postEditor: './src/ts/postEditor.ts',
     threadEditor: './src/ts/threadEditor.ts',
     silentSsoCheck: './src/ts/silentSsoCheck.ts',
@@ -30,6 +31,11 @@ module.exports = {
       filename: "index.html",
       template: './src/index.html',
       chunks: ["index"],
+    }),
+    new HtmlWebpackPlugin({
+      filename: "manage_thread.html",
+      template: './src/manage_thread.html',
+      chunks: ["manageThread"],
     }),
     new HtmlWebpackPlugin({
       filename: "post_editor.html",

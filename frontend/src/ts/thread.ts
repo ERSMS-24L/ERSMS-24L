@@ -99,6 +99,15 @@ async function fetchUserId(): Promise<void> {
 
 async function fetchIsModerator(threadId: string): Promise<void> {
   isModerator = userId === ownerId || await login.isModeratorUnder(threadId);
+  if (isModerator) {
+    // Add a manage thread button to the header
+    const a = document.createElement("a");
+    a.role = "button";
+    a.classList.add("btn", "btn-primary");
+    a.href = `manage_thread.html?threadId=${encodeURIComponent(threadId)}`;
+    a.innerText = "Manage thread";
+    document.getElementById("thread_header_buttons").prepend(a);
+  }
 }
 
 async function currentUserVote(postId: string): Promise<Vote | "UNAUTHORIZED"> {
