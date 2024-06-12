@@ -26,4 +26,5 @@ data class BannedUserView(
 	val bannedUserId: UUID,
 	val threadId: UUID,
 	val accountId: UUID,
+	val username: String?,
 )

@@ -73,7 +73,6 @@ class PostViewControllerImpl(
 ) : PostViewController {
 
 	@GetMapping("/{postId}")
-	@PreAuthorize("hasAnyAuthority('${Scopes.POST.READ}')")
 	override fun findPostById(@PathVariable postId: UUID): Mono<PostView> {
 		return reactorQueryGateway.query(
 			FindPostByIdQuery(postId),
