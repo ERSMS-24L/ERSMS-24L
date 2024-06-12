@@ -43,7 +43,7 @@ ersms.kwojda.pl, http://*.svc.cluster.local, http://*.*.svc.cluster.local {
 	}
 
 	handle /keycloack/* {
-		reverse_proxy http://frontend.ersms-forum.svc.cluster.local:8084
+		reverse_proxy http://keycloak.ersms-forum.svc.cluster.local:8888
 	}
 
 	handle /health {
