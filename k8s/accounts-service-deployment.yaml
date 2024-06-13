@@ -52,16 +52,16 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               value: "mongodb://root:root@mongodb:27017/accounts?authSource=admin"
             - name: KC_BASE
-              value: http://keycloak:8888
+              value: https://keycloak:8888
             - name: KC_ADMINPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: kc-admin-pass
                   key: KC_ADMINPASSWORD
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI
-              value: http://keycloak:8888/keycloak/realms/ersms
+              value: https://keycloak:8888/keycloak/realms/ersms
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI
-              value: http://keycloak:8888/keycloak/realms/ersms/protocol/openid-connect/certs
+              value: https://keycloak:8888/keycloak/realms/ersms/protocol/openid-connect/certs
           ports:
             - containerPort: 8081
       restartPolicy: Always

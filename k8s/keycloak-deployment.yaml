@@ -24,30 +24,51 @@ spec:
             items:
               - key: client.pem
                 path: client.pem
+        - name: server-cert-volume
+          secret:
+            secretName: server-cert
+            items:
+              - key: server.crt.pem
+                path: server.crt.pem
+        - name: server-key-volume
+          secret:
+            secretName: server-key
+            items:
+              - key: server.key.pem
+                path: server.key.pem
       containers:
         - image: quay.io/phasetwo/phasetwo-keycloak:24.0.3
           name: keycloak
           # TODO: use production ready `start`
           args: [
             "start-dev",
-            "--truststore-paths=/custom_certs/client.pem"
+            "--truststore-paths=/custom_certs/client.pem",
+            "--https-certificate-file=/custom_server_certs/server.crt.pem",
+            "--https-certificate-file=/custom_server_keys/server.key.pem",
+            "--http-enabled=false"
           ]
           volumeMounts:
             - name: cert-volume
               mountPath: "/custom_certs"
               readOnly: true
+            - name: server-cert-volume
+              mountPath: "/custom_server_certs"
+              readOnly: true
+            - name: server-key-volume
+              mountPath: "/custom_server_keys"
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /keycloak/realms/master/
-              port: 8080
-              scheme: HTTP
+              port: 8443
+              scheme: HTTPS
             initialDelaySeconds: 120
             periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /keycloak/realms/master/
-              port: 8080
-              scheme: HTTP
+              port: 8443
+              scheme: HTTPS
             initialDelaySeconds: 60
           lifecycle:
             preStop:
@@ -82,6 +103,6 @@ spec:
             - name: KC_DB_PASSWORD
               value: "keycloak"
           ports:
-            - containerPort: 8080
+            - containerPort: 8443
       restartPolicy: Always
 status: {}

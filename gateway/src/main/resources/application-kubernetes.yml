@@ -45,7 +45,7 @@ spring:
             - AddRequestHeader=Host, prometheus-stack-grafana.default.svc.cluster.local
             - AddRequestHeader=Origin, http://prometheus-stack-grafana.default.svc.cluster.local:80
         - id: keycloak
-          uri: http://keycloak.ersms-forum.svc.cluster.local:8888
+          uri: https://keycloak.ersms-forum.svc.cluster.local:8888
           predicates:
             - Path=/keycloak/**
         - id: frontend

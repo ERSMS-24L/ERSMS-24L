@@ -10,9 +10,8 @@ spec:
   ports:
     - name: "http"
       port: 8888
-      targetPort: 8080
+      targetPort: 8443
   selector:
     app: keycloak
-  type: LoadBalancer # TODO: unsure?
 status:
   loadBalancer: { }

@@ -6,6 +6,15 @@ kubectl config use-context docker-desktop
 # Keycloak secret
 kubectl create secret generic cert-pem-1 --from-file accounts/src/main/resources/client.pem -n ersms-forum
 
+# Keystore - certificate + private key
+kubectl create secret generic server-p12 --from-file accounts/src/main/resources/server.p12 -n ersms-forum
+
+# Certificate
+kubectl create secret generic server-cert --from-file accounts/src/main/resources/server.crt.pem -n ersms-forum
+
+# Private key
+kubectl create secret generic server-key --from-file accounts/src/main/resources/server.key.pem -n ersms-forum
+
 # Keycloak password secret
 kubectl create secret generic kc-admin-pass --from-literal=KC_ADMINPASSWORD=admin123 -n ersms-forum # change `admin123` to actual password
 
