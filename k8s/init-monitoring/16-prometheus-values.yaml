@@ -954,7 +954,7 @@ grafana:
   grafana.ini:
     server:
       domain: "kwojda.pl"
-      root_url: "https://kwojda.pl/grafana/"
+      root_url: "https://ersms3.kwojda.pl/grafana/"
 
   ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
   ##
@@ -3487,7 +3487,7 @@ prometheus:
 
     ## External URL at which Prometheus will be reachable.
     ##
-    externalUrl: "https://kwojda.pl/prometheus/"
+    externalUrl: "https://ersms3.kwojda.pl/prometheus/"
 
     ## Define which Nodes the Pods are scheduled on.
     ## ref: https://kubernetes.io/docs/user-guide/node-selection/

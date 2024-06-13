@@ -35,7 +35,7 @@ eck-kibana:
       server:
         basePath: "/kibana"
         rewriteBasePath: true
-        publicBaseUrl: "https://kwojda.pl/kibana"
+        publicBaseUrl: "https://ersms3.kwojda.pl/kibana"
     podTemplate:
       spec:
         containers:
