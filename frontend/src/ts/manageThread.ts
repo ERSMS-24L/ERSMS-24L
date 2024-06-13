@@ -216,7 +216,7 @@ async function listModerators(): Promise<[string, string][]> {
 
 async function removeModerator(moderatorId: string): Promise<void> {
   const response = await fetch(
-    "/threads/api/v1/bannedUsers",
+    "/threads/api/v1/moderators",
     {
       method: "DELETE",
       headers: {
