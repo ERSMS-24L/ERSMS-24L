@@ -13,6 +13,9 @@ server:
     key-store-password: secret
     trust-certificate: /custom_server_certs/server.crt.pem
     trust-certificate-private-key: /custom_server_keys/server.key.pem
+    trust-store: /server-p12/server.p12
+    trust-store-password: secret
+    trust-store-type: PKCS12
 
 axon:
   axonserver:
