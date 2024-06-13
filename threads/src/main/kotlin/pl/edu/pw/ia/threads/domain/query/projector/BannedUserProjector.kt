@@ -11,6 +11,7 @@ import pl.edu.pw.ia.shared.domain.event.AccountUnbannedEvent
 import pl.edu.pw.ia.shared.domain.query.FindAccountByIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindBannedAccountByThreadAndAccountIdsQuery
 import pl.edu.pw.ia.shared.domain.query.FindBannedAccountsByThreadIdQuery
+import pl.edu.pw.ia.shared.domain.query.FindBannedUserByBannedUserIdQuery
 import pl.edu.pw.ia.shared.domain.view.AccountView
 import pl.edu.pw.ia.shared.domain.view.BannedUserView
 import pl.edu.pw.ia.threads.domain.query.repository.BannedUserViewRepository
@@ -44,4 +45,8 @@ class BannedUserProjector(
 	@QueryHandler
 	fun handle(query: FindBannedAccountsByThreadIdQuery): Page<BannedUserView> =
 		repository.findByThreadId(query.threadId, query.pageable)
+
+	@QueryHandler
+	fun handle(query: FindBannedUserByBannedUserIdQuery): BannedUserView? =
+		repository.findByBannedUserId(query.bannedUserId)
 }

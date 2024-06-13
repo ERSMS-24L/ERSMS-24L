@@ -13,5 +13,7 @@ interface BannedUserViewRepository {
 
 	fun findByThreadId(threadId: UUID, pageable: Pageable): Page<BannedUserView>
 
+	fun findByBannedUserId(bannedUserId: UUID): BannedUserView?
+
 	fun delete(bannedUserId: UUID)
 }
