@@ -12,6 +12,7 @@ server:
     key-password: secret
     key-store-password: secret
     trust-certificate: /custom_server_certs/server.crt.pem
+    trust-certificate-private-key: /custom_server_keys/server.key.pem
 
 axon:
   axonserver:
