@@ -26,6 +26,24 @@ spec:
               value: "true"
             - name: AXONIQ_AXONSERVER_STANDALONE
               value: "true"
+            - name: SECURITY_REQUIRE_SSL
+              value: "true"
+            - name: SERVER_SSL_ENABLED
+              value: "true"
+            - name: SERVER_SSL_KEY_STORE_TYPE
+              value: "PKCS12"
+            - name: SERVER_SSL_KEY_STORE
+              value: "/server-p12/server.p12"
+            - name: SERVER_SSL_KEY_STORE_PASSWORD
+              value: "secret"
+            - name: SERVER_SSL_KEY_ALIAS
+              value: "server"
+            - name: AXONIQ_AXONSERVER_SSL_ENABLED
+              value: "true"
+            - name: AXONIQ_AXONSERVER_SSL_CERT_CHAIN_FILE
+              value: "/custom_server_certs/server.crt.pem"
+            - name: AXONIQ_AXONSERVER_SSL_PRIVATE_KEY_FILE
+              value: "/custom_server_keys/server.key.pem"
           ports:
             - containerPort: 8024
             - containerPort: 8124
@@ -38,16 +56,27 @@ spec:
             - mountPath: /config
               name: axonserver-config
               readOnly: true
+            - mountPath: /server-p12
+              name: server-p12-volume
+              readOnly: true
+            - mountPath: /custom_server_certs
+              name: server-cert-volume
+              readOnly: true
+            - mountPath: /custom_server_keys
+              name: server-key-volume
+              readOnly: true
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8024
+              scheme: HTTPS
             initialDelaySeconds: 120
             periodSeconds: 60
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8024
+              scheme: HTTPS
             initialDelaySeconds: 120
             periodSeconds: 60
           resources:
@@ -66,3 +95,21 @@ spec:
           persistentVolumeClaim:
             claimName: axonserver-config
             readOnly: true
+        - name: server-p12-volume
+          secret:
+            secretName: server-p12
+            items:
+              - key: server.p12
+                path: server.p12
+        - name: server-cert-volume
+          secret:
+            secretName: server-cert
+            items:
+              - key: server.crt.pem
+                path: server.crt.pem
+        - name: server-key-volume
+          secret:
+            secretName: server-key
+            items:
+              - key: server.key.pem
+                path: server.key.pem

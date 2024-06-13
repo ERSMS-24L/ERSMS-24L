@@ -12,3 +12,8 @@ server:
     key-password: secret
     key-store-password: secret
     trust-certificate: classpath:client.pem
+
+axon:
+  axonserver:
+    ssl-enabled: true
+    cert-file: classpath:client.pem
