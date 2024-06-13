@@ -15,5 +15,6 @@ server:
 
 axon:
   axonserver:
+    servers: axonserver.ersms-forum.svc.cluster.local
     ssl-enabled: true
     cert-file: /custom_server_certs/server.crt.pem
