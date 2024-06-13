@@ -98,7 +98,7 @@ async function fetchUserId(): Promise<void> {
 }
 
 async function fetchIsModerator(threadId: string): Promise<void> {
-  isModerator = (userId === ownerId) || await login.isModeratorUnder(threadId);
+  isModerator = (userId === ownerId) || login.isAdmin() || await login.isModeratorUnder(threadId);
 
   if (isModerator) {
     // Add a manage thread button to the header
