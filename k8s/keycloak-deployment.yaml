@@ -61,9 +61,9 @@ spec:
             - name: KC_HTTP_RELATIVE_PATH
               value: "/keycloak/"
             - name: KC_HOSTNAME_ADMIN_URL
-              value: "https://kwojda.pl/keycloak/"
+              value: "https://ersms3.kwojda.pl/keycloak/"
             - name: KC_HOSTNAME_URL
-              value: "https://kwojda.pl/keycloak/"
+              value: "https://ersms3.kwojda.pl/keycloak/"
             - name: KC_PROXY
               value: "edge"
             - name: KEYCLOAK_ADMIN

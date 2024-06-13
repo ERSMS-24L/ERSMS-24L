@@ -54,7 +54,7 @@ async function refreshBannedUsersList() {
     return li;
   });
 
-  if (isOwner || isAdmin) {
+  if (isModerator) {
     // <li id="ban_user_username" class="list-group-item d-flex justify-content-between align-items-center">
     //  <input type="text" class="form-control" placeholder="Username" />
     //  <button type="button" class="btn btn-sm btn-success ms-2">+</button>
@@ -161,7 +161,7 @@ async function refreshModeratorsList() {
     span.innerText = username;
     li.append(span);
 
-    if (isModerator) {
+    if (isOwner || isAdmin) {
       const button = document.createElement("button");
       button.role = "button";
       button.classList.add("btn", "btn-sm", "btn-danger");
@@ -216,7 +216,7 @@ async function listModerators(): Promise<[string, string][]> {
 
 async function removeModerator(moderatorId: string): Promise<void> {
   const response = await fetch(
-    "/threads/api/v1/bannedUsers",
+    "/threads/api/v1/moderators",
     {
       method: "DELETE",
       headers: {
