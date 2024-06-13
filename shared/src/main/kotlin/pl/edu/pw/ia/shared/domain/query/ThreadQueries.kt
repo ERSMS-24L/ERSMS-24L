@@ -42,3 +42,7 @@ data class FindBannedAccountsByThreadIdQuery(
 	val threadId: UUID,
 	val pageable: Pageable,
 )
+
+data class FindBannedUserByBannedUserIdQuery(
+	val bannedUserId: UUID
+)

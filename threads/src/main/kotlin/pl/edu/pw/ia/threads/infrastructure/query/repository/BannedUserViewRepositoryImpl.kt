@@ -40,4 +40,10 @@ class BannedUserViewRepositoryImpl(
 		val countViews = repository.countByThreadId(threadId.toString()).block()
 		return PageImpl(views ?: emptyList(), pageable, countViews ?: 0)
 	}
+
+	override fun findByBannedUserId(bannedUserId: UUID): BannedUserView? {
+		return repository.findByBannedUserId(bannedUserId.toString())
+			.map { it.toDomain() }
+			.block()
+	}
 }

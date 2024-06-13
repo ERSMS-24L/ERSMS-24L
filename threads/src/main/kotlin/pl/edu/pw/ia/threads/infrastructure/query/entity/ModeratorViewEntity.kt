@@ -11,12 +11,14 @@ data class ModeratorViewEntity(
 	val moderatorId: String,
 	val threadId: String,
 	val accountId: String,
+	val username: String?
 ) {
 	fun toDomain() : ModeratorView =
 		ModeratorView(
 			moderatorId = UUID.fromString(moderatorId),
 			threadId = UUID.fromString(threadId),
 			accountId = UUID.fromString(accountId),
+			username = username,
 
 		)
 
@@ -26,6 +28,7 @@ data class ModeratorViewEntity(
 				moderatorId = moderatorId.toString(),
 				threadId = threadId.toString(),
 				accountId = accountId.toString(),
+				username = username
 			)
 	}
 }

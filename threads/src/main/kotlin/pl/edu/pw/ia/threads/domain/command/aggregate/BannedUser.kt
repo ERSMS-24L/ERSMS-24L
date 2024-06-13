@@ -4,6 +4,7 @@ import java.time.Instant
 import java.util.UUID
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
+import org.axonframework.messaging.responsetypes.ResponseTypes
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.queryhandling.QueryGateway
@@ -15,8 +16,10 @@ import pl.edu.pw.ia.shared.domain.event.AccountBannedEvent
 import pl.edu.pw.ia.shared.domain.event.AccountUnbannedEvent
 import pl.edu.pw.ia.shared.domain.exception.ModeratorNotFoundException
 import pl.edu.pw.ia.shared.domain.exception.ThreadNotFoundException
+import pl.edu.pw.ia.shared.domain.query.FindBannedUserByBannedUserIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindModeratorByThreadAndAccountIdQuery
 import pl.edu.pw.ia.shared.domain.query.FindThreadByIdQuery
+import pl.edu.pw.ia.shared.domain.view.BannedUserView
 import pl.edu.pw.ia.shared.domain.view.ModeratorView
 import pl.edu.pw.ia.shared.domain.view.ThreadView
 
@@ -55,7 +58,11 @@ internal class BannedUser {
 
 	@CommandHandler
 	fun handle(command: UnbanAccountCommand, queryGateway: QueryGateway) {
-		if (command.accountId != accountId) {
+		val threadView = queryGateway.query(
+			FindThreadByIdQuery(threadId),
+			ThreadView::class.java
+		).join() ?: throw ThreadNotFoundException(threadId)
+		if (command.accountId != threadView.accountId) {
 			queryGateway.query(
 				FindModeratorByThreadAndAccountIdQuery(threadId, command.accountId),
 				ModeratorView::class.java

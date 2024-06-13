@@ -12,4 +12,6 @@ interface SpringBannedUserViewEntityRepository : ReactiveMongoRepository<BannedU
 	fun findByAccountIdAndThreadId(accountId: String, threadId: String): Mono<BannedUserViewEntity>
 	fun findByThreadId(threadId: String, pageable: Pageable): Flux<BannedUserViewEntity>
 	fun countByThreadId(threadId: String): Mono<Long>
+
+	fun findByBannedUserId(bannedUserId: String): Mono<BannedUserViewEntity>
 }
