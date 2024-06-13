@@ -60,8 +60,6 @@ helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-sta
 kubectl port-forward svc/prometheus-stack-kube-prom-prometheus 9090:9090
 kubectl port-forward svc/prometheus-stack-grafana 8080:80
 # spring dashboard: 19004
-#kubectl scale deployment prometheus-stack-grafana --replicas=1
-#kubectl scale deployment prometheus-stack-grafana --replicas=1
 
 # Verification
 kubectl get svc
