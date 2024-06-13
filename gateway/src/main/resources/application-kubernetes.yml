@@ -56,7 +56,7 @@ spring:
       httpclient:
         ssl:
 #          trusted-x509-certificates:
-#            - classpath:client.pem
+#            - /custom_server_certs/server.crt.pem
           use-insecure-trust-manager: true
 
 # TODO: add support for generated ssl certificate
@@ -64,6 +64,6 @@ spring:
 server:
   ssl:
     enabled: true
-    trust-certificate: classpath:client.pem
+    trust-certificate: /custom_server_certs/server.crt.pem
     certificate: classpath:fullchain.pem
     certificate-private-key: classpath:privkey.pem
