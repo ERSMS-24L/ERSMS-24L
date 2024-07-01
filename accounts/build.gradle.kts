@@ -16,7 +16,7 @@ configurations {
 extra["springCloudVersion"] = "2023.0.0"
 
 val axonVersion = "4.9.4"
-val springDocVersion = "2.5.0"
+val springDocVersion = "2.6.0"
 
 dependencies {
 	implementation("pl.edu.pw.ia:ersms-shared:account-username-query-2")
