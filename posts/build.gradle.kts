@@ -15,7 +15,7 @@ configurations {
 
 extra["springCloudVersion"] = "2023.0.0"
 
-val axonVersion = "4.9.4"
+val axonVersion = "4.10.0"
 val springDocVersion = "2.5.0"
 
 dependencies {
