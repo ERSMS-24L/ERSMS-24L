@@ -13,7 +13,7 @@ configurations {
 	}
 }
 
-val axonVersion = "4.9.4"
+val axonVersion = "4.10.0"
 val springDocVersion = "2.5.0"
 
 dependencies {
